@@ -1,0 +1,35 @@
+{{- if .Values.apps.keycloak.enabled  }}
+{{- $tolerations := ( not .Values.apps.keycloak.tolerations | ternary $.Values.defaultTolerations.apps .Values.apps.keycloak.tolerations ) }}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: keycloak
+  namespace: flux-system
+spec:
+  releaseName: keycloak
+  chart:
+    spec:
+      chart: keycloak
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+  interval: 1h0m0s
+  targetNamespace: auth-system
+  values:
+    auth:
+      createAdminUser: false
+    proxyAddressForwarding: true
+    tolerations: {{ toYaml $tolerations | nindent 6 }}
+  postRenderers:
+    - kustomize:
+        patchesStrategicMerge:
+          - kind: StatefulSet
+            apiVersion: apps/v1
+            metadata:
+              name: keycloak-postgresql
+              namespace: auth-system
+            spec:
+              template:
+                spec:
+                  tolerations: {{ toYaml $tolerations | nindent 20 }}
+{{- end }}

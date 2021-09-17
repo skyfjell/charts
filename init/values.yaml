@@ -1,0 +1,48 @@
+# Apps
+
+apps:
+  keycloak:
+    enabled: false
+    hosts: []
+    tolerations: []
+
+# Database
+
+database:
+  postgresql:
+    enabled: false
+    tolerations: []
+
+# Services
+
+services:
+  certManager:
+    enabled: false
+    tolerations: []
+
+  externalDNS:
+    enabled: false
+    domains: []
+    tolerations: []
+
+  istio:
+    enabled: false
+    tolerations: []
+
+# Storage
+
+storage:
+  minio:
+    enabled: false
+    tolerations: []
+
+# Config
+domain: ""
+
+# Defaults
+
+defaultTolerations:
+  apps: []
+  database: []
+  services: []
+  storage: []

@@ -1,0 +1,19 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: istio-install
+  namespace: istio-system
+spec:
+  profile: default
+  components:
+    pilot:
+      k8s:
+        tolerations:
+          - key: system-services
+            operator: Exists
+            effect: NoSchedule
+    ingressGateways:
+      - name: istio-ingressgateway
+        enabled: true
+        k8s:
+          tolerations: {{toYaml .Values.tolerations | nindent 12}}

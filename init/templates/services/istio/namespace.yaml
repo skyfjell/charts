@@ -1,0 +1,7 @@
+{{- if .Values.services.istio.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-system
+  labels: {{- include "chart.labels" . | nindent 4}}
+{{- end }}

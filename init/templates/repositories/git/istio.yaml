@@ -1,0 +1,12 @@
+{{ if .Values.services.istio.enabled }}
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: GitRepository
+metadata:
+  name: istio
+  namespace: flux-system
+spec:
+  url: https://github.com/istio/istio
+  interval: 10m
+  ref:
+    tag: 1.11.0
+{{ end }}
