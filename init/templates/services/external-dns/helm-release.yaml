@@ -1,0 +1,26 @@
+{{- if .Values.services.externalDNS.enabled  }}
+{{- $tolerations := ( not .Values.services.externalDNS.tolerations | ternary .Values.defaultTolerations.services .Values.services.externalDNS.tolerations ) }}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: external-dns
+  namespace: flux-system
+spec:
+  releaseName: external-dns
+  chart:
+    spec:
+      chart: external-dns
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+  interval: 1h0m0s
+  targetNamespace: external-dns
+  values:
+    sources:
+      - service
+      - ingress
+      - istio-gateway
+      - istio-virtualservice
+    domainFilters: {{ toYaml .Values.services.externalDNS.domains | nindent 6 }}
+    tolerations: {{ toYaml $tolerations | nindent 6 }}
+{{- end }}

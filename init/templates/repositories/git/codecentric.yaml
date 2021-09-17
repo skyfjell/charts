@@ -1,0 +1,12 @@
+{{- if .Values.apps.keycloak.enabled }}
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: GitRepository
+metadata:
+  name: codecentric
+spec:
+  url: https://github.com/codecentric/helm-charts
+  interval: 10m
+  # TODO: Move ref to release.
+  ref:
+    tag: keycloak-15.0.2
+{{- end }}

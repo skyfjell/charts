@@ -1,0 +1,9 @@
+{{- if .Values.apps.keycloak.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: auth-system
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+    istio-injection: enabled
+{{- end }}

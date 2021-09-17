@@ -1,0 +1,7 @@
+{{- if .Values.services.externalDNS.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-dns
+  labels: {{- include "chart.labels" . | nindent 4}}
+{{- end }}

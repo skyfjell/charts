@@ -1,0 +1,21 @@
+# `and` condition any other auth services as needed.
+{{- if .Values.apps.keycloak.enabled }}
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: auth-gateway
+  namespace: istio-system
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      tls:
+        mode: SIMPLE
+        credentialName: ingress-cert
+      # Concat any other auth service hosts as needed.
+      hosts: {{ toYaml .Values.apps.keycloak.hosts | nindent 8 }}
+{{- end }}
