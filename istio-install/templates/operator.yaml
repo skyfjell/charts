@@ -8,10 +8,7 @@ spec:
   components:
     pilot:
       k8s:
-        tolerations:
-          - key: system-services
-            operator: Exists
-            effect: NoSchedule
+        tolerations: {{toYaml .Values.tolerations | nindent 10}}
     ingressGateways:
       - name: istio-ingressgateway
         enabled: true

@@ -2,4 +2,4 @@ apiVersion: v2
 name: istio-install
 description: Install istio via the IstioOperator CRD
 type: application
-version: 0.0.15
+version: 0.0.16
