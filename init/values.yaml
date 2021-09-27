@@ -34,7 +34,10 @@ services:
 storage:
   minio:
     enabled: false
-    tolerations: []
+    operator:
+      tolerations: []
+    console:
+      tolerations: []
 
 # Config
 domain: ""
