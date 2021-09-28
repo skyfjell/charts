@@ -18,8 +18,8 @@ spec:
   targetNamespace: minio-operator
   values:
     operator:
-      tolerations: {{ toYaml $operatorTolerations | nindent 6 }}
+      tolerations: {{ toYaml $operatorTolerations | nindent 8 }}
     console:
-      tolerations: {{ toYaml $consoleTolerations | nindent 6 }}
+      tolerations: {{ toYaml $consoleTolerations | nindent 8 }}
     tenants: []
 {{- end }}
