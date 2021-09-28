@@ -2,4 +2,4 @@ apiVersion: v2
 name: init
 description: Common cluster services and applications.
 type: application
-version: 0.1.4
+version: 0.1.5
