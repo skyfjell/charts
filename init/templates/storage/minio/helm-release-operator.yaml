@@ -15,7 +15,7 @@ spec:
         kind: HelmRepository
         name: minio
   interval: 1h0m0s
-  targetNamespace: minio-operator
+  targetNamespace: minio
   values:
     operator:
       tolerations: {{ toYaml $operatorTolerations | nindent 8 }}
