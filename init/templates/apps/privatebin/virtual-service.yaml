@@ -3,7 +3,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: privatebin
-  namespace: system-auth
+  namespace: privatebin
 spec:
   hosts: {{ toYaml .Values.apps.privatebin.hosts | nindent 4 }}
   gateways:
