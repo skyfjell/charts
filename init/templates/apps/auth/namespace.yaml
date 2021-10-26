@@ -1,8 +1,8 @@
-{{- if .Values.apps.keycloak.enabled }}
+{{- if or .Values.apps.keycloak.enabled .Values.apps.privatebin.enabled }}
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: auth-system
+  name: system-auth
   labels:
     {{- include "chart.labels" . | nindent 4 }}
     istio-injection: enabled

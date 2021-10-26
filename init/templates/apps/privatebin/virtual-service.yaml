@@ -1,11 +1,11 @@
-{{- if .Values.apps.keycloak.enabled }}
+{{- if .Values.apps.privatebin.enabled }}
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: keycloak
-  namespace: system-auth
+  name: privatebin
+  namespace: system-user-apps
 spec:
-  hosts: {{ toYaml .Values.apps.keycloak.hosts | nindent 4 }}
+  hosts: {{ toYaml .Values.apps.privatebin.hosts | nindent 4 }}
   gateways:
     - istio-system/auth-gateway
   http:
@@ -16,5 +16,5 @@ spec:
         - destination:
             port:
               number: 80
-            host: keycloak
+            host: privatebin
 {{- end }}
