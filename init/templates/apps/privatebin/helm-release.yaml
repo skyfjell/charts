@@ -12,7 +12,7 @@ spec:
       chart: privatebin
       sourceRef:
         kind: HelmRepository
-        name: bitnami
+        name: privatebin
   interval: 1h0m0s
   targetNamespace: system-auth
   values:

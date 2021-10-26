@@ -1,0 +1,10 @@
+{{- if .Values.apps.privatebin.enabled }}
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: privatebin
+  namespace: flux-system
+spec:
+  url: https://privatebin.github.io/helm-chart
+  interval: 10m
+{{- end }}
