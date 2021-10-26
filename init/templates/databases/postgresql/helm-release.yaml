@@ -14,7 +14,7 @@ spec:
         kind: HelmRepository
         name: bitnami
   interval: 1h0m0s
-  targetNamespace: system-databases
+  targetNamespace: system-auth
   values:
     auth:
       createAdminUser: false
