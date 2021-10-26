@@ -14,7 +14,7 @@ spec:
         kind: HelmRepository
         name: bitnami
   interval: 1h0m0s
-  targetNamespace: auth-system
+  targetNamespace: system-auth
   values:
     auth:
       createAdminUser: false
@@ -27,7 +27,7 @@ spec:
             apiVersion: apps/v1
             metadata:
               name: keycloak-postgresql
-              namespace: auth-system
+              namespace: system-auth
             spec:
               template:
                 spec:

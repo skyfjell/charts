@@ -1,0 +1,23 @@
+{{- if .Values.apps.privatebin.enabled  }}
+{{- $tolerations := ( not .Values.apps.privatebin.tolerations | ternary $.Values.defaultTolerations.apps .Values.apps.privatebin.tolerations ) }}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: privatebin
+  namespace: flux-system
+spec:
+  releaseName: privatebin
+  chart:
+    spec:
+      chart: privatebin
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+  interval: 1h0m0s
+  targetNamespace: system-auth
+  values:
+    auth:
+      createAdminUser: false
+    proxyAddressForwarding: true
+    tolerations: {{ toYaml $tolerations | nindent 6 }}
+{{- end }}

@@ -5,10 +5,14 @@ apps:
     enabled: false
     hosts: []
     tolerations: []
+  privatebin:
+    enabled: false
+    hosts: []
+    tolerations: []
 
 # Database
 
-database:
+databases:
   postgresql:
     enabled: false
     tolerations: []
