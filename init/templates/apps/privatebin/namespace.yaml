@@ -1,0 +1,9 @@
+{{- if .Values.apps.privatebin.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: privatebin
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+    istio-injection: enabled
+{{- end }}

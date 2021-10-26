@@ -14,7 +14,7 @@ spec:
         kind: HelmRepository
         name: privatebin
   interval: 1h0m0s
-  targetNamespace: system-auth
+  targetNamespace: privatebin
   values:
     auth:
       createAdminUser: false
