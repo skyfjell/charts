@@ -17,5 +17,5 @@ spec:
         mode: SIMPLE
         credentialName: ingress-cert
       # Concat any other auth service hosts as needed.
-      hosts: {{- toYaml (concat .Values.apps.keycloak.hosts).Values.apps.keycloak.hosts .Values.apps.privatebin.hosts) | nindent 8 }}
+      hosts: {{- toYaml (concat .Values.apps.keycloak.hosts .Values.apps.privatebin.hosts) | nindent 8 }}
 {{- end }}
