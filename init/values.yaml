@@ -33,6 +33,10 @@ services:
     enabled: false
     tolerations: []
 
+  vault:
+    enabled: false
+    tolerations: []
+
 # Storage
 
 storage:

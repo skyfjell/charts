@@ -16,9 +16,6 @@ spec:
   interval: 1h0m0s
   targetNamespace: system-auth
   values:
-    auth:
-      createAdminUser: false
-    proxyAddressForwarding: true
     tolerations: {{ toYaml $tolerations | nindent 6 }}
     existingSecret: system-auth-postgresql
 {{- end }}
