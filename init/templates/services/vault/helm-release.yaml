@@ -16,5 +16,8 @@ spec:
   interval: 1h0m0s
   targetNamespace: vault
   values:
-    tolerations: {{ toYaml $tolerations | nindent 6 }}
+    injector:
+      tolerations: {{ toYaml $tolerations | nindent 8 }}
+    server
+      tolerations: {{ toYaml $tolerations | nindent 8 }}
 {{- end }}
