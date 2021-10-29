@@ -18,6 +18,6 @@ spec:
   values:
     injector:
       tolerations: {{ toYaml $tolerations | nindent 8 }}
-    server
+    server:
       tolerations: {{ toYaml $tolerations | nindent 8 }}
 {{- end }}
