@@ -62,7 +62,21 @@ def write_operator(tag_name):
     out = subprocess.run(["kubectl", "kustomize", f"{REPO}/deploy?ref={tag_name}"], stdout=subprocess.PIPE).stdout.decode()
     with open(os.path.join(REPO_DIR, "keycloak-operator", "templates", "operator.yaml"), "w") as f:
         f.write(out)
+    with open(os.path.join(REPO_DIR, "keycloak-operator", "templates", "operator.yaml")) as f:
+        data = yaml.load_all(f, Loader=yaml.Loader)
 
+    new_release = []
+    for y in data:
+        if y['kind'] == "Namespace":
+            pass
+        else:
+            if y.get('metadata',{}).get("namespace") is not None:
+                newmetada = y['metadata']
+                newmetada.pop('namespace')
+                y['metadata'] = newmetada
+            new_release.append(y)
+    with open(os.path.join(REPO_DIR, "keycloak-operator", "templates", "operator.yaml"), "w") as f:
+        yaml.dump_all(new_release, f)
 
 def generate_pr(tag_name):
     subprocess.run(["git", "checkout", "-b", f"keycloak-operator/{tag_name}"])
