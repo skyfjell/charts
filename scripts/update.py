@@ -67,7 +67,7 @@ def write_operator(tag_name):
 def generate_pr(tag_name):
     subprocess.run(["git", "checkout", "-b", f"keycloak-operator/{tag_name}"])
     write_operator(tag_name)
-    if subprocess.run(["git", "diff", "HEAD", "--name-only"], stdout=subprocess.PIPE).stdout.decode() == "":
+    if subprocess.run(["git", "diff", "HEAD", "main", "--name-only"], stdout=subprocess.PIPE).stdout.decode() == "":
         return False 
     
     chartyaml = os.path.join(REPO_DIR, "keycloak-operator", "Chart.yaml")
