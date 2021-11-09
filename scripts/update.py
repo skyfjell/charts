@@ -105,6 +105,7 @@ def generate_pr(tag_name):
 if __name__ == "__main__":
     clone_repo()
 
-    tags = sorted(missing_tags())
+    tags = sorted(missing_tags())[:1]
+    print(f"Running tags {tags}")
     for tag in tags[:1]:
         generate_pr(tag)
