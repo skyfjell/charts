@@ -11,6 +11,7 @@ REPO_DIR = os.path.abspath(os.path.join(CWD, ".."))
 
 
 def kc_tags():
+    """Gets all current Keycloak tags above 15.0.0 in Keycloak repo"""
     print("Gathering tags on keycloak-operator")
     raws = set(
         x.split("\t")[1].strip("refs/tags/") for x in 
@@ -25,6 +26,7 @@ def kc_tags():
 
 
 def our_tags():
+    """Gets all our tags for keycloak-operator helm chart"""
     print("Gathering tags on our repo")
     return set([
         x.strip("keycloak-operator-")
@@ -37,6 +39,7 @@ def our_tags():
     ])
 
 def open_branches():
+    """Gets all open branches that follow the same keycloak-operator pattern"""
     print("Gathering open branches with `keycloak-operator` prefix")
     return set([
         x.strip("keycloak-operator/")
@@ -50,6 +53,7 @@ def open_branches():
     ])
 
 def missing_tags():
+    """Finds unique tags to update our helm chart with"""
     print("Calculating new tags that aren't open branches")
     kc = kc_tags()
     our = our_tags()
@@ -59,6 +63,8 @@ def missing_tags():
     return result
 
 def write_operator(tag_name):
+    """Generates all the entire keycloak-operator manifests and fishes out the namespace manifest and metadata
+    so the operator can be installed in a namespace of user's choosing."""
     out = subprocess.run(["kubectl", "kustomize", f"{REPO}/deploy?ref={tag_name}"], stdout=subprocess.PIPE).stdout.decode()
     with open(os.path.join(REPO_DIR, "keycloak-operator", "templates", "operator.yaml"), "w") as f:
         f.write(out)
@@ -79,6 +85,7 @@ def write_operator(tag_name):
         yaml.dump_all(new_release, f)
 
 def generate_pr(tag_name):
+    """Runs git commands that run all the above functions and create a new branch per tag_names"""
     subprocess.run(["git", "checkout", "-b", f"keycloak-operator/{tag_name}"])
     write_operator(tag_name)
     diff = subprocess.run(["git", "status", "-s"], stdout=subprocess.PIPE).stdout.decode()
