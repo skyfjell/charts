@@ -6,23 +6,25 @@ import yaml
 REPO = "https://github.com/keycloak/keycloak-operator.git"
 TGT_DIR = "/tmp/kcop"
 CWD = os.path.abspath(os.path.dirname(__file__))
+REPO_DIR = os.path.abspath(os.path.join(CWD, ".."))
 
 
 def clone_repo():
     os.makedirs(TGT_DIR)
-    print(f"Cloning into {TGT_DIR}")
     subprocess.run(["git", "clone", REPO, TGT_DIR])
 
 
 def kc_tags():
     print("Gathering tags on keycloak-operator")
     return set(
+        [x for x in
         subprocess.run(["git", "tag"], cwd=TGT_DIR, stdout=subprocess.PIPE)
         .stdout
         .decode()
         .strip()
         .split('\n')
-    )
+        if int(x.split(".")[0]) >= 12 # 12.0.0 first tag with kustomize
+    ])
 
 
 def our_tags():
@@ -55,7 +57,9 @@ def missing_tags():
     kc = kc_tags()
     our = our_tags()
     cur = open_branches()
-    return our.union(kc) - kc - cur
+    ours = our.union(cur)
+    result = kc - ours
+    return result
 
 
 def move_files(kc_tag_name):
@@ -74,18 +78,20 @@ def move_files(kc_tag_name):
 
 
 def generate_pr(tag_name):
-    subprocess.run(["git", "checkout", "main"])
+    # subprocess.run(["git", "checkout", "main"])
 
-    templates = os.path.join(CWD, "keycloak-operator", "templates")
+    templates = os.path.join(REPO_DIR, "keycloak-operator", "templates")
     files = move_files(tag_name)
+    if files is None:
+        return
 
-    shutil.rmtree(templates)
+    shutil.rmtree(templates, ignore_errors=True)
     os.makedirs(templates)
 
-    for f in os.listdir(files):
-        shutil.copyfile(files, os.path.join(templates, f))
+    for f in files:
+        shutil.copyfile(f, os.path.join(templates, os.path.basename(f)))
 
-    chartyaml = os.path.join(CWD, "keycloak-operator", "Chart.yaml")
+    chartyaml = os.path.join(REPO_DIR, "keycloak-operator", "Chart.yaml")
     with open(chartyaml) as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
 
@@ -95,17 +101,19 @@ def generate_pr(tag_name):
     data["appVersion"] = f'"{tag_name}"'
 
     with open(chartyaml, "w") as f:
-        yaml.dump(data)
+        yaml.dump(data, f)
 
     subprocess.run(["git", "checkout", "-b", f"keycloak-operator/{tag_name}"])
     subprocess.run(["git", "add", "-A"])
     subprocess.run(["git", "commit", "-m", f'"Auto commit for new keycloak-operator tag {tag_name}"'])
     subprocess.run(["git", "push", "--set-upstream", "origin", f"keycloak-operator/{tag_name}"])
+    return True
     
 if __name__ == "__main__":
-    clone_repo()
+    # clone_repo()
 
-    tags = sorted(missing_tags())[:1]
+    tags = sorted(missing_tags(), key=lambda x: tuple(int(i) for i in x.split('.')))
     print(f"Running tags {tags}")
-    for tag in tags[:1]:
-        generate_pr(tag)
+    for tag in tags:
+        if generate_pr(tag):
+            break
