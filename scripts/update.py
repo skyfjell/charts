@@ -63,15 +63,13 @@ def write_operator(tag_name):
     with open(os.path.join(REPO_DIR, "keycloak-operator", "templates", "operator.yaml"), "w") as f:
         f.write(out)
 
-def check_diff():
-    out = subprocess.run(["git", "diff", "HEAD", "--name-only"], stdout=subprocess.PIPE).stdout.decode()
-    return out != ""
 
 def generate_pr(tag_name):
     subprocess.run(["git", "checkout", "-b", f"keycloak-operator/{tag_name}"])
     write_operator(tag_name)
-    if not check_diff():
-        return False
+    if subprocess.run(["git", "diff", "HEAD", "--name-only"], stdout=subprocess.PIPE).stdout.decode() == "":
+        return False 
+    
     chartyaml = os.path.join(REPO_DIR, "keycloak-operator", "Chart.yaml")
     with open(chartyaml) as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
@@ -84,8 +82,8 @@ def generate_pr(tag_name):
         yaml.dump(data, f)
 
     subprocess.run(["git", "add", "-A"])
-    subprocess.run(["git", "commit", "-m", f'"Auto commit for new keycloak-operator tag {tag_name}"'])
-    subprocess.run(["git", "push", "--set-upstream", "origin", f"keycloak-operator/{tag_name}"])
+    subprocess.run(["git", "commit", "-m", f'"Auto commit for new keycloak-operator tag {tag_name}"'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    subprocess.run(["git", "push", "--set-upstream", "origin", f"keycloak-operator/{tag_name}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     return True
     
 if __name__ == "__main__":
