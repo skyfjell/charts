@@ -67,8 +67,7 @@ def write_operator(tag_name):
 def generate_pr(tag_name):
     subprocess.run(["git", "checkout", "-b", f"keycloak-operator/{tag_name}"])
     write_operator(tag_name)
-    subprocess.run(["git", "add", "-A"])
-    diff = subprocess.run(["git", "diff", "HEAD", "main", "--name-only"], stdout=subprocess.PIPE).stdout.decode()
+    diff = subprocess.run(["git", "status", "-s"], stdout=subprocess.PIPE).stdout.decode()
     if diff == "":
         return False 
     
