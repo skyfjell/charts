@@ -63,7 +63,7 @@ def write_operator(tag_name):
     with open(os.path.join(REPO_DIR, "keycloak-operator", "templates", "operator.yaml"), "w") as f:
         f.write(out)
     with open(os.path.join(REPO_DIR, "keycloak-operator", "templates", "operator.yaml")) as f:
-        data = yaml.load_all(f, Loader=yaml.Loader)
+        data = list(yaml.load_all(f, Loader=yaml.Loader))
 
     new_release = []
     for y in data:
@@ -100,7 +100,6 @@ def generate_pr(tag_name):
     return True
     
 if __name__ == "__main__":
-
     tags = sorted(missing_tags(), key=lambda x: tuple(int(i) for i in x.split('.')))
     print(f"Running tags {tags}")
     for tag in tags:
