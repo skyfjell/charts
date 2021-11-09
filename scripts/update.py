@@ -98,7 +98,7 @@ def generate_pr(tag_name):
     (maj, min, fix) = data["version"].split(".")
     min = int(min) + 1
     data["version"] = f"{maj}.{min}.{fix}"
-    data["appVersion"] = f'"{tag_name}"'
+    data["appVersion"] = f"{tag_name}"
 
     with open(chartyaml, "w") as f:
         yaml.dump(data, f)
