@@ -20,7 +20,7 @@ def kc_tags():
         .strip()
         .split('\n')
         )    
-    return set([x for x in raws if int(x.split(".")[0]) >= 12 ])# 12.0.0 first tag with kustomize
+    return set([x for x in raws if int(x.split(".")[0]) >= 15 ])# 15.0.0 init version
     
 
 
@@ -74,10 +74,8 @@ def generate_pr(tag_name):
     chartyaml = os.path.join(REPO_DIR, "keycloak-operator", "Chart.yaml")
     with open(chartyaml) as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
-    (maj, min, fix) = data["version"].split(".")
-    min = int(min) + 1
-    data["version"] = f"{maj}.{min}.{fix}"
-    data["appVersion"] = f"{tag_name}"
+    data["version"] = f"{tag_name}"
+    data["appVersion"] = str(tag_name)
 
     with open(chartyaml, "w") as f:
         yaml.dump(data, f)
