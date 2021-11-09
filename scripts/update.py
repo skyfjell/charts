@@ -20,7 +20,7 @@ def kc_tags():
         .strip()
         .split('\n')
         )    
-    return set([x for x in raws if int(x.split(".")[0]) >= 12 ])# 12.0.0 first tag with kustomize
+    return set([x for x in raws if int(x.split(".")[0]) >= 15 ])# 15.0.0 init version
     
 
 
@@ -62,7 +62,21 @@ def write_operator(tag_name):
     out = subprocess.run(["kubectl", "kustomize", f"{REPO}/deploy?ref={tag_name}"], stdout=subprocess.PIPE).stdout.decode()
     with open(os.path.join(REPO_DIR, "keycloak-operator", "templates", "operator.yaml"), "w") as f:
         f.write(out)
+    with open(os.path.join(REPO_DIR, "keycloak-operator", "templates", "operator.yaml")) as f:
+        data = yaml.load_all(f, Loader=yaml.Loader)
 
+    new_release = []
+    for y in data:
+        if y['kind'] == "Namespace":
+            pass
+        else:
+            if y.get('metadata',{}).get("namespace") is not None:
+                newmetada = y['metadata']
+                newmetada.pop('namespace')
+                y['metadata'] = newmetada
+            new_release.append(y)
+    with open(os.path.join(REPO_DIR, "keycloak-operator", "templates", "operator.yaml"), "w") as f:
+        yaml.dump_all(new_release, f)
 
 def generate_pr(tag_name):
     subprocess.run(["git", "checkout", "-b", f"keycloak-operator/{tag_name}"])
@@ -74,10 +88,8 @@ def generate_pr(tag_name):
     chartyaml = os.path.join(REPO_DIR, "keycloak-operator", "Chart.yaml")
     with open(chartyaml) as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
-    (maj, min, fix) = data["version"].split(".")
-    min = int(min) + 1
-    data["version"] = f"{maj}.{min}.{fix}"
-    data["appVersion"] = f"{tag_name}"
+    data["version"] = f"{tag_name}"
+    data["appVersion"] = str(tag_name)
 
     with open(chartyaml, "w") as f:
         yaml.dump(data, f)
