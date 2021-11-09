@@ -69,7 +69,7 @@ def write_operator(tag_name):
     with open(os.path.join(REPO_DIR, "keycloak-operator", "templates", "operator.yaml"), "w") as f:
         f.write(out)
     with open(os.path.join(REPO_DIR, "keycloak-operator", "templates", "operator.yaml")) as f:
-        data = yaml.load_all(f, Loader=yaml.Loader)
+        data = list(yaml.load_all(f, Loader=yaml.Loader))
 
     new_release = []
     for y in data:
