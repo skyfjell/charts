@@ -80,13 +80,20 @@ def write_operator(tag_name):
                 newmetada = y['metadata']
                 newmetada.pop('namespace')
                 y['metadata'] = newmetada
+            if y.get("subjects", []) != []:
+                newsubjects = []
+                for i in y.get("subjects", []):
+                    i.pop("namespace",None)
+                    newsubjects.append(i)
+                y['subjects'] = newsubjects
+
             new_release.append(y)
     with open(os.path.join(REPO_DIR, "keycloak-operator", "templates", "operator.yaml"), "w") as f:
         yaml.dump_all(new_release, f)
 
 def generate_pr(tag_name):
     """Runs git commands that run all the above functions and create a new branch per tag_names"""
-    subprocess.run(["git", "checkout", "-b", f"keycloak-operator/{tag_name}"])
+    # subprocess.run(["git", "checkout", "-b", f"keycloak-operator/{tag_name}"])
     write_operator(tag_name)
     diff = subprocess.run(["git", "status", "-s"], stdout=subprocess.PIPE).stdout.decode()
     if diff == "":
