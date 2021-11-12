@@ -1,5 +1,5 @@
-{{- if .Values.databases.postgresql.enabled  }}
-{{- $tolerations := ( not .Values.databases.postgresql.tolerations | ternary $.Values.defaultTolerations.apps .Values.databases.postgresql.tolerations ) }}
+{{- if .Values.apps.keycloak.enabled  }}
+{{- $tolerations := ( not .Values.apps.keycloak.tolerations | ternary $.Values.defaultTolerations.apps .Values.apps.keycloak.tolerations ) }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
