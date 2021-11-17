@@ -6,7 +6,7 @@ metadata:
   name: system-auth-postgresql
   namespace: flux-system
 spec:
-  releaseName: system-auth-postgresql
+  releaseName: system-auth
   chart:
     spec:
       chart: postgresql
@@ -16,6 +16,9 @@ spec:
   interval: 1h0m0s
   targetNamespace: system-auth
   values:
-    tolerations: {{ toYaml $tolerations | nindent 6 }}
     existingSecret: system-auth-postgresql
+    primary:
+      tolerations: {{ toYaml $tolerations | nindent 8 }}
+    readReplicas:
+      tolerations: {{ toYaml $tolerations | nindent 8 }}
 {{- end }}
