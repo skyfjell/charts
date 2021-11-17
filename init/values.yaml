@@ -13,6 +13,9 @@ apps:
 # Database
 
 databases:
+  auth:
+    enabled: false
+    tolerations: []
   postgresql:
     enabled: false
     tolerations: []
