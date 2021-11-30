@@ -6,7 +6,7 @@ metadata:
   name: system-auth-postgresql
   namespace: flux-system
 spec:
-  releaseName: system-auth-postgresql
+  releaseName: system-auth
   chart:
     spec:
       chart: postgresql
