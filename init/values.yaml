@@ -39,6 +39,8 @@ services:
   vault:
     enabled: false
     tolerations: []
+    csi:
+      enabled: false
 
 # Storage
 
