@@ -20,4 +20,8 @@ spec:
       tolerations: {{ toYaml $tolerations | nindent 8 }}
     server:
       tolerations: {{ toYaml $tolerations | nindent 8 }}
+    csi:
+      enabled: {{ .Values.services.vault.csi.enabled }}
+      pod:
+        tolerations: {{ toYaml $tolerations | nindent 10 }}
 {{- end }}
