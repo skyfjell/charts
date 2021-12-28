@@ -1,5 +1,5 @@
 {{ if .Values.services.istio.enabled }}
-{{- $tolerations := ( not .Values.services.istio.tolerations | ternary .Values.services.tolerations.services .Values.services.istio.tolerations ) }}
+{{- $tolerations := ( not .Values.services.istio.tolerations | ternary .Values.services.tolerations .Values.services.istio.tolerations ) }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:

@@ -1,7 +1,6 @@
 # Apps
 
 apps:
-  tolerations: []
   keycloak:
     enabled: false
     hosts: []
@@ -10,22 +9,23 @@ apps:
     enabled: false
     hosts: []
     tolerations: []
+  tolerations: []
 
 # Database
 
 databases:
-  tolerations: []
   auth:
     enabled: false
     tolerations: []
   postgresql:
     enabled: false
     tolerations: []
+  tolerations: []
+
 
 # Services
 
 services:
-  tolerations: []
   certManager:
     enabled: false
     tolerations: []
@@ -50,17 +50,19 @@ services:
     tolerations: []
     # rest of velero helm chart values
     values: {}
-
+  tolerations: []
+  
 # Storage
 
 storage:
-  tolerations: []
   minio:
     enabled: false
     operator:
       tolerations: []
     console:
       tolerations: []
+  tolerations: []
+
 
 # Config
 domain: ""

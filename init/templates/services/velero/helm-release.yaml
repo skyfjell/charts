@@ -1,5 +1,5 @@
 {{- if .Values.services.velero.enabled  }}
-{{- $tolerations := ( not .Values.services.velero.tolerations | ternary $.Values.services.tolerations.services .Values.services.velero.tolerations ) }}
+{{- $tolerations := ( not .Values.services.velero.tolerations | ternary $.Values.services.tolerations .Values.services.velero.tolerations ) }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
