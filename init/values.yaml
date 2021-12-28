@@ -51,7 +51,7 @@ services:
     # rest of velero helm chart values
     values: {}
   tolerations: []
-  
+
 # Storage
 
 storage:
@@ -63,7 +63,5 @@ storage:
       tolerations: []
   tolerations: []
 
-
 # Config
 domain: ""
-
