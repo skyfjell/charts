@@ -42,6 +42,12 @@ services:
     csi:
       enabled: false
 
+  velero:
+    enabled: false
+    tolerations: []
+    # rest of velero helm chart values
+    values: {}
+
 # Storage
 
 storage:
