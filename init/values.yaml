@@ -1,6 +1,7 @@
 # Apps
 
 apps:
+  tolerations: []
   keycloak:
     enabled: false
     hosts: []
@@ -13,6 +14,7 @@ apps:
 # Database
 
 databases:
+  tolerations: []
   auth:
     enabled: false
     tolerations: []
@@ -23,6 +25,7 @@ databases:
 # Services
 
 services:
+  tolerations: []
   certManager:
     enabled: false
     tolerations: []
@@ -51,6 +54,7 @@ services:
 # Storage
 
 storage:
+  tolerations: []
   minio:
     enabled: false
     operator:
@@ -61,10 +65,3 @@ storage:
 # Config
 domain: ""
 
-# Defaults
-
-defaultTolerations:
-  apps: []
-  database: []
-  services: []
-  storage: []

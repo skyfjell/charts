@@ -1,5 +1,5 @@
 {{- if .Values.services.vault.enabled  }}
-{{- $tolerations := ( not .Values.services.vault.tolerations | ternary $.Values.defaultTolerations.services .Values.services.vault.tolerations ) }}
+{{- $tolerations := ( not .Values.services.vault.tolerations | ternary $.Values.services.tolerations.services .Values.services.vault.tolerations ) }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:

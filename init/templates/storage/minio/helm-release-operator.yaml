@@ -1,6 +1,6 @@
 {{- if .Values.storage.minio.enabled }}
-{{- $operatorTolerations := ( not .Values.storage.minio.operator.tolerations | ternary .Values.defaultTolerations.storage .Values.storage.minio.operator.tolerations ) }}
-{{- $consoleTolerations := ( not .Values.storage.minio.console.tolerations | ternary .Values.defaultTolerations.apps .Values.storage.minio.console.tolerations ) }}
+{{- $operatorTolerations := ( not .Values.storage.minio.operator.tolerations | ternary .Values.storage.tolerations.storage .Values.storage.minio.operator.tolerations ) }}
+{{- $consoleTolerations := ( not .Values.storage.minio.console.tolerations | ternary .Values.storage.tolerations.apps .Values.storage.minio.console.tolerations ) }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
