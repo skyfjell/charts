@@ -1,5 +1,5 @@
 {{- if .Values.services.externalDNS.enabled  }}
-{{- $tolerations := ( not .Values.services.externalDNS.tolerations | ternary .Values.defaultTolerations.services .Values.services.externalDNS.tolerations ) }}
+{{- $tolerations := ( not .Values.services.externalDNS.tolerations | ternary .Values.services.tolerations .Values.services.externalDNS.tolerations ) }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:

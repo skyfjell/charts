@@ -1,5 +1,5 @@
 {{- if .Values.apps.keycloak.enabled  }}
-{{- $tolerations := ( not .Values.apps.keycloak.tolerations | ternary $.Values.defaultTolerations.apps .Values.apps.keycloak.tolerations ) }}
+{{- $tolerations := ( not .Values.apps.keycloak.tolerations | ternary $.Values.apps.tolerations .Values.apps.keycloak.tolerations ) }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:

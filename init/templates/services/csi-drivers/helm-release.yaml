@@ -1,6 +1,6 @@
 ---
 {{- if .Values.services.vault.enabled  }}
-{{- $tolerations := $.Values.defaultTolerations.services }}
+{{- $tolerations := $.Values.services.tolerations }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:

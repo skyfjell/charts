@@ -9,6 +9,7 @@ apps:
     enabled: false
     hosts: []
     tolerations: []
+  tolerations: []
 
 # Database
 
@@ -19,6 +20,7 @@ databases:
   postgresql:
     enabled: false
     tolerations: []
+  tolerations: []
 
 # Services
 
@@ -47,6 +49,7 @@ services:
     tolerations: []
     # rest of velero helm chart values
     values: {}
+  tolerations: []
 
 # Storage
 
@@ -57,14 +60,7 @@ storage:
       tolerations: []
     console:
       tolerations: []
+  tolerations: []
 
 # Config
 domain: ""
-
-# Defaults
-
-defaultTolerations:
-  apps: []
-  database: []
-  services: []
-  storage: []
