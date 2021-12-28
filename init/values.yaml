@@ -22,7 +22,6 @@ databases:
     tolerations: []
   tolerations: []
 
-
 # Services
 
 services:
