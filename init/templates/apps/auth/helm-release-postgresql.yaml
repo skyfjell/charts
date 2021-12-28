@@ -1,5 +1,5 @@
 {{- if .Values.databases.auth.enabled  }}
-{{- $tolerations := ( not .Values.databases.auth.tolerations | ternary $.Values.defaultTolerations.apps .Values.databases.auth.tolerations ) }}
+{{- $tolerations := ( not .Values.databases.auth.tolerations | ternary $.Values.databases.tolerations .Values.databases.auth.tolerations ) }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:

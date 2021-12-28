@@ -1,5 +1,5 @@
 {{- if .Values.services.certManager.enabled  }}
-{{- $tolerations := ( not .Values.services.certManager.tolerations | ternary $.Values.defaultTolerations.services .Values.services.certManager.tolerations ) }}
+{{- $tolerations := ( not .Values.services.certManager.tolerations | ternary $.Values.services.tolerations .Values.services.certManager.tolerations ) }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
