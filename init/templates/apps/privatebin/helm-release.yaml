@@ -16,8 +16,5 @@ spec:
   interval: 1h0m0s
   targetNamespace: privatebin
   values:
-    auth:
-      createAdminUser: false
-    proxyAddressForwarding: true
     tolerations: {{ toYaml $tolerations | nindent 6 }}
 {{- end }}
