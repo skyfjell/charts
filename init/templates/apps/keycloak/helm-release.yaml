@@ -19,6 +19,11 @@ spec:
     auth:
       createAdminUser: false
     proxyAddressForwarding: true
+    postgresql:
+      enabled: false
+    externalDatabase:
+      host: system-auth-postgresql
+
     tolerations: {{ toYaml $tolerations | nindent 6 }}
   postRenderers:
     - kustomize:
@@ -26,10 +31,32 @@ spec:
           - kind: StatefulSet
             apiVersion: apps/v1
             metadata:
-              name: keycloak-postgresql
+              name: keycloak
               namespace: system-auth
             spec:
               template:
-                spec:
-                  tolerations: {{ toYaml $tolerations | nindent 20 }}
+                containers:
+                  - name: keycloak
+                    env:
+                      - name: KEYCLOAK_DATABASE_USER
+                          valueFrom:
+                            secretKeyRef:
+                              name: keycloak-vault-postgresql
+                              key: username
+                      - name: KEYCLOAK_DATABASE_PASSWORD
+                        valueFrom:
+                          secretKeyRef:
+                            name: keycloak-vault-postgresql
+                            key: password
+                    volumeMounts:
+                      - name: keycloak-vault-postgresql
+                        mountPath: /mnt/secrets-store/postgresql
+                        readOnly: true
+                volumes:
+                  - name: keycloak-vault-postgresql
+                    csi:
+                      driver: secrets-store.csi.k8s.io
+                      readOnly: true
+                      volumeAttributes:
+                        secretProviderClass: vault-db-creds
 {{- end }}
