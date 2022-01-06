@@ -39,10 +39,10 @@ spec:
                   - name: keycloak
                     env:
                       - name: KEYCLOAK_DATABASE_USER
-                          valueFrom:
-                            secretKeyRef:
-                              name: keycloak-vault-postgresql
-                              key: username
+                        valueFrom:
+                          secretKeyRef:
+                            name: keycloak-vault-postgresql
+                            key: username
                       - name: KEYCLOAK_DATABASE_PASSWORD
                         valueFrom:
                           secretKeyRef:
