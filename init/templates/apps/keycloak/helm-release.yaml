@@ -59,5 +59,5 @@ spec:
                         driver: secrets-store.csi.k8s.io
                         readOnly: true
                         volumeAttributes:
-                          secretProviderClass: vault-db-creds
+                          secretProviderClass: keycloak-vault-postgresql
 {{- end }}
