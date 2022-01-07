@@ -35,28 +35,29 @@ spec:
               namespace: system-auth
             spec:
               template:
-                containers:
-                  - name: keycloak
-                    env:
-                      - name: KEYCLOAK_DATABASE_USER
-                        valueFrom:
-                          secretKeyRef:
-                            name: keycloak-vault-postgresql
-                            key: username
-                      - name: KEYCLOAK_DATABASE_PASSWORD
-                        valueFrom:
-                          secretKeyRef:
-                            name: keycloak-vault-postgresql
-                            key: password
-                    volumeMounts:
-                      - name: keycloak-vault-postgresql
-                        mountPath: /mnt/secrets-store/postgresql
+                spec:
+                  containers:
+                    - name: keycloak
+                      env:
+                        - name: KEYCLOAK_DATABASE_USER
+                          valueFrom:
+                            secretKeyRef:
+                              name: keycloak-vault-postgresql
+                              key: username
+                        - name: KEYCLOAK_DATABASE_PASSWORD
+                          valueFrom:
+                            secretKeyRef:
+                              name: keycloak-vault-postgresql
+                              key: password
+                      volumeMounts:
+                        - name: keycloak-vault-postgresql
+                          mountPath: /mnt/secrets-store/postgresql
+                          readOnly: true
+                  volumes:
+                    - name: keycloak-vault-postgresql
+                      csi:
+                        driver: secrets-store.csi.k8s.io
                         readOnly: true
-                volumes:
-                  - name: keycloak-vault-postgresql
-                    csi:
-                      driver: secrets-store.csi.k8s.io
-                      readOnly: true
-                      volumeAttributes:
-                        secretProviderClass: vault-db-creds
+                        volumeAttributes:
+                          secretProviderClass: vault-db-creds
 {{- end }}
