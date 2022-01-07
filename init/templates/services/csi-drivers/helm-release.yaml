@@ -1,6 +1,6 @@
 ---
 {{- if .Values.services.vault.csi.enabled  }}
-{{- $tolerations := .Values.services.tolerations }}
+{{- $tolerations := .Values.apps.tolerations }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
