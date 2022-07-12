@@ -1,0 +1,16 @@
+{{ if and .Values.apps.istio.enabled (eq .Values.solution.name "flux") }}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: istiod
+  namespace: flux-system
+spec:
+  releaseName: istiod
+  chart:
+    spec:
+      chart: istiod
+      sourceRef:
+        kind: HelmRepository
+        name: istio
+  interval: {{ .Values.solution.interval }}
+{{ end }}
