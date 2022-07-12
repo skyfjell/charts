@@ -8,7 +8,7 @@ entries:
     name: init
     type: application
     urls:
-    - https://github.com/OmniTeqSource/charts/releases/download/init-0.1.41/init-0.1.41.tgz
+    - https://github.com/skyfjell/charts/releases/download/init-0.1.41/init-0.1.41.tgz
     version: 0.1.41
   istio-install:
   - apiVersion: v2
@@ -18,7 +18,7 @@ entries:
     name: istio-install
     type: application
     urls:
-    - https://github.com/OmniTeqSource/charts/releases/download/istio-install-0.0.16/istio-install-0.0.16.tgz
+    - https://github.com/skyfjell/charts/releases/download/istio-install-0.0.16/istio-install-0.0.16.tgz
     version: 0.0.16
   "null":
   - apiVersion: v2
@@ -29,6 +29,6 @@ entries:
     name: "null"
     type: application
     urls:
-    - https://github.com/OmniTeqSource/charts/releases/download/null-0.0.1/null-0.0.1.tgz
+    - https://github.com/skyfjell/charts/releases/download/null-0.0.1/null-0.0.1.tgz
     version: 0.0.1
 generated: "2022-05-13T23:41:15.61269986Z"
