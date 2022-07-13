@@ -4,6 +4,6 @@ kind: Namespace
 metadata:
   name: vault
   labels: 
-    {{- include "chart.labels" . | nindent 4}}
+    {{- include "chart.labels" . | nindent 4 }}
     istio-injection: enabled
 {{- end }}
