@@ -2,6 +2,15 @@ apiVersion: v1
 entries:
   init:
   - apiVersion: v2
+    created: "2022-07-13T20:27:47.601721995Z"
+    description: Common cluster services and applications.
+    digest: 5e06a940ded2e00808ac81111b2e395793461b5831b677f60c0dfd567190aa8a
+    name: init
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/init-0.1.42/init-0.1.42.tgz
+    version: 0.1.42
+  - apiVersion: v2
     created: "2022-05-13T23:41:15.247387769Z"
     description: Common cluster services and applications.
     digest: c2bd3ff64ae019d23e4da19af74f1aa5365a2f24f03327c0108db3d02e0bd60c
@@ -31,4 +40,48 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/null-0.0.1/null-0.0.1.tgz
     version: 0.0.1
-generated: "2022-05-13T23:41:15.61269986Z"
+  platform-auth:
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2022-07-13T20:27:47.857013518Z"
+    description: Skyfjell Platform Auth Chart
+    digest: f8d62743841a4f839294c1e099e05ba0668d5fa9705f0f3b855c288fab945524
+    name: platform-auth
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-auth-0.0.1/platform-auth-0.0.1.tgz
+    version: 0.0.1
+  platform-factory:
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2022-07-13T20:27:48.11948735Z"
+    description: Skyfjell Platform Factory Chart
+    digest: ea3907c83b13474f3df15a3e207091ea337793df761535306056c71872a0f624
+    name: platform-factory
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-factory-0.0.1/platform-factory-0.0.1.tgz
+    version: 0.0.1
+  platform-system:
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2022-07-13T20:27:48.396697601Z"
+    description: Skyfjell Platform System Chart
+    digest: f9ddad32093daea9c77737a3ea19ea9221c438c49bb9ed688341247787a8b8ca
+    name: platform-system
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-system-0.0.1/platform-system-0.0.1.tgz
+    version: 0.0.1
+  platform-tenant:
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2022-07-13T20:27:48.653261626Z"
+    description: Skyfjell Platform Tenant Chart
+    digest: dc7f23b77a0df3cee93a58d7b83a8019fc8c57d497f02f0fc27319dd1388cf7e
+    name: platform-tenant
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-tenant-0.0.1/platform-tenant-0.0.1.tgz
+    version: 0.0.1
+generated: "2022-07-13T20:27:48.653270526Z"
