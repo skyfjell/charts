@@ -1,0 +1,18 @@
+{{ if and .Values.apps.kyverno.enabled (eq .Values.solution.name "flux") }}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kyverno
+  namespace: kyverno
+spec:
+  releaseName: kyverno
+  chart:
+    spec:
+      chart: kyverno
+      version: {{ .Values.apps.kyverno.version }}
+      sourceRef:
+        kind: HelmRepository
+        name: kyverno
+        namespace: flux-system
+  interval: {{ .Values.solution.interval }}
+{{ end }}
