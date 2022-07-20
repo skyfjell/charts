@@ -22,6 +22,7 @@ apps:
     affinity: {}
 
 # Global Pod Assignment
-nodeSelector: {}
-tolerations: []
-affinity: {}
+global:
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
