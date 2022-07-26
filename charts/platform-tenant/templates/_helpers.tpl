@@ -60,3 +60,27 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/* Set tolerations from global if available and if not set it from app values*/}}  
+{{/* ex: tolerations: {{ include "helper.tolerations" (dict "globalTolerations" .Values.global.tolerations "appTolerations" .Values.apps.<app>.tolerations ) | indent 6 }} */}}
+{{- define "helper.tolerations" }}                                                   
+{{- if .appTolerations }}                                                            
+{{ toYaml .appTolerations | indent 2 }}                                              
+{{- else if .globalTolerations }}                                                    
+{{ toYaml .globalTolerations | indent 2 }}                                           
+{{- else }}                                                                          
+{{- "[]" }}                                                                          
+{{- end }}                                                                           
+{{- end }}                                                                           
+                                                                                     
+{{/* Set nodeSelector from global if available and if not set it from app values*/}} 
+{{/* ex: nodeSelector: {{ include "helper.nodeSelector" (dict "globalNodeSelector" .Values.global.nodeSelector "appNodeSelector" .Values.apps.<app>.nodeSelector) | indent 6 }} */}}
+{{- define "helper.nodeSelector" }}                                                  
+{{- if .appNodeSelector }}                                                           
+{{ toYaml .appNodeSelector | indent 2 }}                                             
+{{- else if .globalNodeSelector }}                                                   
+{{ toYaml .globalNodeSelector | indent 2 }}                                          
+{{- else }}                                                                          
+{{- "{}" }}                                                                          
+{{- end }}                                                                           
+{{- end }}                                                                           
