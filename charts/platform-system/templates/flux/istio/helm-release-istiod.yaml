@@ -6,11 +6,18 @@ metadata:
   namespace: flux-system
 spec:
   releaseName: istiod
+  targetNamespace: {{ .Values.apps.istio.namespace }}
+  dependsOn:
+    - name: istio-base
   chart:
     spec:
       chart: istiod
       sourceRef:
         kind: HelmRepository
         name: istio
+        namespace: flux-system
   interval: {{ .Values.solution.interval }}
+  values:
+    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.istio.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 6 }}
+    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.istio.tolerations "globalTolerations" .Values.global.tolerations ) | indent 6 }}
 {{ end }}
