@@ -32,6 +32,8 @@ apps:
   certManager:
     enabled: true
     namespace: cert-manager
+    version: "1.8.2"
+    webhookSecurePort: 10260
     nodeSelector: {}
     tolerations: []
     affinity: {}
