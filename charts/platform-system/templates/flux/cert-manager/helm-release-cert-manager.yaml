@@ -3,9 +3,10 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: cert-manager
-  namespace: cert-manager
+  namespace: flux-system
 spec:
   releaseName: cert-manager
+  targetNamespace: {{ .Values.apps.certManager.namespace }}
   chart:
     spec:
       chart: cert-manager
