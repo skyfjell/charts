@@ -9,8 +9,23 @@ prefix: ""
 
 apps:
   istio:
-    enabled: true
+    enabled: false
     namespace: istio-system
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+  kyverno:
+    enabled: true
+    version: "2.5.1"
+    namespace: kyverno
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+  kyverno_policies:
+    enabled: true
+    version: "2.5.1"
+    namespace: kyverno
+    podSecurityStandard: "baseline"
     nodeSelector: {}
     tolerations: []
     affinity: {}
