@@ -3,11 +3,12 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: kyverno-policies
-  namespace: kyverno
+  namespace: flux-system
 spec:
   releaseName: kyverno-policies
   dependsOn:
     - name: kyverno
+  targetNamespace: {{ .Values.apps.kyverno.namespace }}
   chart:
     spec:
       chart: kyverno-policies
