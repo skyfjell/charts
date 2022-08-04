@@ -14,6 +14,21 @@ apps:
     nodeSelector: {}
     tolerations: []
     affinity: {}
+  certManager:
+    enabled: true
+    namespace: cert-manager
+    version: "1.8.2"
+    webhookSecurePort: 10260
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+  externalDns:
+    enabled: true
+    namespace: external-dns 
+    version: "6.7.2"
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
   kyverno:
     enabled: true
     version: "2.5.1"
@@ -26,14 +41,6 @@ apps:
     version: "2.5.1"
     namespace: kyverno
     podSecurityStandard: "baseline"
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
-  certManager:
-    enabled: true
-    namespace: cert-manager
-    version: "1.8.2"
-    webhookSecurePort: 10260
     nodeSelector: {}
     tolerations: []
     affinity: {}
