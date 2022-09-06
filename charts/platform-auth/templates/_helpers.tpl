@@ -84,3 +84,71 @@ Create the name of the service account to use
 {{- "{}" }}                                                                          
 {{- end }}                                                                           
 {{- end }}                                                                           
+
+
+{{- define "keycloak.nodeSelector" }}
+{{- $nodeSelector := merge (default dict .appNodeSelector ) (default dict .globalNodeSelector ) (default dict .Values.keycloak.release.values.nodeSelector) (default dict .Values.nodeSelector)  }}
+{{- toYaml (default dict $nodeSelector) | nindent 6 }}
+{{- end }}
+
+{{- define "keycloak.tolerations" }}
+{{- $tolerations := concat (default list .appTolerations ) (default list .globalTolerations ) (default list .Values.keycloak.release.values.tolerations) (default list .Values.tolerations)  }}
+{{- toYaml (default list $tolerations | uniq) |  nindent 6 }}
+{{- end }}
+
+
+{{- define "keycloak.dnsQuery" }}
+name: JAVA_OPTS_APPEND
+value: >-
+  -XX:+UseContainerSupport
+  -XX:MaxRAMPercentage=50.0
+  -Djava.awt.headless=true
+  -Djgroups.dns.query=keycloak-headless
+{{- end }}
+
+{{- define "keycloak.adminUser" }}
+{{- if or .Values.keycloak.admin.username .Values.keycloak.admin.usernameSecretRef }}
+name: KEYCLOAK_ADMIN
+{{- if .Values.keycloak.admin.username }}
+value: {{ .Values.keycloak.admin.username | quote}}
+{{- else if .Values.keycloak.admin.usernameSecretRef }}
+valueFrom:
+  secretKeyRef:
+    {{- with .Values.keycloak.admin.usernameSecretRef }}
+    {{ toYaml . | nindent 8}}
+    {{- end}}
+  {{- end }}
+{{- end }}
+{{- end }}
+
+{{- define "keycloak.adminPassword" }}
+{{- if or .Values.keycloak.admin.password .Values.keycloak.admin.passwordSecretRef }}
+name: KEYCLOAK_ADMIN_PASSWORD
+{{- if .Values.keycloak.admin.password }}
+value: {{ .Values.keycloak.admin.password | quote}}
+{{- else if .Values.keycloak.admin.passwordSecretRef }}
+valueFrom:
+  secretKeyRef:
+    {{- with .Values.keycloak.admin.passwordSecretRef }}
+    {{ toYaml . | nindent 8}}
+    {{- end}}
+{{- end }}
+{{- end }}
+{{- end }}
+
+
+{{- define "keycloak.extraEnv" }}
+{{- $extraEnv := concat (list (include "keycloak.dnsQuery" . | fromYaml))  (default list .Values.keycloak.release.values.extraEnv ) }}
+{{- with (include "keycloak.adminUser" . | fromYaml ) }}
+{{- $extraEnv = concat (list .) $extraEnv}}
+{{- end }}
+{{- with (include "keycloak.adminPassword" . | fromYaml ) }}
+{{- $extraEnv = concat (list .) $extraEnv}}
+{{- end }}
+{{- toYaml (default list $extraEnv | uniq) | nindent 6 }}
+{{- end }}
+
+{{- define "keycloak.Values" }}
+{{- $values := omit .Values.keycloak.release.values "nodeSelector" "tolerations" "extraEnv" }}
+{{- toYaml $values | nindent 4 }}
+{{- end }}

@@ -1,0 +1,13 @@
+{{- if and .Values.keycloak.enabled .Values.keycloak.cert.enabled }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Release.Name }}-keycloak
+spec:
+  secretName: {{ .Release.Name }}-keycloak-tls
+  dnsNames: {{ .Values.keycloak.cert.dnsNames | toYaml | nindent 4}}
+  issuerRef:
+    name: {{ default .Values.clusterIssuerName .Values.keycloak.cert.clusterIssuerName | quote }}
+    kind: ClusterIssuer
+    group: cert-manager.io
+{{- end }}

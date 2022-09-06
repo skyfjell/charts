@@ -1,0 +1,24 @@
+{{- if and .Values.keycloak.enabled  }}
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: keycloak
+  namespace: {{ .Values.fluxNamespace }}
+spec:
+  targetNamespace: {{ .Release.Namespace  }}
+  chart:
+    spec:
+      chart: {{ .Values.keycloak.release.chart.name }}
+      version: {{ .Values.keycloak.release.chart.version }}
+      sourceRef:
+        kind: HelmRepository
+        name: {{ .Release.Name }}-codecentric
+        namespace:  {{ .Values.fluxNamespace }}
+  interval: 1h0m0s
+  values:
+    nodeSelector: {{- include "keycloak.nodeSelector" . }}
+    tolerations: {{- include "keycloak.tolerations" . }}
+    extraEnv: {{- include "keycloak.extraEnv" .  }}
+    {{- include "keycloak.Values" . }}
+{{- end }}
