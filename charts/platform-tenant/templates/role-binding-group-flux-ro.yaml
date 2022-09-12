@@ -1,0 +1,15 @@
+{{- if .Values.rbac.enable -}}
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: {{ .Values.flux.namespace }}
+  name: {{ printf "%s-%s" .Release.Name "flux-ro" | trunc 63 | trimSuffix "-" | quote}}
+subjects:
+  - kind: Group
+    name: {{ include "helper.deployerRoleName" .}}
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ printf "%s-%s" .Release.Name "flux-ro" | trunc 63 | trimSuffix "-" | quote}}
+{{- end -}}
