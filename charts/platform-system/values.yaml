@@ -60,6 +60,15 @@ apps:
     nodeSelector: {}
     tolerations: []
     affinity: {}
+  minioTenant:
+    enabled: false
+    version: "4.4.27"
+    namespace: minio-tenant
+    annotations:  {}
+    serviceAccountAnnotations: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
 
 # Global Pod Assignment
 global:
