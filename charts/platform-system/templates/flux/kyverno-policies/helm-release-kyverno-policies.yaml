@@ -19,9 +19,10 @@ spec:
         namespace: flux-system
   interval: {{ .Values.solution.interval }}
   values:
+    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.kyverno_policies.annotations) }}
+    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.kyverno_policies.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) }}
     podSecurityStandard: {{ .Values.apps.kyverno_policies.podSecurityStandard }}
-    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.kyverno.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 6 }}
-    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.kyverno.tolerations "globalTolerations" .Values.global.tolerations ) | indent 6 }}
-
-
+    serviceAccount:
+      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.kyverno_policies.serviceAccountAnnotations) }}
+    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.kyverno_policies.tolerations "globalTolerations" .Values.global.tolerations ) }}
 {{ end }}

@@ -85,4 +85,23 @@ Create the name of the service account to use
 {{- end }}                                                                           
 {{- end }}                                                                           
 
+{{/* Set annotations in subcharts from main chart */}}
+{{/* ex: annotations: {{ include "helper.appAnnotations" ("appAnnotations" .Values.apps.<app>.appAnnotations) | indent 6 }} */}}
+{{- define "helper.appAnnotations" }}
+{{- if .appAnnotations }}
+{{ toYaml .appAnnotations | indent 6 }}
+{{- else }}
+{{- "{}" }}
+{{- end }}
+{{- end }}
+
+{{/* Set annotations in subcharts from main chart */}}
+{{/* ex: annotations: {{ include "helper.saAnnotations" ("saAnnotations" .Values.apps.<app>.serviceAccountAnnotations) }} */}}
+{{- define "helper.saAnnotations" }}
+{{- if .saAnnotations }}
+{{ toYaml .saAnnotations | indent 8 }}
+{{- else }}
+{{- "{}" }}
+{{- end }}
+{{- end }}
 
