@@ -105,3 +105,13 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
+{{/* Pass the storage class name through from main chart */}}
+{{/* ex: key: {{ include "helper.storageClassName" ("scname" .Values.apps.<app>.storageClassName) }} */}}
+{{- define "helper.storageClassName" }}
+{{- if .scname }}
+{{- toYaml .scname -}}
+{{- else }}
+{{- "default" }}
+{{- end }}
+{{- end }}
+

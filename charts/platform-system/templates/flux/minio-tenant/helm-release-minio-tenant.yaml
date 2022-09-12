@@ -19,7 +19,15 @@ spec:
   values:
     annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.minioTenant.annotations) }}
     nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.minioTenant.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) }}
-    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.minioTenant.tolerations "globalTolerations" .Values.global.tolerations ) }}
     serviceAccount:
       annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.minioTenant.serviceAccountAnnotations) }}
+    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.minioTenant.tolerations "globalTolerations" .Values.global.tolerations ) }}
+    tenant:
+      pools:
+        storageClassName: {{ include "helper.storageClassName" (dict "scname" .Values.apps.minioTenant.storageClassName) }}
+    prometheus:
+      storageClassName: {{ include "helper.storageClassName" (dict "scname" .Values.apps.minioTenant.storageClassName) }}
+    log:
+      db:
+        storageClassName: {{ include "helper.storageClassName" (dict "scname" .Values.apps.minioTenant.storageClassName) }}
 {{ end }}
