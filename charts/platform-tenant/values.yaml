@@ -53,3 +53,19 @@ rbac:
     # defaults to tenantDeploymentRole.name
     # group to map external objects to like IAM
     groupName: ""
+
+# using kyverno policies
+# to add labels/annotations on objects tenant deploys
+kyverno:
+  enable: false
+  name: ""
+  nodeSelector: {}
+  tolerations: []
+  labels: {}
+  annotations: {}
+
+# use prometheus operator for pod monitors
+prometheus:
+  enable: false
+  # namespace where prometheus resides
+  namespace: monitoring
