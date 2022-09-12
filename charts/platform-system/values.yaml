@@ -61,7 +61,7 @@ apps:
     tolerations: []
     affinity: {}
   minioTenant:
-    enabled: true
+    enabled: false
     version: "4.4.27"
     namespace: minio-tenant
     storageClassName: gp2 
