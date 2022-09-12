@@ -1,0 +1,25 @@
+{{ if and .Values.apps.minioOperator.enabled (eq .Values.solution.name "flux") }}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: minio-operator
+  namespace: flux-system
+spec:
+  releaseName: minio-operator
+  targetNamespace: {{ .Values.apps.minioOperator.namespace }}
+  chart:
+    spec:
+      chart: operator
+      version: {{ .Values.apps.minioOperator.version }}
+      sourceRef:
+        kind: HelmRepository
+        name: minio
+        namespace: flux-system
+  interval: {{ .Values.solution.interval }}
+  values:
+    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.minioOperator.annotations) }}
+    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.minioOperator.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 6 }}
+    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.minioOperator.tolerations "globalTolerations" .Values.global.tolerations ) | indent 6 }}
+    serviceAccount:
+      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.minioOperator.serviceAccountAnnotations) }}
+{{ end }}
