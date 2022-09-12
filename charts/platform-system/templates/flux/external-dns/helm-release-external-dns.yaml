@@ -5,7 +5,7 @@ metadata:
   name: external-dns
   namespace: flux-system
 spec:
-  releaseName: external-dens
+  releaseName: external-dns
   targetNamespace: {{ .Values.apps.externalDns.namespace }}
   chart:
     spec:
@@ -17,8 +17,9 @@ spec:
         namespace: flux-system
   interval: {{ .Values.solution.interval }}
   values:
-    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.externalDns.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 6 }}
-    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.externalDns.tolerations "globalTolerations" .Values.global.tolerations ) | indent 6 }}
+    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.externalDns.annotations) }}
+    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.externalDns.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) }}
+    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.externalDns.tolerations "globalTolerations" .Values.global.tolerations ) }}
     global:
       enabled: false
       name: external-dns
@@ -28,11 +29,13 @@ spec:
       boostrapExpect: 1
     podSecurityContext:
       fsGroup: 65534 # For ExternalDNS to be able to read Kubernetes and AWS token files
+    serviceAccount:
+      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.externalDns.serviceAccountAnnotations) }}
     sources:
       - service
       - ingress
-      # - istio-gateway
-      # - istio-virtualservice
+      - istio-gateway
+      - istio-virtualservice
 {{ end }}
 
 

@@ -9,8 +9,10 @@ prefix: ""
 
 apps:
   istio:
-    enabled: false
+    enabled: true 
     namespace: istio-system
+    annotations: {}
+    serviceAccountAnnotations: {}
     nodeSelector: {}
     tolerations: []
     affinity: {}
@@ -19,6 +21,8 @@ apps:
     namespace: cert-manager
     version: "1.8.2"
     webhookSecurePort: 10260
+    annotations: {}
+    serviceAccountAnnotations: {}
     nodeSelector: {}
     tolerations: []
     affinity: {}
@@ -26,21 +30,27 @@ apps:
     enabled: true
     namespace: external-dns 
     version: "6.7.2"
+    annotations: {}
+    serviceAccountAnnotations: {}
     nodeSelector: {}
     tolerations: []
     affinity: {}
   kyverno:
-    enabled: true
+    enabled: true 
     version: "2.5.1"
     namespace: kyverno
+    annotations: {}
+    serviceAccountAnnotations: {}
     nodeSelector: {}
     tolerations: []
     affinity: {}
   kyverno_policies:
-    enabled: true
+    enabled: true 
     version: "2.5.1"
     namespace: kyverno
     podSecurityStandard: "baseline"
+    annotations:  {}
+    serviceAccountAnnotations: {}
     nodeSelector: {}
     tolerations: []
     affinity: {}
