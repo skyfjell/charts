@@ -1,15 +1,7 @@
-<<<<<<< Updated upstream:charts/platform-system/templates/apps/external-dns/namespace.yaml
-{{ if .Values.apps.externalDns.enabled }}
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: {{ .Values.apps.externalDns.namespace }}
-=======
 {{ if .Values.apps.minioOperator.enabled }}
 apiVersion: v1
 kind: Namespace
 metadata:
   name: {{ .Values.apps.minioOperator.namespace }}
->>>>>>> Stashed changes:charts/platform-system/templates/apps/minio/namespace.yaml
   labels: {{- include "platform-system.labels" . | nindent 4 }}
 {{ end }}
