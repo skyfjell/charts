@@ -32,6 +32,7 @@ apps:
   istio:
     enabled: true 
     namespace: istio-system
+    strictMTLS: true
     annotations: {}
     serviceAccountAnnotations: {}
     nodeSelector: {}
@@ -57,6 +58,7 @@ apps:
     serviceAccountAnnotations: {}
   minioOperator:
     enabled: true
+    istioEnabled: false
     version: "4.4.27"
     namespace: minio-operator
     annotations:  {}
@@ -66,6 +68,7 @@ apps:
     affinity: {}
   minioTenant:
     enabled: false
+    istioEnabled: false
     version: "4.4.27"
     namespace: minio-tenant
     storageClassName: gp2 
