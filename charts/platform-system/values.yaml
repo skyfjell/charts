@@ -10,6 +10,7 @@ prefix: ""
 apps:
   certManager:
     enabled: true
+    istioEnabled: false
     namespace: cert-manager
     version: "1.8.2"
     webhookSecurePort: 10260
@@ -20,6 +21,7 @@ apps:
     affinity: {}
   externalDns:
     enabled: true
+    istioEnabled: false
     namespace: external-dns 
     version: "6.7.2"
     annotations: {}
@@ -36,7 +38,8 @@ apps:
     tolerations: []
     affinity: {}
   kyverno:
-    enabled: true 
+    enabled: true
+    istioEnabled: false
     version: "2.5.1"
     namespace: kyverno
     annotations: {}
@@ -46,6 +49,7 @@ apps:
     affinity: {}
   kyverno_policies:
     enabled: true 
+    istioEnabled: false
     version: "2.5.1"
     namespace: kyverno
     podSecurityStandard: "baseline"
@@ -73,6 +77,7 @@ apps:
 
 # Global Pod Assignment
 global:
+  affinity: {}
+  istioEnabled: true
   nodeSelector: {}
   tolerations: []
-  affinity: {}
