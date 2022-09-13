@@ -84,3 +84,20 @@ Create the name of the service account to use
 {{- "{}" }}                                                                          
 {{- end }}                                                                           
 {{- end }}                                                                           
+
+# defaults for kustomization spec
+{{- define "helper.kustomizationSpec" -}}
+interval: 1m0s
+path: /
+prune: true
+validation: client
+{{- end }}                                                                           
+
+
+{{- define "helper.clusterRoleName" -}}
+{{ (default (printf "%s-%s" .Release.Name "tenant") .Values.rbac.tenantClusterRole.name) | trunc 63 | trimSuffix "-" | quote}}
+{{- end }}
+
+{{- define "helper.deployerRoleName" -}}
+{{ (default (printf "%s-%s" .Release.Name "deployer") .Values.rbac.tenantDeploymentRole.name) | trunc 63 | trimSuffix "-" | quote}}
+{{- end }}  
