@@ -1,0 +1,7 @@
+{{ if .Values.apps.minioOperator.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.apps.minioOperator.namespace }}
+  labels: {{- include "platform-system.labels" . | nindent 4 }}
+{{ end }}

@@ -8,14 +8,6 @@ solution:
 prefix: ""
 
 apps:
-  istio:
-    enabled: true 
-    namespace: istio-system
-    annotations: {}
-    serviceAccountAnnotations: {}
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
   certManager:
     enabled: true
     namespace: cert-manager
@@ -35,6 +27,14 @@ apps:
     nodeSelector: {}
     tolerations: []
     affinity: {}
+  istio:
+    enabled: true 
+    namespace: istio-system
+    annotations: {}
+    serviceAccountAnnotations: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
   kyverno:
     enabled: true 
     version: "2.5.1"
@@ -49,6 +49,22 @@ apps:
     version: "2.5.1"
     namespace: kyverno
     podSecurityStandard: "baseline"
+    annotations:  {}
+    serviceAccountAnnotations: {}
+  minioOperator:
+    enabled: true
+    version: "4.4.27"
+    namespace: minio-operator
+    annotations:  {}
+    serviceAccountAnnotations: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+  minioTenant:
+    enabled: false
+    version: "4.4.27"
+    namespace: minio-tenant
+    storageClassName: gp2 
     annotations:  {}
     serviceAccountAnnotations: {}
     nodeSelector: {}
