@@ -6,6 +6,10 @@ metadata:
   namespace: flux-system
 spec:
   releaseName: cert-manager
+  {{- if .Values.apps.istio.enabled }}
+  dependsOn:
+    - name: istio-base
+  {{- end }}
   targetNamespace: {{ .Values.apps.certManager.namespace }}
   chart:
     spec:

@@ -9,7 +9,7 @@ prefix: ""
 
 apps:
   certManager:
-    enabled: false
+    enabled: true
     istioEnabled: true
     namespace: cert-manager
     version: "1.8.2"
@@ -30,31 +30,11 @@ apps:
     tolerations: []
     affinity: {}
   istio:
-    enabled: false
+    enabled: true
     istioEnabled: true
     version: "1.15.0"
     namespace: istio-system
-    strictMTLS: false
-    annotations: {}
-    serviceAccountAnnotations: {}
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
-  istioEgress:
-    enabled: false
-    istioEnabled: true
-    version: "1.15.0"
-    namespace: istio-egress
-    annotations: {}
-    serviceAccountAnnotations: {}
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
-  istioGateway:
-    enabled: false
-    istioEnabled: false
-    version: "1.15.0"
-    namespace: istio-gateway
+    strictMTLS: true
     annotations: {}
     serviceAccountAnnotations: {}
     nodeSelector: {}
