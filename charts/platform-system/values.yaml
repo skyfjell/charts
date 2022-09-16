@@ -10,6 +10,7 @@ prefix: ""
 apps:
   certManager:
     enabled: true
+    istioEnabled: true
     namespace: cert-manager
     version: "1.8.2"
     webhookSecurePort: 10260
@@ -19,7 +20,8 @@ apps:
     tolerations: []
     affinity: {}
   externalDns:
-    enabled: true
+    enabled: false
+    istioEnabled: true
     namespace: external-dns 
     version: "6.7.2"
     annotations: {}
@@ -28,15 +30,19 @@ apps:
     tolerations: []
     affinity: {}
   istio:
-    enabled: true 
+    enabled: true
+    istioEnabled: true
+    version: "1.15.0"
     namespace: istio-system
+    strictMTLS: true
     annotations: {}
     serviceAccountAnnotations: {}
     nodeSelector: {}
     tolerations: []
     affinity: {}
   kyverno:
-    enabled: true 
+    enabled: false
+    istioEnabled: true
     version: "2.5.1"
     namespace: kyverno
     annotations: {}
@@ -45,14 +51,16 @@ apps:
     tolerations: []
     affinity: {}
   kyverno_policies:
-    enabled: true 
+    enabled: false
+    istioEnabled: true
     version: "2.5.1"
     namespace: kyverno
     podSecurityStandard: "baseline"
     annotations:  {}
     serviceAccountAnnotations: {}
   minioOperator:
-    enabled: true
+    enabled: false
+    istioEnabled: true
     version: "4.4.27"
     namespace: minio-operator
     annotations:  {}
@@ -62,6 +70,7 @@ apps:
     affinity: {}
   minioTenant:
     enabled: false
+    istioEnabled: false
     version: "4.4.27"
     namespace: minio-tenant
     storageClassName: gp2 
@@ -73,6 +82,7 @@ apps:
 
 # Global Pod Assignment
 global:
+  affinity: {}
+  istioEnabled: false
   nodeSelector: {}
   tolerations: []
-  affinity: {}
