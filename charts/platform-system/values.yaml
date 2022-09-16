@@ -34,7 +34,7 @@ apps:
     istioEnabled: true
     version: "1.15.0"
     namespace: istio-system
-    strictMTLS: true
+    mTLSMode: "PERMISSIVE" # Options here are UNSET, DISABLE, PERMISSIVE, and STRICT
     annotations: {}
     serviceAccountAnnotations: {}
     nodeSelector: {}
