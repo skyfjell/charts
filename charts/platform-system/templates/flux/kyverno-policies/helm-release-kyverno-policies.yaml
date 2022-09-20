@@ -1,4 +1,4 @@
-{{ if and (and .Values.apps.kyverno_policies.enabled .Values.apps.kyverno.enabled) (eq .Values.solution.name "flux") }}
+{{ if and (and .Values.apps.kyvernoPolicies.enabled .Values.apps.kyverno.enabled) (eq .Values.solution.name "flux") }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -12,17 +12,17 @@ spec:
   chart:
     spec:
       chart: kyverno-policies
-      version: {{ .Values.apps.kyverno_policies.version }}
+      version: {{ .Values.apps.kyvernoPolicies.version }}
       sourceRef:
         kind: HelmRepository
         name: kyverno
         namespace: flux-system
   interval: {{ .Values.solution.interval }}
   values:
-    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.kyverno_policies.annotations) }}
-    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.kyverno_policies.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) }}
-    podSecurityStandard: {{ .Values.apps.kyverno_policies.podSecurityStandard }}
+    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.kyvernoPolicies.annotations) }}
+    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.kyvernoPolicies.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) }}
+    podSecurityStandard: {{ .Values.apps.kyvernoPolicies.podSecurityStandard }}
     serviceAccount:
-      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.kyverno_policies.serviceAccountAnnotations) }}
-    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.kyverno_policies.tolerations "globalTolerations" .Values.global.tolerations ) }}
+      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.kyvernoPolicies.serviceAccountAnnotations) }}
+    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.kyvernoPolicies.tolerations "globalTolerations" .Values.global.tolerations ) }}
 {{ end }}

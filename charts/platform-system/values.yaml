@@ -22,7 +22,7 @@ apps:
   externalDns:
     enabled: false
     istioEnabled: true
-    namespace: external-dns 
+    namespace: external-dns
     version: "6.7.2"
     annotations: {}
     serviceAccountAnnotations: {}
@@ -41,7 +41,7 @@ apps:
     tolerations: []
     affinity: {}
   kyverno:
-    enabled: false
+    enabled: true
     istioEnabled: true
     version: "2.5.1"
     namespace: kyverno
@@ -50,20 +50,20 @@ apps:
     nodeSelector: {}
     tolerations: []
     affinity: {}
-  kyverno_policies:
-    enabled: false
+  kyvernoPolicies:
+    enabled: true
     istioEnabled: true
     version: "2.5.1"
     namespace: kyverno
     podSecurityStandard: "baseline"
-    annotations:  {}
+    annotations: {}
     serviceAccountAnnotations: {}
   minioOperator:
     enabled: false
     istioEnabled: true
     version: "4.4.27"
     namespace: minio-operator
-    annotations:  {}
+    annotations: {}
     serviceAccountAnnotations: {}
     nodeSelector: {}
     tolerations: []
@@ -73,8 +73,8 @@ apps:
     istioEnabled: false
     version: "4.4.27"
     namespace: minio-tenant
-    storageClassName: gp2 
-    annotations:  {}
+    storageClassName: gp2
+    annotations: {}
     serviceAccountAnnotations: {}
     nodeSelector: {}
     tolerations: []
