@@ -62,34 +62,34 @@ Create the name of the service account to use
 {{- end }}
 
 {{/* Set tolerations from global if available and if not set it from app values*/}}  
-{{/* ex: tolerations: {{ include "helper.tolerations" (dict "globalTolerations" .Values.global.tolerations "appTolerations" .Values.apps.<app>.tolerations ) | indent 6 }} */}}
+{{/* ex: tolerations: {{ include "helper.tolerations" (dict "globalTolerations" .Values.global.tolerations "appTolerations" .Values.apps.<app>.tolerations ) }} */}}
 {{- define "helper.tolerations" }}                                                   
 {{- if .appTolerations }}                                                            
-{{ toYaml .appTolerations | indent 2 }}                                              
+{{ toYaml .appTolerations }}                                              
 {{- else if .globalTolerations }}                                                    
-{{ toYaml .globalTolerations | indent 2 }}                                           
+{{ toYaml .globalTolerations }}                                           
 {{- else }}                                                                          
 {{- "[]" }}                                                                          
 {{- end }}                                                                           
 {{- end }}                                                                           
                                                                                      
 {{/* Set nodeSelector from global if available and if not set it from app values*/}} 
-{{/* ex: nodeSelector: {{ include "helper.nodeSelector" (dict "globalNodeSelector" .Values.global.nodeSelector "appNodeSelector" .Values.apps.<app>.nodeSelector) | indent 6 }} */}}
+{{/* ex: nodeSelector: {{ include "helper.nodeSelector" (dict "globalNodeSelector" .Values.global.nodeSelector "appNodeSelector" .Values.apps.<app>.nodeSelector) }} */}}
 {{- define "helper.nodeSelector" }}                                                  
 {{- if .appNodeSelector }}                                                           
-{{ toYaml .appNodeSelector | indent 2 }}                                             
+{{ toYaml .appNodeSelector }}                                             
 {{- else if .globalNodeSelector }}                                                   
-{{ toYaml .globalNodeSelector | indent 2 }}                                          
+{{ toYaml .globalNodeSelector }}                                          
 {{- else }}                                                                          
 {{- "{}" }}                                                                          
 {{- end }}                                                                           
 {{- end }}                                                                           
 
 {{/* Set annotations in subcharts from main chart */}}
-{{/* ex: annotations: {{ include "helper.appAnnotations" ("appAnnotations" .Values.apps.<app>.appAnnotations) | indent 6 }} */}}
+{{/* ex: annotations: {{ include "helper.appAnnotations" ("appAnnotations" .Values.apps.<app>.appAnnotations) }} */}}
 {{- define "helper.appAnnotations" }}
 {{- if .appAnnotations }}
-{{ toYaml .appAnnotations | indent 6 }}
+{{ toYaml .appAnnotations }}
 {{- else }}
 {{- "{}" }}
 {{- end }}
@@ -99,7 +99,7 @@ Create the name of the service account to use
 {{/* ex: annotations: {{ include "helper.saAnnotations" ("saAnnotations" .Values.apps.<app>.serviceAccountAnnotations) }} */}}
 {{- define "helper.saAnnotations" }}
 {{- if .saAnnotations }}
-{{ toYaml .saAnnotations | indent 8 }}
+{{ toYaml .saAnnotations }}
 {{- else }}
 {{- "{}" }}
 {{- end }}
