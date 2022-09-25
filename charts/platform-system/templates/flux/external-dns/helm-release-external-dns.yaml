@@ -17,9 +17,9 @@ spec:
         namespace: flux-system
   interval: {{ .Values.solution.interval }}
   values:
-    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.externalDns.annotations) }}
-    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.externalDns.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) }}
-    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.externalDns.tolerations "globalTolerations" .Values.global.tolerations ) }}
+    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.externalDns.annotations) | indent 6 }}
+    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.externalDns.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 6 }}
+    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.externalDns.tolerations "globalTolerations" .Values.global.tolerations ) | indent 6 }}
     global:
       enabled: false
       name: external-dns
@@ -30,7 +30,7 @@ spec:
     podSecurityContext:
       fsGroup: 65534 # For ExternalDNS to be able to read Kubernetes and AWS token files
     serviceAccount:
-      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.externalDns.serviceAccountAnnotations) }}
+      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.externalDns.serviceAccountAnnotations) | indent 8 }}
     sources:
       - service
       - ingress
