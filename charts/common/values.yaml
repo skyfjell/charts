@@ -1,0 +1,8 @@
+kubeCheck:
+  enabled: false
+  minVersion: 1.22
+  maxVersion: null
+
+crdCheck:
+  # ensure flux CRDs are present in target cluster
+  flux: false
