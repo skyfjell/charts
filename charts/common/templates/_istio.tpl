@@ -8,38 +8,38 @@
 {{ end }}
 
 {{/*
-  Checks generally if API version for flux is installed. Currently only checking required CRDs.
+  Checks generally if API version for flux is installed. Currently only checking requires CRDs.
 */}}
-{{ define "required.istio.gateway" }}
-  {{ include "required.flux.custom" ( list "networking.istio.io" "Gateway" $ ) }}
+{{ define "requires.api.istio.gateway" }}
+  {{ include "requires.api.istio.custom" ( list "networking.istio.io" "Gateway" $ ) }}
 {{ end }}
 
-{{ define "required.istio.sidecar" }}
-  {{ include "required.flux.custom" ( list "networking.istio.io" "Sidecar" $ ) }}
+{{ define "requires.api.istio.sidecar" }}
+  {{ include "requires.api.istio.custom" ( list "networking.istio.io" "Sidecar" $ ) }}
 {{ end }}
 
-{{ define "required.istio.vs" }}
-  {{ include "required.flux.custom" ( list "networking.istio.io" "VirtualService" $ ) }}
+{{ define "requires.api.istio.vs" }}
+  {{ include "requires.api.istio.custom" ( list "networking.istio.io" "VirtualService" $ ) }}
 {{ end }}
 
-{{ define "required.istio.neworking" }}
-  {{ include "required.istio.vs" . }}
-  {{ include "required.istio.sidecar" . }}
-  {{ include "required.istio.gateway" . }}
+{{ define "requires.api.istio.neworking" }}
+  {{ include "requires.api.istio.vs" . }}
+  {{ include "requires.api.istio.sidecar" . }}
+  {{ include "requires.api.istio.gateway" . }}
 {{ end }}
 
-{{ define "required.istio.all" }}
-  {{ include "required.istio.neworking" . }}
+{{ define "requires.api.istio.all" }}
+  {{ include "requires.api.istio.neworking" . }}
 {{ end }}
 
 
 {{/*
   Checks specifically for an istio api version and resource.
 
-  Use like `{{ include "required.istio.custom" ( list "networking.istio.io" "VirtualService" $) }}`
+  Use like `{{ include "requires.api.istio.custom" ( list "networking.istio.io" "VirtualService" $) }}`
 */}}
-{{- define "required.istio.custom" }}
-   {{- include "required.common.custom" ( prepend . "errorMessage.istio" ) -}}
+{{- define "requires.api.istio.custom" }}
+   {{- include "requires.api" ( prepend . "errorMessage.istio" ) -}}
 {{- end -}}
  
  

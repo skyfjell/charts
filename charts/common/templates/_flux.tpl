@@ -8,35 +8,35 @@
 {{end}}
 
 {{/*
-  Checks generally if API version for flux is installed. Currently only checking required CRDs.
+  Checks generally if API version for flux is installed. Currently only checking requires CRDs.
 */}}
-{{ define "required.flux.helmRelease" }}
-  {{ include "required.flux.custom" ( list "helm.toolkit.fluxcd.io" "HelmRelease" $ ) }}
+{{ define "requires.api.flux.helmRelease" }}
+  {{ include "requires.api.flux.custom" ( list "helm.toolkit.fluxcd.io" "HelmRelease" $ ) }}
 {{end}}
 
-{{ define "required.flux.kustomize" }}
-  {{ include "required.flux.custom" ( list "kustomize.toolkit.fluxcd.io" "Kustomization" $ ) }}
+{{ define "requires.api.flux.kustomize" }}
+  {{ include "requires.api.flux.custom" ( list "kustomize.toolkit.fluxcd.io" "Kustomization" $ ) }}
 {{end}}
 
-{{ define "required.flux.source" }}
-  {{ include "required.flux.custom" ( list "source.toolkit.fluxcd.io" "HelmRepository" $ ) }}
-  {{ include "required.flux.custom" ( list "source.toolkit.fluxcd.io" "GitRepository" $ ) }}
+{{ define "requires.api.flux.source" }}
+  {{ include "requires.api.flux.custom" ( list "source.toolkit.fluxcd.io" "HelmRepository" $ ) }}
+  {{ include "requires.api.flux.custom" ( list "source.toolkit.fluxcd.io" "GitRepository" $ ) }}
 {{end}}
 
-{{ define "required.flux.all" }}
-  {{ include "required.flux.helmRelease" . }}
-  {{ include "required.flux.kustomize" . }}
-  {{ include "required.flux.source" . }}
+{{ define "requires.api.flux.all" }}
+  {{ include "requires.api.flux.helmRelease" . }}
+  {{ include "requires.api.flux.kustomize" . }}
+  {{ include "requires.api.flux.source" . }}
 {{ end }}
 
 
 {{/*
   Checks specifically for a flux api version and resource.
 
-  Use like `{{ include "required.flux.custom" ( list "helm.toolkit.fluxcd.io" "HelmRelease" $) }}`
+  Use like `{{ include "requires.api.flux.custom" ( list "helm.toolkit.fluxcd.io" "HelmRelease" $) }}`
 */}}
-{{- define "required.flux.custom" }}
-   {{- include "required.common.custom" ( prepend . "errorMessage.flux" ) -}}
+{{- define "requires.api.flux.custom" }}
+   {{- include "requires.api" ( prepend . "errorMessage.flux" ) -}}
 {{- end -}}
  
 

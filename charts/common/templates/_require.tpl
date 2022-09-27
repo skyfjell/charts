@@ -1,9 +1,9 @@
 {{/*
   Checks specifically for a CRD api version and resource.
 
-  Use like `{{ include "required.common.custom" ( list "errorMessage.flux" "helm.toolkit.fluxcd.io" "HelmRelease" $) }}`
+  Use like `{{ include "requires.api" ( list "errorMessage.flux" "helm.toolkit.fluxcd.io" "HelmRelease" $) }}`
 */}}
-{{- define "required.common.custom" }}
+{{- define "requires.api" }}
   {{- $global :=  ( last . ) }}
   {{- $tpl := (first . ) }}
   {{- $api := ( first ( rest . ) ) }}
