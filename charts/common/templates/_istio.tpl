@@ -4,42 +4,42 @@
 
 {{/* Error message */}}
 {{ define "errorMessage.istio" }}
-{{ fail ( printf "Chart requires %s to be present. See https://istio.io/latest/docs/setup/install for more info." . ) }}
+{{ fail ( printf "Chart require %s to be present. See https://istio.io/latest/docs/setup/install for more info." . ) }}
 {{ end }}
 
 {{/*
-  Checks generally if API version for flux is installed. Currently only checking requires CRDs.
+  Checks generally if API version for flux is installed. Currently only checking require CRDs.
 */}}
-{{ define "requires.api.istio.gateway" }}
-  {{ include "requires.api.istio.custom" ( list "networking.istio.io" "Gateway" $ ) }}
+{{ define "require.api.istio.gateway" }}
+  {{ include "require.api.istio.base" ( list "networking.istio.io" "Gateway" $ ) }}
 {{ end }}
 
-{{ define "requires.api.istio.sidecar" }}
-  {{ include "requires.api.istio.custom" ( list "networking.istio.io" "Sidecar" $ ) }}
+{{ define "require.api.istio.sidecar" }}
+  {{ include "require.api.istio.base" ( list "networking.istio.io" "Sidecar" $ ) }}
 {{ end }}
 
-{{ define "requires.api.istio.vs" }}
-  {{ include "requires.api.istio.custom" ( list "networking.istio.io" "VirtualService" $ ) }}
+{{ define "require.api.istio.vs" }}
+  {{ include "require.api.istio.base" ( list "networking.istio.io" "VirtualService" $ ) }}
 {{ end }}
 
-{{ define "requires.api.istio.neworking" }}
-  {{ include "requires.api.istio.vs" . }}
-  {{ include "requires.api.istio.sidecar" . }}
-  {{ include "requires.api.istio.gateway" . }}
+{{ define "require.api.istio.neworking" }}
+  {{ include "require.api.istio.vs" . }}
+  {{ include "require.api.istio.sidecar" . }}
+  {{ include "require.api.istio.gateway" . }}
 {{ end }}
 
-{{ define "requires.api.istio.all" }}
-  {{ include "requires.api.istio.neworking" . }}
+{{ define "require.api.istio.all" }}
+  {{ include "require.api.istio.neworking" . }}
 {{ end }}
 
 
 {{/*
   Checks specifically for an istio api version and resource.
 
-  Use like `{{ include "requires.api.istio.custom" ( list "networking.istio.io" "VirtualService" $) }}`
+  Use like `{{ include "require.api.istio.base" ( list "networking.istio.io" "VirtualService" $) }}`
 */}}
-{{- define "requires.api.istio.custom" }}
-   {{- include "requires.api" ( prepend . "errorMessage.istio" ) -}}
+{{- define "require.api.istio.base" }}
+   {{- include "require.api" ( prepend . "errorMessage.istio" ) -}}
 {{- end -}}
  
  
