@@ -7,6 +7,8 @@ metadata:
 spec:
   releaseName: platform-system-config-istio
   targetNamespace: {{ .Values.apps.istio.namespace }}
+  dependsOn:
+  - name: istio-base
   chart:
     spec:
       chart: platform-system-config-istio
