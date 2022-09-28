@@ -86,3 +86,8 @@ global:
   istioEnabled: false
   nodeSelector: {}
   tolerations: []
+
+# Skyfjell Flux HelmRepository Reference
+helmRepository:
+  name: skyfjell
+  namespace: flux-system
