@@ -65,6 +65,16 @@ entries:
   platform-system:
   - apiVersion: v2
     appVersion: 0.0.0
+    created: "2022-09-28T15:37:06.345890423Z"
+    description: Skyfjell Platform System Chart
+    digest: 6b9621adde12b73a1409385c9b9cc006c1f6c67a838ad0fec0ba8ea2e59fa6d5
+    name: platform-system
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-system-0.0.4/platform-system-0.0.4.tgz
+    version: 0.0.4
+  - apiVersion: v2
+    appVersion: 0.0.0
     created: "2022-09-25T19:53:07.383477572Z"
     description: Skyfjell Platform System Chart
     digest: 77b353ccd55a80ae1c8a7f85c68b2944135d24a5381a66c1e45e15789f5dedaf
@@ -93,6 +103,16 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/platform-system-0.0.1/platform-system-0.0.1.tgz
     version: 0.0.1
+  platform-system-config-istio:
+  - apiVersion: v2
+    created: "2022-09-28T15:37:06.529849479Z"
+    description: Platform System Istio Configuration Chart
+    digest: 39e6f333d17a91f0d024765fb936cf277d6b914a05cb852475f0dc9114293f77
+    name: platform-system-config-istio
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-system-config-istio-0.0.1/platform-system-config-istio-0.0.1.tgz
+    version: 0.0.1
   platform-tenant:
   - apiVersion: v2
     appVersion: 0.0.0
@@ -104,4 +124,4 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/platform-tenant-0.0.1/platform-tenant-0.0.1.tgz
     version: 0.0.1
-generated: "2022-09-25T19:53:07.383492172Z"
+generated: "2022-09-28T15:37:06.530133183Z"
