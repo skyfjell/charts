@@ -13,8 +13,8 @@ spec:
       version: 0.0.1
       sourceRef:
         kind: HelmRepository
-        name: skyfjell
-        namespace: flux-system
+        name: {{ .Values.helmRepository.name }}
+        namespace: {{ .Values.helmRepository.namespace }}
   interval: {{ .Values.solution.interval }}
   values: {{ toYaml .Values | nindent 4 }}
 {{ end }}
