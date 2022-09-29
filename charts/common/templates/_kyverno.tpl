@@ -10,7 +10,7 @@
 {{/*
   Checks generally if API version for kyerno is installed. Currently only checking require CRDs.
 */}}
-{{ define "require.api.kyerno.clusterpolicy" }}
+{{ define "require.api.kyerno.clusterPolicy" }}
   {{ include "require.api.kyerno.base" ( list "kyverno.io" "ClusterPolicy" $ ) }}
 {{end}}
 
@@ -20,7 +20,7 @@
 
 
 {{ define "require.api.kyerno.all" }}
-  {{ include "require.api.kyerno.clusterpolicy" . }}
+  {{ include "require.api.kyerno.clusterPolicy" . }}
   {{ include "require.api.kyerno.policy" . }}
 {{ end }}
 
