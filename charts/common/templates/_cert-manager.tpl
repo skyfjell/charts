@@ -30,6 +30,3 @@
 {{- define "require.api.cert-manager.base" }}
    {{- include "require.api" ( prepend . "errorMessage.cert-manager" ) -}}
 {{- end -}}
- 
- 
-
