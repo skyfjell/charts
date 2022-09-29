@@ -4,10 +4,12 @@
 
 nameOverride: ""
 fullnameOverride: ""
+# Formatted name of tenant
+title: ""
 
 # The target namespace for this tenant
 targetNamespace:
-  create: true
+  create: false
   name: ""
   labels: {}
   annotations: {}
@@ -16,7 +18,7 @@ commonAnnotations: {}
 commonLabels: {}
 
 serviceAccount:
-  create: true
+  create: false
   name: ""
   annotations: {}
 
@@ -24,7 +26,7 @@ serviceAccount:
 flux:
   namespace: flux-system
   source:
-    create: true
+    create: false
     name: ""
     url: ""
     # If a private repo, this is the secret for the GitRepository
@@ -34,13 +36,13 @@ flux:
     #   branch: main
     ref: {}
   kustomization:
-    create: true
+    create: false
     name: ""
     # any spec other than  `serviceAccountName` and `sourceRef`
     spec: {}
 
 rbac:
-  enable: true
+  enable: false
   # Cluster role giving * access to flux resources
   tenantClusterRole:
     create: true
@@ -64,8 +66,11 @@ kyverno:
   labels: {}
   annotations: {}
 
-# use prometheus operator for pod monitors
-prometheus:
+# If loki, prometheus and grafana installed
+# this configures a namespaced dashboard.
+observability:
   enable: false
   # namespace where prometheus resides
-  namespace: monitoring
+  namespace: observability
+  labels: {}
+  annotations: {}
