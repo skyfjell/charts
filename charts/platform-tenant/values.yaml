@@ -27,7 +27,7 @@ flux:
   namespace: flux-system
   source:
     create: false
-    name: ""
+    name: "ssh"
     url: ""
     # If a private repo, this is the secret for the GitRepository
     secretName: ""
@@ -74,3 +74,27 @@ observability:
   namespace: observability
   labels: {}
   annotations: {}
+
+# Use istio to manage networking
+istio:
+  # enable all istio CR's
+  enable: true
+  # namespace istio is installed in
+  namespace: "istio-system"
+  # Gateways.
+  #  selector:
+  #    istio: ingressgateway
+  #  servers:
+  #    - port:
+  #        number: 443
+  #        name: https
+  #        protocol: HTTPS
+  #      hosts:
+  #        - example.com
+  #      tls:
+  #        mode: SIMPLE
+  #        credentialName: example-tls
+  gateway: {}
+  # will create cert-manager certificates based on
+  # tls credential names
+  createCert: false
