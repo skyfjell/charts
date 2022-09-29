@@ -2,4 +2,4 @@ apiVersion: v2
 name: skyfjell-common
 description: Common chart for skyfjell helm charts.
 type: library
-version: 0.0.2
+version: 0.0.3
