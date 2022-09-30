@@ -1,0 +1,4 @@
+{{ if .Values.observability.enable }}
+By enabling the observability for the tenant, a new dashboard is created inside grafana.
+Version {{.Version}}
+{{- end -}}

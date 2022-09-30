@@ -101,3 +101,4 @@ validation: client
 {{- define "helper.deployerRoleName" -}}
 {{ (default (printf "%s-%s" .Release.Name "deployer") .Values.rbac.tenantDeploymentRole.name) | trunc 63 | trimSuffix "-" | quote}}
 {{- end }}  
+

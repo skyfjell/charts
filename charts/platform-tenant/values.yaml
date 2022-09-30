@@ -9,7 +9,7 @@ title: ""
 
 # The target namespace for this tenant
 targetNamespace:
-  create: false
+  create: true
   name: ""
   labels: {}
   annotations: {}
@@ -18,7 +18,7 @@ commonAnnotations: {}
 commonLabels: {}
 
 serviceAccount:
-  create: false
+  create: true
   name: ""
   annotations: {}
 
@@ -26,7 +26,7 @@ serviceAccount:
 flux:
   namespace: flux-system
   source:
-    create: false
+    create: true
     name: "ssh"
     url: ""
     # If a private repo, this is the secret for the GitRepository
@@ -59,7 +59,7 @@ rbac:
 # using kyverno policies
 # to add labels/annotations on objects tenant deploys
 kyverno:
-  enable: false
+  enable: true
   name: ""
   nodeSelector: {}
   tolerations: []
@@ -69,7 +69,7 @@ kyverno:
 # If loki, prometheus and grafana installed
 # this configures a namespaced dashboard.
 observability:
-  enable: false
+  enable: true
   # namespace where prometheus resides
   namespace: observability
   labels: {}
@@ -78,7 +78,7 @@ observability:
 # Use istio to manage networking
 istio:
   # enable all istio CR's
-  enable: false
+  enable: true
   # namespace istio is installed in
   namespace: "istio-system"
   # Gateways.
@@ -98,5 +98,5 @@ istio:
   # will create cert-manager certificates based on
   # tls credential names
   certManager:
-    createCerts: false
+    createCerts: true
     issuerRef: {}
