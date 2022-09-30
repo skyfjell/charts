@@ -68,10 +68,10 @@ kyverno:
 
 # If loki, prometheus and grafana installed
 # this configures a namespaced dashboard.
-observability:
+o11y:
   enable: true
   # namespace where prometheus resides
-  namespace: observability
+  namespace: o11y
   labels: {}
   annotations: {}
 

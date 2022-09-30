@@ -1,4 +1,4 @@
-{{ if .Values.observability.enable }}
-By enabling the observability for the tenant, a new dashboard is created inside grafana.
-Version {{.Version}}
+{{ if .Values.o11y.enable }}
+By enabling the o11y for the tenant, a new dashboard is created inside grafana. If you are using
+open source Grafana, you must ensure the correct team management for this new dashboard.
 {{- end -}}
