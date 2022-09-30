@@ -1,0 +1,6 @@
+{{ if .Values.istio.certManager.createCerts}}
+  {{ include "require.api.certManager.certificate" $}}
+  {{ range $val := (.Values.istio.gateway ).servers }}
+    {{ include "certManager.certificate" (list $val $)}}
+  {{ end }}
+{{ end }}

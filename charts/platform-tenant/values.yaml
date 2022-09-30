@@ -42,7 +42,7 @@ flux:
     spec: {}
 
 rbac:
-  enable: false
+  enable: true
   # Cluster role giving * access to flux resources
   tenantClusterRole:
     create: true
@@ -78,7 +78,7 @@ observability:
 # Use istio to manage networking
 istio:
   # enable all istio CR's
-  enable: true
+  enable: false
   # namespace istio is installed in
   namespace: "istio-system"
   # Gateways.
@@ -97,4 +97,6 @@ istio:
   gateway: {}
   # will create cert-manager certificates based on
   # tls credential names
-  createCert: false
+  certManager:
+    createCerts: false
+    issuerRef: {}
