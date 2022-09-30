@@ -36,7 +36,7 @@ flux:
     #   branch: main
     ref: {}
   kustomization:
-    create: false
+    create: true
     name: ""
     # any spec other than  `serviceAccountName` and `sourceRef`
     spec: {}
