@@ -4,6 +4,8 @@
 
 nameOverride: ""
 fullnameOverride: ""
+# Formatted name of tenant
+title: ""
 
 # The target namespace for this tenant
 targetNamespace:
@@ -25,7 +27,7 @@ flux:
   namespace: flux-system
   source:
     create: true
-    name: ""
+    name: "ssh"
     url: ""
     # If a private repo, this is the secret for the GitRepository
     secretName: ""
@@ -57,15 +59,44 @@ rbac:
 # using kyverno policies
 # to add labels/annotations on objects tenant deploys
 kyverno:
-  enable: false
+  enable: true
   name: ""
   nodeSelector: {}
   tolerations: []
   labels: {}
   annotations: {}
 
-# use prometheus operator for pod monitors
-prometheus:
-  enable: false
+# If loki, prometheus and grafana installed
+# this configures a namespaced dashboard.
+o11y:
+  enable: true
   # namespace where prometheus resides
-  namespace: monitoring
+  namespace: o11y
+  labels: {}
+  annotations: {}
+
+# Use istio to manage networking
+istio:
+  # enable all istio CR's
+  enable: true
+  # namespace istio is installed in
+  namespace: "istio-system"
+  # Gateways.
+  #  selector:
+  #    istio: ingressgateway
+  #  servers:
+  #    - port:
+  #        number: 443
+  #        name: https
+  #        protocol: HTTPS
+  #      hosts:
+  #        - example.com
+  #      tls:
+  #        mode: SIMPLE
+  #        credentialName: example-tls
+  gateway: {}
+  # will create cert-manager certificates based on
+  # tls credential names
+  certManager:
+    createCerts: true
+    issuerRef: {}

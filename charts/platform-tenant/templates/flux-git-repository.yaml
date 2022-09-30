@@ -1,4 +1,5 @@
 {{- if .Values.flux.source.create -}}
+{{- include "require.api.flux.source" . -}}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: GitRepository
 metadata:

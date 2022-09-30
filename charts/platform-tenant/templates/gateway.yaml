@@ -1,0 +1,12 @@
+{{- if .Values.istio.enable -}}
+{{ include "require.api.istio.gateway" $}}
+{{ with .Values.istio.gateway }}
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ printf "%s-gateway" (include "platform-tenant.fullname" $)  }}
+  namespace: {{ $.Values.istio.namespace  }}
+spec:
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+{{- end -}}

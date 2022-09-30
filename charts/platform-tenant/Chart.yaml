@@ -2,4 +2,8 @@ apiVersion: v2
 name: platform-tenant
 description: Skyfjell Platform Tenant Chart
 type: application
-version: 0.0.1
+version: 0.0.2
+dependencies:
+  - name: skyfjell-common
+    repository: https://skyfjell.github.io/charts
+    version: "0.0.x"
