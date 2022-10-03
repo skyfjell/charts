@@ -1,0 +1,10 @@
+{{ if and .Values.apps.vaultOperator.enabled (eq .Values.solution.name "flux") }}
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: banzaicloud
+  namespace: flux-system
+spec:
+  url: https://kubernetes-charts.banzaicloud.com
+  interval: 10m
+{{ end }}

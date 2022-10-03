@@ -79,6 +79,16 @@ apps:
     nodeSelector: {}
     tolerations: []
     affinity: {}
+  vaultOperator:
+    enabled: true
+    istioEnabled: true
+    version: "1.16.1"
+    namespace: vault-operator
+    annotations: {}
+    serviceAccountAnnotations: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
 
 # Global Pod Assignment
 global:
