@@ -5,7 +5,7 @@ metadata:
   name: {{ .Values.apps.externalDns.namespace }}
   labels:
     {{- include "platform-system.labels" . | nindent 4 }}
-    {{- if or (and .Values.apps.istio.enabled .Values.apps.certManager.istioEnabled) (and .Values.apps.istio.enabled .Values.global.istioEnabled) }}
+    {{- if or (and .Values.apps.istio.enabled .Values.apps.externalDns.istioEnabled) (and .Values.apps.istio.enabled .Values.global.istioEnabled) }}
     istio-injection: enabled
     {{- end }}
 {{ end }}
