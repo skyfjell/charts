@@ -2,4 +2,4 @@ apiVersion: v2
 name: platform-system-config-istio
 description: Platform System Istio Configuration Chart
 type: application
-version: 0.0.1
+version: 0.0.2

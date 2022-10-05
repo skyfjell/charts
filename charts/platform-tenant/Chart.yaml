@@ -5,5 +5,5 @@ type: application
 version: 0.0.2
 dependencies:
   - name: skyfjell-common
-    repository: https://skyfjell.github.io/charts
+    repository: https://skyfjell.github.io
     version: "0.0.x"
