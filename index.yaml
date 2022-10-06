@@ -65,6 +65,16 @@ entries:
   platform-system:
   - apiVersion: v2
     appVersion: 0.0.0
+    created: "2022-10-06T19:03:38.487321417Z"
+    description: Skyfjell Platform System Chart
+    digest: 081bc5332521e456fea4da3d635b8ea99c6fe1f8acdb029b5ed934d964017f89
+    name: platform-system
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-system-0.0.8/platform-system-0.0.8.tgz
+    version: 0.0.8
+  - apiVersion: v2
+    appVersion: 0.0.0
     created: "2022-09-28T16:12:20.962740163Z"
     description: Skyfjell Platform System Chart
     digest: 3d0329c0a918010906b81cc137f95875a634d3ebca47ab2b313a5b91037b94f5
@@ -125,6 +135,15 @@ entries:
     version: 0.0.1
   platform-system-config-istio:
   - apiVersion: v2
+    created: "2022-10-06T19:03:38.682639776Z"
+    description: Platform System Istio Configuration Chart
+    digest: 84e0d1ffa7cc89faf75ffb041b121be2253cb32f9b535f705f12113f12fc1613
+    name: platform-system-config-istio
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-system-config-istio-0.0.2/platform-system-config-istio-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
     created: "2022-09-28T15:37:06.529849479Z"
     description: Platform System Istio Configuration Chart
     digest: 39e6f333d17a91f0d024765fb936cf277d6b914a05cb852475f0dc9114293f77
@@ -134,6 +153,19 @@ entries:
     - https://github.com/skyfjell/charts/releases/download/platform-system-config-istio-0.0.1/platform-system-config-istio-0.0.1.tgz
     version: 0.0.1
   platform-tenant:
+  - apiVersion: v2
+    created: "2022-10-06T19:03:38.83266624Z"
+    dependencies:
+    - name: skyfjell-common
+      repository: '@skyfjell'
+      version: 0.0.x
+    description: Skyfjell Platform Tenant Chart
+    digest: ca92f0c9da2abdd3168840828e63f5f27a3384a0ae11c52bb12cda910a7d6f0b
+    name: platform-tenant
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-tenant-0.0.2/platform-tenant-0.0.2.tgz
+    version: 0.0.2
   - apiVersion: v2
     appVersion: 0.0.0
     created: "2022-07-13T20:27:48.653261626Z"
@@ -172,4 +204,4 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/skyfjell-common-0.0.1/skyfjell-common-0.0.1.tgz
     version: 0.0.1
-generated: "2022-09-29T23:09:11.65698851Z"
+generated: "2022-10-06T19:03:38.995513857Z"
