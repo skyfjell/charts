@@ -1,0 +1,25 @@
+{{ if and .Values.helmRelease.enabled .Values.helmRelease.base.enabled }}
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ .Values.helmRelease.base.name | quote }}
+  namespace: {{ .Values.helmRelease.releaseNamespace | quote }}
+spec:
+  targetNamespace: {{ .Values.namespace | quote }}
+  chart:
+    spec:
+      chart: base
+      version: {{ .Values.helmRelease.base.version }}
+      sourceRef:
+        kind: HelmRepository
+        name: {{ .Values.helmRepository.name }}
+        namespace: {{ .Values.helmRepository.namespace }}
+  interval: {{ .Values.helmRelease.base.interval }}
+  install:
+    crds: {{ .Values.helmRelease.base.crds.install }}
+  upgrade:
+    crds: {{ .Values.helmRelease.base.crds.update }}
+  values:
+    {{- include "istio-install.istio-base.values" $ | nindent 4 }}
+{{- end -}}
