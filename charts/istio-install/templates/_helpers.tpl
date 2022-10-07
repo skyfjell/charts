@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "operator-resource.name" -}}
+{{- define "istio-install.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "operator-resource.fullname" -}}
+{{- define "istio-install.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "operator-resource.chart" -}}
+{{- define "istio-install.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "operator-resource.labels" -}}
-helm.sh/chart: {{ include "operator-resource.chart" . }}
-{{ include "operator-resource.selectorLabels" . }}
+{{- define "istio-install.labels" -}}
+helm.sh/chart: {{ include "istio-install.chart" . }}
+{{ include "istio-install.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "operator-resource.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "operator-resource.name" . }}
+{{- define "istio-install.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "istio-install.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "operator-resource.serviceAccountName" -}}
+{{- define "istio-install.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "operator-resource.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "istio-install.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

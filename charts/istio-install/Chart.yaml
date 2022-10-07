@@ -1,5 +1,5 @@
 apiVersion: v2
 name: istio-install
-description: Install istio via the IstioOperator CRD
+description: Install istio via HelmReleases
 type: application
-version: 0.0.16
+version: 0.0.17

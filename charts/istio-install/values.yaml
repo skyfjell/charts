@@ -1,1 +1,10 @@
 tolerations: []
+helmRepository:
+  # creates the flux helmrepository CR
+  create: true
+  # namespace to create the CR in
+  namespace: flux-system
+  # name of CR
+  name: istio
+  # refresh interval
+  interval: 10m

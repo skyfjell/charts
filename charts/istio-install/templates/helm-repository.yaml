@@ -1,0 +1,13 @@
+{{ if .Values.helmRepository.create }}
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: {{ .Values.helmRepository.name }}
+  namespace: {{ .Values.helmRepository.namespace }}
+  labels:
+    {{- include "istio-install.labels" $ | nindent 4 }}
+spec:
+  url: https://istio-release.storage.googleapis.com/charts
+  interval: {{ .Values.helmRepository.interval }}
+{{- end -}}
