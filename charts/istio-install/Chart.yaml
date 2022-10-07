@@ -1,5 +1,0 @@
-apiVersion: v2
-name: istio-install
-description: Install istio via HelmReleases
-type: application
-version: 0.0.17

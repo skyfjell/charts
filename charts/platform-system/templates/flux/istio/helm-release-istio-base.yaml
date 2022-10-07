@@ -1,24 +1,28 @@
 {{ if and .Values.apps.istio.enabled (eq .Values.solution.name "flux") }}
+{{ $istioValues := .Values.apps.istio}}
+{{ if and $istioValues.helmRelease.enabled $istioValues.helmRelease.base.enabled }}
+---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: istio-base
-  namespace: flux-system
+  name: {{ $istioValues.helmRelease.base.name | quote }}
+  namespace: {{ $istioValues.helmRelease.releaseNamespace | quote }}
 spec:
-  releaseName: istio-base
-  targetNamespace: {{ .Values.apps.istio.namespace }}
+  targetNamespace: {{ $istioValues.namespace | quote }}
   chart:
     spec:
       chart: base
+      version: {{  $istioValues.helmRelease.base.version }}
       sourceRef:
         kind: HelmRepository
-        name: istio
-        namespace: flux-system
-  interval: {{ .Values.solution.interval }}
+        name: {{  $istioValues.helmRepository.name }}
+        namespace: {{  $istioValues.helmRepository.namespace }}
+  interval: {{ default $istioValues.solution.interval  $istioValues.helmRelease.base.interval }}
+  install:
+    crds: {{  $istioValues.helmRelease.base.crds.install }}
+  upgrade:
+    crds: {{  $istioValues.helmRelease.base.crds.update }}
   values:
-    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.istio.annotations) | indent 6 }}
-    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.istio.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 6 }}
-    serviceAccount:
-      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.istio.serviceAccountAnnotations) | indent 8 }}
-    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.istio.tolerations "globalTolerations" .Values.global.tolerations ) | indent 6 }}
-{{ end }}
+    {{- include "platform-system.istio.istio-base.values" $ | nindent 4 }}
+{{- end -}}
+{{- end -}}

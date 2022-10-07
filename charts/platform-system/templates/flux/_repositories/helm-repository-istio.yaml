@@ -1,10 +1,16 @@
-{{ if and .Values.apps.istio.enabled (eq .Values.solution.name "flux") }}
+{{- if and .Values.apps.istio.enabled (eq .Values.solution.name "flux") }}
+{{ $istioValues := .Values.apps.istio}}
+{{- if $istioValues.helmRepository.create }}
+---
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: istio
-  namespace: flux-system
+  name: {{ $istioValues.helmRepository.name }}
+  namespace: {{ $istioValues.helmRepository.namespace }}
+  labels:
+    {{- include "platform-system.labels" $ | nindent 4 }}
 spec:
   url: https://istio-release.storage.googleapis.com/charts
-  interval: 10m
-{{ end }}
+  interval: {{ $istioValues.helmRepository.interval }}
+{{- end -}}
+{{- end -}}
