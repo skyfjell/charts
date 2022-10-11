@@ -1,0 +1,29 @@
+{{- if and .Values.apps.istio.enabled (eq .Values.solution.name "flux") -}}
+{{- $istioValues := .Values.apps.istio -}}
+{{- $istogw := $istioValues.component.gateway }}
+{{- if $istogw.create }}
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ include "platform-system.istio.istio-gateway.release.name" $ }}
+  namespace: {{ .Values.solution.rootNamespace | quote }}
+spec:
+  releaseName: {{ include "platform-system.istio.istio-gateway.release.name" $ }}
+  targetNamespace: {{ .Values.apps.istio.namespace }}
+  dependsOn:
+    - name: {{ include "platform-system.istio.istiod.release.name" $ }}
+      namespace: {{ .Values.solution.rootNamespace | quote }}
+  chart:
+    spec:
+      chart: {{ $istogw.chart.name }}
+      version: {{ default $istioValues.chart.version $istogw.chart.version }}
+      sourceRef:
+        kind: HelmRepository
+        name: {{ .Values.helmRepository.name }}
+        namespace: {{ .Values.helmRepository.namespace }}
+  interval: {{ .Values.solution.interval }}
+  values:
+    {{- include "platform-system.istio.istio-gateway.values" $ | nindent 4 }}
+{{- end -}}
+{{- end -}}

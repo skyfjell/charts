@@ -1,27 +1,27 @@
 {{ if and .Values.apps.istio.enabled (eq .Values.solution.name "flux") }}
 {{ $istioValues := .Values.apps.istio}}
-{{ if and $istioValues.helmRelease.enabled $istioValues.helmRelease.base.enabled }}
+{{ if $istioValues.component.base.create }}
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: {{ $istioValues.helmRelease.base.name | quote }}
-  namespace: {{ $istioValues.helmRelease.releaseNamespace | quote }}
+  name: {{ include "platform-system.istio.istio-base.release.name" $ }}
+  namespace: {{ .Values.solution.rootNamespace | quote }}
 spec:
   targetNamespace: {{ $istioValues.namespace | quote }}
   chart:
     spec:
-      chart: base
-      version: {{  $istioValues.helmRelease.base.version }}
+      chart: {{ $istioValues.component.base.chart.name }}
+      version: {{ default $istioValues.chart.version $istioValues.component.base.chart.version }}
       sourceRef:
         kind: HelmRepository
-        name: {{  $istioValues.helmRepository.name }}
-        namespace: {{  $istioValues.helmRepository.namespace }}
-  interval: {{ default $istioValues.solution.interval  $istioValues.helmRelease.base.interval }}
+        name: {{ include "platform-system.istio.repository.name" $ }}
+        namespace: {{ .Values.solution.rootNamespace }}
+  interval: {{ $.Values.solution.interval }}
   install:
-    crds: {{  $istioValues.helmRelease.base.crds.install }}
+    crds: {{ $istioValues.component.base.crds.install }}
   upgrade:
-    crds: {{  $istioValues.helmRelease.base.crds.update }}
+    crds: {{ $istioValues.component.base.crds.update }}
   values:
     {{- include "platform-system.istio.istio-base.values" $ | nindent 4 }}
 {{- end -}}

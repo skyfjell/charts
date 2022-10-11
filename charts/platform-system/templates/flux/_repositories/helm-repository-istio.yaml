@@ -1,16 +1,16 @@
-{{- if and .Values.apps.istio.enabled (eq .Values.solution.name "flux") }}
-{{ $istioValues := .Values.apps.istio}}
-{{- if $istioValues.helmRepository.create }}
+{{- if and .Values.apps.istio.enabled (eq .Values.solution.name "flux") -}}
+{{- $istioValues := .Values.apps.istio -}}
+{{- if $istioValues.source.create -}}
 ---
 apiVersion: source.toolkit.fluxcd.io/v1beta1
-kind: HelmRepository
+kind: {{ default "HelmRepository" $istioValues.source.type }}
 metadata:
-  name: {{ $istioValues.helmRepository.name }}
-  namespace: {{ $istioValues.helmRepository.namespace }}
+  name: {{ include "platform-system.istio.repository.name" $ }}
+  namespace: {{ .Values.solution.rootNamespace }}
   labels:
     {{- include "platform-system.labels" $ | nindent 4 }}
 spec:
-  url: https://istio-release.storage.googleapis.com/charts
-  interval: {{ $istioValues.helmRepository.interval }}
+  url: {{ default "https://istio-release.storage.googleapis.com/charts" $istioValues.source.url }}
+  interval: {{ .Values.solution.interval }}
 {{- end -}}
 {{- end -}}

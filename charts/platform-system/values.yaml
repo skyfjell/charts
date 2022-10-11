@@ -3,13 +3,14 @@
 solution:
   name: flux
   interval: 10m
+  rootNamespace: flux-system
 
 # Prefix for global resources. Defaults to `namespace` if unset.
 prefix: ""
 
 apps:
   certManager:
-    enabled: true
+    enabled: false
     istioEnabled: true
     namespace: cert-manager
     version: "1.8.2"
@@ -31,47 +32,91 @@ apps:
     affinity: {}
   istio:
     enabled: true
-    mTLSMode: "PERMISSIVE" # Options here are UNSET, DISABLE, PERMISSIVE, and STRICT
-    annotations: {}
-    serviceAccountAnnotations: {}
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
-    # The namespace to target for all HelmReleases
+    # namespace to target for all HelmReleases
     namespace: istio-system
-    helmRepository:
-      # creates the flux helmrepository CR
+    # mTLSMode options here are UNSET, DISABLE, PERMISSIVE, and STRICT
+    mTLSMode: "STRICT"
+    # annotations for istio components
+    annotations: {}
+    # serviceAccountAnnotations for istio components
+    serviceAccountAnnotations: {}
+    # nodeSelector for istio components
+    nodeSelector: {}
+    # tolerations for istio components
+    tolerations: []
+    # affinity for istio components
+    affinity: {}
+    # source of helm release
+    source:
       create: true
-      # namespace to create the CR in
-      namespace: flux-system
-      # name of CR
-      name: istio
-      # refresh interval
-      interval: 10m
-    helmRelease:
-      # the namespace where the HelmRelease CR is installed to
-      releaseNamespace: flux-system
-      enabled: true
-      # istio base chart release
+      # type: HelmRepository
+      # url: https://istio-release.storage.googleapis.com/charts
+    # chart config for HelmReleases
+    chart:
+      # version for istio components. Istio keeps components in sync
+      version: "1.15.1"
+      source:
+        kind: HelmRepository
+        repository: istio
+    # component of full istio install
+    component:
+      # base istio chart release
       base:
-        # Installs the base chart via HelmRelease. The base chart
-        # installs CRDs and RBAC
-        enabled: true
-        # HelmRelease CR name
-        name: istio-base
-        # Helm chart version
-        version: "1.15.1"
-        # HelmRelease interval
-        interval: "1h0m0s"
-        # CRD policies
-        # override defaults
+        # create the base chart via HelmRelease. The base chart installs CRDs and RBAC
+        create: true
+        # chart spec
+        chart:
+          # name of chart
+          name: base
+          # version of base, defaults to .Values.apps.istio.chart.version
+          version: ""
+          # source of helm release, defaults to .Values.apps.istio.chart.source
+          # source:
+          #   kind: ""
+          #   repository: ""
+          source: {}
+        # crds policies
         crds:
           install: Create
           update: CreateReplace
-        # Override HelmRelease values
+        # values override HelmRelease values
+        values: {}
+      # istiod istio chart release
+      istiod:
+        # create the base chart via HelmRelease. The base chart installs CRDs and RBAC
+        create: true
+        # chart spec
+        chart:
+          # name of chart
+          name: istiod
+          # version of base, defaults to .Values.apps.istio.chart.version
+          version: ""
+          # source of helm release, defaults to .Values.apps.istio.chart.source
+          # source:
+          #   kind: ""
+          #   repository: ""
+          source: {}
+        # values override HelmRelease values
+        values: {}
+      # gateway istio chart release
+      gateway:
+        # create the base chart via HelmRelease. The base chart installs CRDs and RBAC
+        create: true
+        # chart spec
+        chart:
+          # name of chart
+          name: istio-gateway
+          # version of base, defaults to .Values.apps.istio.chart.version
+          version: ""
+          # source of helm release, defaults to .Values.apps.istio.chart.source
+          # source:
+          #   kind: ""
+          #   repository: ""
+          source: {}
+        # values override HelmRelease values
         values: {}
   kyverno:
-    enabled: true
+    enabled: false
     istioEnabled: true
     version: "2.5.1"
     namespace: kyverno
@@ -81,7 +126,7 @@ apps:
     tolerations: []
     affinity: {}
   kyvernoPolicies:
-    enabled: true
+    enabled: false
     istioEnabled: true
     version: "2.5.1"
     namespace: kyverno
@@ -110,7 +155,7 @@ apps:
     tolerations: []
     affinity: {}
   vaultOperator:
-    enabled: true
+    enabled: false
     istioEnabled: true
     version: "1.16.1"
     namespace: vault-operator
@@ -123,7 +168,7 @@ apps:
 # Global Pod Assignment
 global:
   affinity: {}
-  istioEnabled: false
+  istioEnabled: true
   nodeSelector: {}
   tolerations: []
 
