@@ -119,7 +119,6 @@ apps:
       config:
         create: true
         chart:
-          name: platform-system-config-istio
           version: "0.0.2"
   kyverno:
     enabled: true

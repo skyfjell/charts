@@ -1,7 +1,7 @@
 {{ if and .Values.apps.istio.enabled (eq .Values.solution.name "flux") }}
 {{- $istioValues := .Values.apps.istio }}
 {{- $config := $istioValues.component.config }}
-{{- if and ($config.create .$istioValues.component.base.create) }}
+{{- if and $config.create $istioValues.component.base.create }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
