@@ -4,7 +4,7 @@ kind: Namespace
 metadata:
   name: {{ .Values.apps.kyverno.namespace }}
   labels:
-    {{- include "platform-system.labels" . | nindent 4 }}
+    {{- include "platformSystem.labels" . | nindent 4 }}
     {{- if or (and .Values.apps.istio.enabled .Values.apps.kyverno.istioEnabled) (and .Values.apps.istio.enabled .Values.global.istioEnabled) }}
     istio-injection: enabled
     {{- end }}

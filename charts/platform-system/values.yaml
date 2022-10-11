@@ -3,14 +3,14 @@
 solution:
   name: flux
   interval: 10m
-  rootNamespace: flux-system
+  namespace: flux-system
 
 # Prefix for global resources. Defaults to `namespace` if unset.
 prefix: ""
 
 apps:
   certManager:
-    enabled: false
+    enabled: true
     istioEnabled: true
     namespace: cert-manager
     version: "1.8.2"
@@ -115,8 +115,14 @@ apps:
           source: {}
         # values override HelmRelease values
         values: {}
+      # config chart from skyfjell
+      config:
+        create: true
+        chart:
+          name: platform-system-config-istio
+          version: "0.0.2"
   kyverno:
-    enabled: false
+    enabled: true
     istioEnabled: true
     version: "2.5.1"
     namespace: kyverno
@@ -126,7 +132,7 @@ apps:
     tolerations: []
     affinity: {}
   kyvernoPolicies:
-    enabled: false
+    enabled: true
     istioEnabled: true
     version: "2.5.1"
     namespace: kyverno
@@ -155,7 +161,7 @@ apps:
     tolerations: []
     affinity: {}
   vaultOperator:
-    enabled: false
+    enabled: true
     istioEnabled: true
     version: "1.16.1"
     namespace: vault-operator

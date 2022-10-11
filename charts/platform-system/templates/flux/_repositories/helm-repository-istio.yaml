@@ -3,12 +3,12 @@
 {{- if $istioValues.source.create -}}
 ---
 apiVersion: source.toolkit.fluxcd.io/v1beta1
-kind: {{ default "HelmRepository" $istioValues.source.type }}
+kind: HelmRepository
 metadata:
-  name: {{ include "platform-system.istio.repository.name" $ }}
-  namespace: {{ .Values.solution.rootNamespace }}
+  name: {{ include "platformSystem.istio.repository.name" $ }}
+  namespace: {{ .Values.solution.namespace }}
   labels:
-    {{- include "platform-system.labels" $ | nindent 4 }}
+    {{- include "platformSystem.labels" $ | nindent 4 }}
 spec:
   url: {{ default "https://istio-release.storage.googleapis.com/charts" $istioValues.source.url }}
   interval: {{ .Values.solution.interval }}
