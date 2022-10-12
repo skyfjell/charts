@@ -22,19 +22,19 @@ spec:
   interval: {{ .Values.solution.interval }}
   values:
     installCRDs: true
-    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.certManager.annotations) | indent 6 }}
-    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.certManager.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 6 }}
+    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.certManager.annotations) | nindent 6 }}
+    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.certManager.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | nindent 6 }}
     serviceAccount:
-      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.certManager.serviceAccountAnnotations)  | indent 8 }}
-    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.certManager.tolerations "globalTolerations" .Values.global.tolerations )  | indent 6 }}
+      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.certManager.serviceAccountAnnotations)  | nindent 8 }}
+    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.certManager.tolerations "globalTolerations" .Values.global.tolerations )  | nindent 6 }}
     webhook:
       securePort: {{ .Values.apps.certManager.webhookSecurePort }}
-      nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.certManager.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 8 }}
-      tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.certManager.tolerations "globalTolerations" .Values.global.tolerations ) | indent 8 }}
+      nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.certManager.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | nindent 8 }}
+      tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.certManager.tolerations "globalTolerations" .Values.global.tolerations ) | nindent 8 }}
     cainjector:
-      nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.certManager.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 8 }}
-      tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.certManager.tolerations "globalTolerations" .Values.global.tolerations ) | indent 8 }}
+      nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.certManager.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | nindent 8 }}
+      tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.certManager.tolerations "globalTolerations" .Values.global.tolerations ) | nindent 8 }}
     startupapicheck:
-      nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.certManager.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 8 }}
-      tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.certManager.tolerations "globalTolerations" .Values.global.tolerations ) | indent 8 }}
+      nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.certManager.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | nindent 8 }}
+      tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.certManager.tolerations "globalTolerations" .Values.global.tolerations ) | nindent 8 }}
 {{ end }}

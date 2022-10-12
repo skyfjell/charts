@@ -19,10 +19,10 @@ spec:
         namespace: flux-system
   interval: {{ .Values.solution.interval }}
   values:
-    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.kyvernoPolicies.annotations) | indent 6 }}
-    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.kyvernoPolicies.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 6 }}
-    podSecurityStandard: {{ .Values.apps.kyvernoPolicies.podSecurityStandard | indent 6 }}
+    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.kyvernoPolicies.annotations) | nindent 6 }}
+    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.kyvernoPolicies.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | nindent 6 }}
+    podSecurityStandard: {{ .Values.apps.kyvernoPolicies.podSecurityStandard | quote }}
     serviceAccount:
-      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.kyvernoPolicies.serviceAccountAnnotations) | indent 8 }}
-    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.kyvernoPolicies.tolerations "globalTolerations" .Values.global.tolerations ) | indent 6 }}
+      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.kyvernoPolicies.serviceAccountAnnotations) | nindent 8 }}
+    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.kyvernoPolicies.tolerations "globalTolerations" .Values.global.tolerations ) | nindent 6 }}
 {{ end }}
