@@ -72,7 +72,47 @@ Create the name of the service account to use
 {{- "[]" }}                                                                          
 {{- end }}                                                                           
 {{- end }}                                                                           
-                                                                                     
+
+{{/*
+Sets annotations for app based on local and global annoations.
+Ex: {{ include "platformSystem.helper.annotations" (list "kyverno" $)}}
+*/}}
+{{- define "platformSystem.helper.annotations" }}
+{{- $appName:= first .}}
+{{- $global := last . }}
+{{- $values := $global.Values }}
+{{- with (default $values.global.annotations (get $values.apps $appName).annotations) }}
+annotations: {{- toYaml . | nindent 2}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Sets nodeSelector for app based on local and global nodeSelector.
+Ex: {{ include "platformSystem.helper.nodeSelector" (list "kyverno" $)}}
+*/}}
+{{- define "platformSystem.helper.nodeSelector" }}
+{{- $appName:= first .}}
+{{- $global := last . }}
+{{- $values := $global.Values }}
+{{- with (default $values.global.nodeSelector (get $values.apps $appName).nodeSelector) }}
+nodeSelector: {{- toYaml . | nindent 2}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Sets tolerations for app based on local and global tolerations.
+Ex: {{ include "platformSystem.helper.tolerations" (list "kyverno" $)}}
+*/}}
+{{- define "platformSystem.helper.tolerations" }}
+{{- $appName:= first .}}
+{{- $global := last . }}
+{{- $values := $global.Values }}
+{{- with (default $values.global.tolerations (get $values.apps $appName).tolerations) }}
+tolerations: {{- toYaml . | nindent 2}}
+{{- end -}}
+{{- end -}}
+
+
 {{/* Set nodeSelector from global if available and if not set it from app values*/}} 
 {{/* ex: nodeSelector: {{ include "helper.nodeSelector" (dict "globalNodeSelector" .Values.global.nodeSelector "appNodeSelector" .Values.apps.<app>.nodeSelector) }} */}}
 {{- define "helper.nodeSelector" }}                                                  

@@ -86,7 +86,8 @@ apps:
     namespace: vault-operator
     annotations: {}
     serviceAccountAnnotations: {}
-    nodeSelector: {}
+    nodeSelector:
+      local: selector
     tolerations: []
     affinity: {}
 
@@ -94,7 +95,8 @@ apps:
 global:
   affinity: {}
   istioEnabled: false
-  nodeSelector: {}
+  nodeSelector:
+    global: selector
   tolerations: []
 
 # Skyfjell Flux HelmRepository Reference

@@ -17,6 +17,12 @@ spec:
         namespace: flux-system
   interval: {{ .Values.solution.interval }}
   values:
+    {{- with .Values.apps.minioTenant.annotations }}
+    annotations: {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with (default .Values.global.nodeSelector .Values.apps.minioTenant.nodeSelector) }}
+    nodeSelector: {{- toYaml . | nindent 6 }}
+    {{- end }}
     annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.minioTenant.annotations) }}
     nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.minioTenant.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) }}
     serviceAccount:
