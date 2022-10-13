@@ -40,9 +40,6 @@ components:
     nodeSelector: {}
     tolerations: []
     affinity: {}
-    component:
-      annotations:
-        "asd": asdas
   kyverno:
     enabled: true
     istioEnabled: true
@@ -89,8 +86,7 @@ components:
     namespace: vault-operator
     annotations: {}
     serviceAccountAnnotations: {}
-    nodeSelector:
-      local: selector
+    nodeSelector: {}
     tolerations: []
     affinity: {}
 
@@ -98,8 +94,7 @@ components:
 global:
   affinity: {}
   istioEnabled: false
-  nodeSelector:
-    global: selector
+  nodeSelector: {}
   tolerations: []
 
 # Skyfjell Flux HelmRepository Reference

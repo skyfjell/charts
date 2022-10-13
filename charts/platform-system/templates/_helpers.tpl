@@ -83,11 +83,10 @@ Ex: {{ include "platformSystem.helper.annotations" (list "kyverno" $)}}
 {{- $path:= first .}}
 {{- $global := last . }}
 {{- $values := $global.Values }}
-{{- $appName :=  ((tpl (printf "{{( $.Values.components.%s).annotations | toYaml }}" $path) $global) | fromYaml) }}
+{{- $appName :=  ((tpl (printf "{{ default dict ( $.Values.components.%s).annotations | toYaml }}" $path) $global) | fromYaml) }}
 {{- with (default $values.global.annotations $appName ) }}
 annotations: {{- toYaml . | nindent 2}}
 {{- end -}}
-
 {{- end -}}
 
 {{/*
@@ -95,10 +94,10 @@ Sets nodeSelector for app based on local and global nodeSelector.
 Ex: {{ include "platformSystem.helper.nodeSelector" (list "kyverno" $)}}
 */}}
 {{- define "platformSystem.helper.nodeSelector" }}
-{{- $appName:= first .}}
+{{- $path := first .}}
 {{- $global := last . }}
 {{- $values := $global.Values }}
-{{- $appName :=  ((tpl (printf "{{( $.Values.components.%s).nodeSelector | toYaml }}" $path) $global) | fromYaml) }}
+{{- $appName :=  ((tpl (printf "{{ default dict ( $.Values.components.%s).nodeSelector | toYaml }}" $path) $global) | fromYaml) }}
 {{- with (default $values.global.nodeSelector $appName ) }}
 nodeSelector: {{- toYaml . | nindent 2}}
 {{- end -}}
@@ -109,10 +108,10 @@ Sets tolerations for app based on local and global tolerations.
 Ex: {{ include "platformSystem.helper.tolerations" (list "kyverno" $)}}
 */}}
 {{- define "platformSystem.helper.tolerations" }}
-{{- $appName:= first .}}
+{{- $path:= first .}}
 {{- $global := last . }}
 {{- $values := $global.Values }}
-{{- $appName :=  ((tpl (printf "{{( $.Values.components.%s).tolerations | toYaml }}" $path) $global) | fromYaml) }}
+{{- $appName :=  ((tpl (printf "{{ default dict ( $.Values.components.%s).tolerations | toYaml }}" $path) $global) | fromYaml) }}
 {{- with (default $values.global.tolerations $appName ) }}
 tolerations: {{- toYaml . | nindent 2}}
 {{- end -}}
