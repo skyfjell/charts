@@ -1,11 +1,11 @@
-{{- if .Values.apps.keycloak.enabled }}
+{{- if .Values.components.keycloak.enabled }}
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: keycloak
   namespace: system-auth
 spec:
-  hosts: {{ toYaml .Values.apps.keycloak.hosts | nindent 4 }}
+  hosts: {{ toYaml .Values.components.keycloak.hosts | nindent 4 }}
   gateways:
     - istio-system/auth-gateway
   http:

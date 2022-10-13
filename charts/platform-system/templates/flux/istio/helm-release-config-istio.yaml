@@ -11,7 +11,7 @@ metadata:
     {{- include "platformSystem.labels" $ | nindent 4 }}
 spec:
   releaseName: platform-system-config-istio
-  targetNamespace: {{ .Values.apps.istio.namespace }}
+  targetNamespace: {{ .Values.components.istio.namespace }}
   dependsOn:
     - name: {{ include "platformSystem.istio.istioBase.release.name" $ }}
       namespace: {{ .Values.solution.namespace | quote }}

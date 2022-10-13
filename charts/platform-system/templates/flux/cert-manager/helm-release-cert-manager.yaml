@@ -1,4 +1,4 @@
-{{ if and .Values.apps.certManager.enabled (eq .Values.solution.name "flux") }}
+{{ if and .Values.components.certManager.enabled (eq .Values.solution.name "flux") }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -6,15 +6,15 @@ metadata:
   namespace: flux-system
 spec:
   releaseName: cert-manager
-  {{- if .Values.apps.istio.enabled }}
+  {{- if .Values.components.istio.enabled }}
   dependsOn:
     - name: istio-base
   {{- end }}
-  targetNamespace: {{ .Values.apps.certManager.namespace }}
+  targetNamespace: {{ .Values.components.certManager.namespace }}
   chart:
     spec:
       chart: cert-manager
-      version: {{ .Values.apps.certManager.version }}
+      version: {{ .Values.components.certManager.version }}
       sourceRef:
         kind: HelmRepository
         name: jetstack
@@ -22,19 +22,21 @@ spec:
   interval: {{ .Values.solution.interval }}
   values:
     installCRDs: true
-    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.certManager.annotations) | indent 6 }}
-    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.certManager.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 6 }}
+    {{- include "platformSystem.helper.annotations" (list "certManager" $) | indent 4 }}
+    {{- include "platformSystem.helper.nodeSelector" (list "certManager" $) | indent 4 }}
+    {{- include "platformSystem.helper.tolerations" (list "certManager" $) | indent 4 }}
+    {{- with .Values.components.certManager.serviceAccountAnnotations }}
     serviceAccount:
-      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.certManager.serviceAccountAnnotations)  | indent 8 }}
-    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.certManager.tolerations "globalTolerations" .Values.global.tolerations )  | indent 6 }}
+      annotations: {{- toYaml . | nindent 8 }}
+    {{- end }}
     webhook:
-      securePort: {{ .Values.apps.certManager.webhookSecurePort }}
-      nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.certManager.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 8 }}
-      tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.certManager.tolerations "globalTolerations" .Values.global.tolerations ) | indent 8 }}
+      securePort: {{ .Values.components.certManager.webhookSecurePort }}
+      {{- include "platformSystem.helper.nodeSelector" (list "certManager" $) | indent 6 }}
+      {{- include "platformSystem.helper.tolerations" (list "certManager" $) | indent 6 }}
     cainjector:
-      nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.certManager.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 8 }}
-      tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.certManager.tolerations "globalTolerations" .Values.global.tolerations ) | indent 8 }}
+      {{- include "platformSystem.helper.nodeSelector" (list "certManager" $) | indent 6 }}
+      {{- include "platformSystem.helper.tolerations" (list "certManager" $) | indent 6 }}
     startupapicheck:
-      nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.certManager.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 8 }}
-      tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.certManager.tolerations "globalTolerations" .Values.global.tolerations ) | indent 8 }}
+      {{- include "platformSystem.helper.nodeSelector" (list "certManager" $) | indent 6 }}
+      {{- include "platformSystem.helper.tolerations" (list "certManager" $) | indent 6 }}
 {{ end }}

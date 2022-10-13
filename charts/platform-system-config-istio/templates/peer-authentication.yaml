@@ -1,4 +1,4 @@
-{{ if .Values.apps.istio.enabled }}
+{{ if .Values.components.istio.enabled }}
 apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
 metadata:
@@ -6,5 +6,5 @@ metadata:
   namespace: {{ .Values.solution.namespace | quote }}
 spec:
   mtls:
-    mode: {{ .Values.apps.istio.mTLSMode | default "STRICT" | quote }}
+    mode: {{ .Values.components.istio.mTLSMode | default "STRICT" | quote }}
 {{- end }}

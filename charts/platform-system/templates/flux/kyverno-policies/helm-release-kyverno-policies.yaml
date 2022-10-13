@@ -1,4 +1,4 @@
-{{ if and (and .Values.apps.kyvernoPolicies.enabled .Values.apps.kyverno.enabled) (eq .Values.solution.name "flux") }}
+{{ if and (and .Values.components.kyvernoPolicies.enabled .Values.components.kyverno.enabled) (eq .Values.solution.name "flux") }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -8,21 +8,23 @@ spec:
   releaseName: kyverno-policies
   dependsOn:
     - name: kyverno
-  targetNamespace: {{ .Values.apps.kyverno.namespace }}
+  targetNamespace: {{ .Values.components.kyverno.namespace }}
   chart:
     spec:
       chart: kyverno-policies
-      version: {{ .Values.apps.kyvernoPolicies.version }}
+      version: {{ .Values.components.kyvernoPolicies.version }}
       sourceRef:
         kind: HelmRepository
         name: kyverno
         namespace: flux-system
   interval: {{ .Values.solution.interval }}
   values:
-    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.kyvernoPolicies.annotations) | indent 6 }}
-    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.kyvernoPolicies.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 6 }}
-    podSecurityStandard: {{ .Values.apps.kyvernoPolicies.podSecurityStandard | indent 6 }}
+    {{- include "platformSystem.helper.annotations" (list "kyvernoPolicies" $) | indent 4 }}
+    {{- include "platformSystem.helper.nodeSelector" (list "kyvernoPolicies" $) | indent 4 }}
+    {{- include "platformSystem.helper.tolerations" (list "kyvernoPolicies" $) | indent 4 }}
+    {{- with .Values.components.kyvernoPolicies.serviceAccountAnnotations }}
     serviceAccount:
-      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.kyvernoPolicies.serviceAccountAnnotations) | indent 8 }}
-    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.kyvernoPolicies.tolerations "globalTolerations" .Values.global.tolerations ) | indent 6 }}
+      annotations: {{- toYaml . | nindent 8 }}
+    {{- end }}
+    podSecurityStandard: {{ .Values.components.kyvernoPolicies.podSecurityStandard | quote }}
 {{ end }}

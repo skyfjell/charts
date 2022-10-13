@@ -1,4 +1,4 @@
-{{- if or .Values.apps.keycloak.enabled .Values.apps.privatebin.enabled }}
+{{- if or .Values.components.keycloak.enabled .Values.components.privatebin.enabled }}
 apiVersion: v1
 kind: Namespace
 metadata:

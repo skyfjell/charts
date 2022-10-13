@@ -1,4 +1,4 @@
-{{ if and .Values.apps.vaultOperator.enabled (eq .Values.solution.name "flux") }}
+{{ if and .Values.components.vaultOperator.enabled (eq .Values.solution.name "flux") }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -6,20 +6,22 @@ metadata:
   namespace: flux-system
 spec:
   releaseName: vault-operator
-  targetNamespace: {{ .Values.apps.vaultOperator.namespace }}
+  targetNamespace: {{ .Values.components.vaultOperator.namespace }}
   chart:
     spec:
       chart: vault-operator
-      version: {{ .Values.apps.vaultOperator.version }}
+      version: {{ .Values.components.vaultOperator.version }}
       sourceRef:
         kind: HelmRepository
         name: banzaicloud
         namespace: flux-system
   interval: {{ .Values.solution.interval }}
   values:
-    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.kyverno.annotations) | indent 6 }}
-    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.kyverno.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 6 }}
-    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.kyverno.tolerations "globalTolerations" .Values.global.tolerations ) | indent 6 }}
+    {{- include "platformSystem.helper.annotations" (list "vaultOperator" $) | indent 4 }}
+    {{- include "platformSystem.helper.nodeSelector" (list "vaultOperator" $) | indent 4 }}
+    {{- include "platformSystem.helper.tolerations" (list "vaultOperator" $) | indent 4 }}
+    {{- with .Values.components.vaultOperator.serviceAccountAnnotations }}
     serviceAccount:
-      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.kyverno.serviceAccountAnnotations) | indent 8 }}
+      annotations: {{- toYaml . | nindent 8 }}
+    {{- end }}
 {{ end }}

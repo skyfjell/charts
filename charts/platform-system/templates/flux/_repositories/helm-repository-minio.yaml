@@ -1,4 +1,4 @@
-{{ if and .Values.apps.minioOperator.enabled (eq .Values.solution.name "flux") }}
+{{ if and .Values.components.minioOperator.enabled (eq .Values.solution.name "flux") }}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
