@@ -62,7 +62,7 @@ Create the name of the service account to use
 {{- end }}
 
 {{/* Set tolerations from global if available and if not set it from app values*/}}  
-{{/* ex: tolerations: {{ include "helper.tolerations" (dict "globalTolerations" .Values.global.tolerations "appTolerations" .Values.apps.<app>.tolerations ) }} */}}
+{{/* ex: tolerations: {{ include "helper.tolerations" (dict "globalTolerations" .Values.global.tolerations "appTolerations" .Values.components.<app>.tolerations ) }} */}}
 {{- define "helper.tolerations" }}                                                   
 {{- if .appTolerations }}                                                            
 {{ toYaml .appTolerations }}                                              
@@ -72,9 +72,54 @@ Create the name of the service account to use
 {{- "[]" }}                                                                          
 {{- end }}                                                                           
 {{- end }}                                                                           
-                                                                                     
+
+
+
+{{/*
+Sets annotations for app based on local and global annoations.
+Ex: {{ include "platformSystem.helper.annotations" (list "kyverno" $)}}
+*/}}
+{{- define "platformSystem.helper.annotations" }}
+{{- $path:= first .}}
+{{- $global := last . }}
+{{- $values := $global.Values }}
+{{- $appName :=  ((tpl (printf "{{ default dict ( $.Values.components.%s).annotations | toYaml }}" $path) $global) | fromYaml) }}
+{{- with (default $values.global.annotations $appName ) }}
+annotations: {{- toYaml . | nindent 2}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Sets nodeSelector for app based on local and global nodeSelector.
+Ex: {{ include "platformSystem.helper.nodeSelector" (list "kyverno" $)}}
+*/}}
+{{- define "platformSystem.helper.nodeSelector" }}
+{{- $path := first .}}
+{{- $global := last . }}
+{{- $values := $global.Values }}
+{{- $appName :=  ((tpl (printf "{{ default dict ( $.Values.components.%s).nodeSelector | toYaml }}" $path) $global) | fromYaml) }}
+{{- with (default $values.global.nodeSelector $appName ) }}
+nodeSelector: {{- toYaml . | nindent 2}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Sets tolerations for app based on local and global tolerations.
+Ex: {{ include "platformSystem.helper.tolerations" (list "kyverno" $)}}
+*/}}
+{{- define "platformSystem.helper.tolerations" }}
+{{- $path:= first .}}
+{{- $global := last . }}
+{{- $values := $global.Values }}
+{{- $appName :=  ((tpl (printf "{{ default dict ( $.Values.components.%s).tolerations | toYaml }}" $path) $global) | fromYaml) }}
+{{- with (default $values.global.tolerations $appName ) }}
+tolerations: {{- toYaml . | nindent 2}}
+{{- end -}}
+{{- end -}}
+
+
 {{/* Set nodeSelector from global if available and if not set it from app values*/}} 
-{{/* ex: nodeSelector: {{ include "helper.nodeSelector" (dict "globalNodeSelector" .Values.global.nodeSelector "appNodeSelector" .Values.apps.<app>.nodeSelector) }} */}}
+{{/* ex: nodeSelector: {{ include "helper.nodeSelector" (dict "globalNodeSelector" .Values.global.nodeSelector "appNodeSelector" .Values.components.<app>.nodeSelector) }} */}}
 {{- define "helper.nodeSelector" }}                                                  
 {{- if .appNodeSelector }}                                                           
 {{ toYaml .appNodeSelector }}                                             
@@ -86,7 +131,7 @@ Create the name of the service account to use
 {{- end }}                                                                           
 
 {{/* Set annotations in subcharts from main chart */}}
-{{/* ex: annotations: {{ include "helper.appAnnotations" ("appAnnotations" .Values.apps.<app>.appAnnotations) }} */}}
+{{/* ex: annotations: {{ include "helper.appAnnotations" ("appAnnotations" .Values.components.<app>.appAnnotations) }} */}}
 {{- define "helper.appAnnotations" }}
 {{- if .appAnnotations }}
 {{ toYaml .appAnnotations }}
@@ -96,7 +141,7 @@ Create the name of the service account to use
 {{- end }}
 
 {{/* Set annotations in subcharts from main chart */}}
-{{/* ex: annotations: {{ include "helper.saAnnotations" ("saAnnotations" .Values.apps.<app>.serviceAccountAnnotations) }} */}}
+{{/* ex: annotations: {{ include "helper.saAnnotations" ("saAnnotations" .Values.components.<app>.serviceAccountAnnotations) }} */}}
 {{- define "helper.saAnnotations" }}
 {{- if .saAnnotations }}
 {{ toYaml .saAnnotations }}
@@ -106,7 +151,7 @@ Create the name of the service account to use
 {{- end }}
 
 {{/* Pass the storage class name through from main chart */}}
-{{/* ex: key: {{ include "helper.storageClassName" ("scname" .Values.apps.<app>.storageClassName) }} */}}
+{{/* ex: key: {{ include "helper.storageClassName" ("scname" .Values.components.<app>.storageClassName) }} */}}
 {{- define "helper.storageClassName" }}
 {{- if .scname }}
 {{- toYaml .scname -}}

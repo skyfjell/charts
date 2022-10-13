@@ -1,4 +1,4 @@
-{{ if and .Values.apps.istio.enabled (eq .Values.solution.name "flux") }}
+{{ if and .Values.components.istio.enabled (eq .Values.solution.name "flux") }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   releaseName: istio-base
-  targetNamespace: {{ .Values.apps.istio.namespace }}
+  targetNamespace: {{ .Values.components.istio.namespace }}
   chart:
     spec:
       chart: base
@@ -16,9 +16,9 @@ spec:
         namespace: flux-system
   interval: {{ .Values.solution.interval }}
   values:
-    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.istio.annotations) | indent 6 }}
-    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.istio.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 6 }}
+    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.components.istio.annotations) | indent 6 }}
+    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.components.istio.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 6 }}
     serviceAccount:
-      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.istio.serviceAccountAnnotations) | indent 8 }}
-    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.istio.tolerations "globalTolerations" .Values.global.tolerations ) | indent 6 }}
+      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.components.istio.serviceAccountAnnotations) | indent 8 }}
+    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.components.istio.tolerations "globalTolerations" .Values.global.tolerations ) | indent 6 }}
 {{ end }}

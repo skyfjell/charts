@@ -1,4 +1,4 @@
-{{ if and .Values.apps.certManager.enabled (eq .Values.solution.name "flux") }}
+{{ if and .Values.components.certManager.enabled (eq .Values.solution.name "flux") }}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:

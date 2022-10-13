@@ -1,11 +1,11 @@
-{{ if .Values.apps.istio.enabled }}
+{{ if .Values.components.istio.enabled }}
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: {{ .Values.apps.istio.namespace }}
+  name: {{ .Values.components.istio.namespace }}
   labels:
     {{- include "platform-system.labels" . | nindent 4 }}
-    {{- if or (and .Values.apps.istio.enabled .Values.apps.istio.istioEnabled) (and .Values.apps.istio.enabled .Values.global.istioEnabled) }}
+    {{- if or (and .Values.components.istio.enabled .Values.components.istio.istioEnabled) (and .Values.components.istio.enabled .Values.global.istioEnabled) }}
     istio-injection: enabled
     {{- end }}
 {{ end }}
