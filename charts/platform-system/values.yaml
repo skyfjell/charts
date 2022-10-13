@@ -7,7 +7,7 @@ solution:
 # Prefix for global resources. Defaults to `namespace` if unset.
 prefix: ""
 
-apps:
+components:
   certManager:
     enabled: true
     istioEnabled: true
@@ -40,6 +40,9 @@ apps:
     nodeSelector: {}
     tolerations: []
     affinity: {}
+    component:
+      annotations:
+        "asd": asdas
   kyverno:
     enabled: true
     istioEnabled: true

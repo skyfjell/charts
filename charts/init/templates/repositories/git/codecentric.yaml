@@ -1,4 +1,4 @@
-{{- if .Values.apps.keycloak.enabled }}
+{{- if .Values.components.keycloak.enabled }}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: GitRepository
 metadata:

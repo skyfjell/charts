@@ -1,11 +1,11 @@
-{{- if .Values.apps.privatebin.enabled }}
+{{- if .Values.components.privatebin.enabled }}
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: privatebin
   namespace: privatebin
 spec:
-  hosts: {{ toYaml .Values.apps.privatebin.hosts | nindent 4 }}
+  hosts: {{ toYaml .Values.components.privatebin.hosts | nindent 4 }}
   gateways:
     - istio-system/auth-gateway
   http:

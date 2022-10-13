@@ -1,4 +1,4 @@
-{{ if and .Values.apps.vaultOperator.enabled (eq .Values.solution.name "flux") }}
+{{ if and .Values.components.vaultOperator.enabled (eq .Values.solution.name "flux") }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -6,11 +6,11 @@ metadata:
   namespace: flux-system
 spec:
   releaseName: vault-operator
-  targetNamespace: {{ .Values.apps.vaultOperator.namespace }}
+  targetNamespace: {{ .Values.components.vaultOperator.namespace }}
   chart:
     spec:
       chart: vault-operator
-      version: {{ .Values.apps.vaultOperator.version }}
+      version: {{ .Values.components.vaultOperator.version }}
       sourceRef:
         kind: HelmRepository
         name: banzaicloud
@@ -20,7 +20,7 @@ spec:
     {{- include "platformSystem.helper.annotations" (list "vaultOperator" $) | indent 4 }}
     {{- include "platformSystem.helper.nodeSelector" (list "vaultOperator" $) | indent 4 }}
     {{- include "platformSystem.helper.tolerations" (list "vaultOperator" $) | indent 4 }}
-    {{- with .Values.apps.vaultOperator.serviceAccountAnnotations }}
+    {{- with .Values.components.vaultOperator.serviceAccountAnnotations }}
     serviceAccount:
       annotations: {{- toYaml . | nindent 8 }}
     {{- end }}

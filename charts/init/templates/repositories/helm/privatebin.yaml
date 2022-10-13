@@ -1,4 +1,4 @@
-{{- if .Values.apps.privatebin.enabled }}
+{{- if .Values.components.privatebin.enabled }}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:

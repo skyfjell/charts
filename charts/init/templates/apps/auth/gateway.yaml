@@ -1,5 +1,5 @@
 # `and` condition any other auth services as needed.
-{{- if or .Values.apps.keycloak.enabled .Values.apps.privatebin.enabled }}
+{{- if or .Values.components.keycloak.enabled .Values.components.privatebin.enabled }}
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
@@ -17,5 +17,5 @@ spec:
         mode: SIMPLE
         credentialName: ingress-cert
       # Concat any other auth service hosts as needed.
-      hosts: {{- toYaml (concat .Values.apps.keycloak.hosts .Values.apps.privatebin.hosts) | nindent 8 }}
+      hosts: {{- toYaml (concat .Values.components.keycloak.hosts .Values.components.privatebin.hosts) | nindent 8 }}
 {{- end }}

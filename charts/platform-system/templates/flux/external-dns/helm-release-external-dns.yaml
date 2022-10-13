@@ -1,4 +1,4 @@
-{{ if and .Values.apps.externalDns.enabled (eq .Values.solution.name "flux") }}
+{{ if and .Values.components.externalDns.enabled (eq .Values.solution.name "flux") }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -6,20 +6,24 @@ metadata:
   namespace: flux-system
 spec:
   releaseName: external-dns
-  targetNamespace: {{ .Values.apps.externalDns.namespace }}
+  targetNamespace: {{ .Values.components.externalDns.namespace }}
   chart:
     spec:
       chart: external-dns
-      version: {{ .Values.apps.externalDns.version }}
+      version: {{ .Values.components.externalDns.version }}
       sourceRef:
         kind: HelmRepository
         name: bitnami
         namespace: flux-system
   interval: {{ .Values.solution.interval }}
   values:
-    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.externalDns.annotations) | nindent 6 }}
-    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.externalDns.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | nindent 6 }}
-    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.externalDns.tolerations "globalTolerations" .Values.global.tolerations ) | nindent 6 }}
+    {{- include "platformSystem.helper.annotations" (list "externalDns" $) | indent 4 }}
+    {{- include "platformSystem.helper.nodeSelector" (list "externalDns" $) | indent 4 }}
+    {{- include "platformSystem.helper.tolerations" (list "externalDns" $) | indent 4 }}
+    {{- with .Values.components.externalDns.serviceAccountAnnotations }}
+    serviceAccount:
+      annotations: {{- toYaml . | nindent 8 }}
+    {{- end }}
     global:
       enabled: false
       name: external-dns
@@ -29,8 +33,6 @@ spec:
       boostrapExpect: 1
     podSecurityContext:
       fsGroup: 65534 # For ExternalDNS to be able to read Kubernetes and AWS token files
-    serviceAccount:
-      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.externalDns.serviceAccountAnnotations) | nindent 8 }}
     sources:
       - service
       - ingress

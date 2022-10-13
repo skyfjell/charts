@@ -1,11 +1,11 @@
-{{ if .Values.apps.externalDns.enabled }}
+{{ if .Values.components.externalDns.enabled }}
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: {{ .Values.apps.externalDns.namespace }}
+  name: {{ .Values.components.externalDns.namespace }}
   labels:
     {{- include "platform-system.labels" . | nindent 4 }}
-    {{- if or (and .Values.apps.istio.enabled .Values.apps.externalDns.istioEnabled) (and .Values.apps.istio.enabled .Values.global.istioEnabled) }}
+    {{- if or (and .Values.components.istio.enabled .Values.components.externalDns.istioEnabled) (and .Values.components.istio.enabled .Values.global.istioEnabled) }}
     istio-injection: enabled
     {{- end }}
 {{ end }}

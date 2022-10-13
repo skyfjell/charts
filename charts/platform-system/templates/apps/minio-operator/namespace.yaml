@@ -1,11 +1,11 @@
-{{ if .Values.apps.minioOperator.enabled }}
+{{ if .Values.components.minioOperator.enabled }}
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: {{ .Values.apps.minioOperator.namespace }}
+  name: {{ .Values.components.minioOperator.namespace }}
   labels:
     {{- include "platform-system.labels" . | nindent 4 }}
-    {{- if or (and .Values.apps.istio.enabled .Values.apps.minioOperator.istioEnabled) (and .Values.apps.istio.enabled .Values.global.istioEnabled) }}
+    {{- if or (and .Values.components.istio.enabled .Values.components.minioOperator.istioEnabled) (and .Values.components.istio.enabled .Values.global.istioEnabled) }}
     istio-injection: enabled
     {{- end }}
 {{ end }}

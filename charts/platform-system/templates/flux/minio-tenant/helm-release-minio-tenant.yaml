@@ -1,4 +1,4 @@
-{{ if and .Values.apps.minioTenant.enabled (eq .Values.solution.name "flux") }}
+{{ if and .Values.components.minioTenant.enabled (eq .Values.solution.name "flux") }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -6,34 +6,30 @@ metadata:
   namespace: flux-system
 spec:
   releaseName: minio-tenant
-  targetNamespace: {{ .Values.apps.minioTenant.namespace }}
+  targetNamespace: {{ .Values.components.minioTenant.namespace }}
   chart:
     spec:
       chart: tenant 
-      version: {{ .Values.apps.minioTenant.version }}
+      version: {{ .Values.components.minioTenant.version }}
       sourceRef:
         kind: HelmRepository
         name: minio
         namespace: flux-system
   interval: {{ .Values.solution.interval }}
   values:
-    {{- with .Values.apps.minioTenant.annotations }}
-    annotations: {{- toYaml . | nindent 6 }}
-    {{- end }}
-    {{- with (default .Values.global.nodeSelector .Values.apps.minioTenant.nodeSelector) }}
-    nodeSelector: {{- toYaml . | nindent 6 }}
-    {{- end }}
-    annotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.minioTenant.annotations) }}
-    nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.minioTenant.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) }}
+    {{- include "platformSystem.helper.annotations" (list "minioTenant" $) | indent 4 }}
+    {{- include "platformSystem.helper.nodeSelector" (list "minioTenant" $) | indent 4 }}
+    {{- include "platformSystem.helper.tolerations" (list "minioTenant" $) | indent 4 }}
+    {{- with .Values.components.minioTenant.serviceAccountAnnotations }}
     serviceAccount:
-      annotations: {{ include "helper.saAnnotations" (dict "saAnnotations" .Values.apps.minioTenant.serviceAccountAnnotations) }}
-    tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.minioTenant.tolerations "globalTolerations" .Values.global.tolerations ) }}
+      annotations: {{- toYaml . | nindent 8 }}
+    {{- end }}
     tenant:
       pools:
-        storageClassName: {{ include "helper.storageClassName" (dict "scname" .Values.apps.minioTenant.storageClassName) }}
+        storageClassName: {{ default "default" .Values.components.minioTenant.storageClassName }}
     prometheus:
-      storageClassName: {{ include "helper.storageClassName" (dict "scname" .Values.apps.minioTenant.storageClassName) }}
+      storageClassName: {{ default "default" .Values.components.minioTenant.storageClassName }}
     log:
       db:
-        storageClassName: {{ include "helper.storageClassName" (dict "scname" .Values.apps.minioTenant.storageClassName) }}
+        storageClassName: {{ default "default" .Values.components.minioTenant.storageClassName }}
 {{ end }}

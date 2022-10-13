@@ -1,4 +1,4 @@
-{{- if or .Values.apps.keycloak.enabled .Values.services.externalDNS.enabled .Values.databases.postgresql.enabled }}
+{{- if or .Values.components.keycloak.enabled .Values.services.externalDNS.enabled .Values.databases.postgresql.enabled }}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:

@@ -62,7 +62,7 @@ Create the name of the service account to use
 {{- end }}
 
 {{/* Set tolerations from global if available and if not set it from app values*/}}  
-{{/* ex: tolerations: {{ include "helper.tolerations" (dict "globalTolerations" .Values.global.tolerations "appTolerations" .Values.apps.<app>.tolerations ) }} */}}
+{{/* ex: tolerations: {{ include "helper.tolerations" (dict "globalTolerations" .Values.global.tolerations "appTolerations" .Values.components.<app>.tolerations ) }} */}}
 {{- define "helper.tolerations" }}                                                   
 {{- if .appTolerations }}                                                            
 {{ toYaml .appTolerations }}                                              
@@ -73,17 +73,21 @@ Create the name of the service account to use
 {{- end }}                                                                           
 {{- end }}                                                                           
 
+
+
 {{/*
 Sets annotations for app based on local and global annoations.
 Ex: {{ include "platformSystem.helper.annotations" (list "kyverno" $)}}
 */}}
 {{- define "platformSystem.helper.annotations" }}
-{{- $appName:= first .}}
+{{- $path:= first .}}
 {{- $global := last . }}
 {{- $values := $global.Values }}
-{{- with (default $values.global.annotations (get $values.apps $appName).annotations) }}
+{{- $appName :=  ((tpl (printf "{{( $.Values.components.%s).annotations | toYaml }}" $path) $global) | fromYaml) }}
+{{- with (default $values.global.annotations $appName ) }}
 annotations: {{- toYaml . | nindent 2}}
 {{- end -}}
+
 {{- end -}}
 
 {{/*
@@ -94,7 +98,8 @@ Ex: {{ include "platformSystem.helper.nodeSelector" (list "kyverno" $)}}
 {{- $appName:= first .}}
 {{- $global := last . }}
 {{- $values := $global.Values }}
-{{- with (default $values.global.nodeSelector (get $values.apps $appName).nodeSelector) }}
+{{- $appName :=  ((tpl (printf "{{( $.Values.components.%s).nodeSelector | toYaml }}" $path) $global) | fromYaml) }}
+{{- with (default $values.global.nodeSelector $appName ) }}
 nodeSelector: {{- toYaml . | nindent 2}}
 {{- end -}}
 {{- end -}}
@@ -107,14 +112,15 @@ Ex: {{ include "platformSystem.helper.tolerations" (list "kyverno" $)}}
 {{- $appName:= first .}}
 {{- $global := last . }}
 {{- $values := $global.Values }}
-{{- with (default $values.global.tolerations (get $values.apps $appName).tolerations) }}
+{{- $appName :=  ((tpl (printf "{{( $.Values.components.%s).tolerations | toYaml }}" $path) $global) | fromYaml) }}
+{{- with (default $values.global.tolerations $appName ) }}
 tolerations: {{- toYaml . | nindent 2}}
 {{- end -}}
 {{- end -}}
 
 
 {{/* Set nodeSelector from global if available and if not set it from app values*/}} 
-{{/* ex: nodeSelector: {{ include "helper.nodeSelector" (dict "globalNodeSelector" .Values.global.nodeSelector "appNodeSelector" .Values.apps.<app>.nodeSelector) }} */}}
+{{/* ex: nodeSelector: {{ include "helper.nodeSelector" (dict "globalNodeSelector" .Values.global.nodeSelector "appNodeSelector" .Values.components.<app>.nodeSelector) }} */}}
 {{- define "helper.nodeSelector" }}                                                  
 {{- if .appNodeSelector }}                                                           
 {{ toYaml .appNodeSelector }}                                             
@@ -126,7 +132,7 @@ tolerations: {{- toYaml . | nindent 2}}
 {{- end }}                                                                           
 
 {{/* Set annotations in subcharts from main chart */}}
-{{/* ex: annotations: {{ include "helper.appAnnotations" ("appAnnotations" .Values.apps.<app>.appAnnotations) }} */}}
+{{/* ex: annotations: {{ include "helper.appAnnotations" ("appAnnotations" .Values.components.<app>.appAnnotations) }} */}}
 {{- define "helper.appAnnotations" }}
 {{- if .appAnnotations }}
 {{ toYaml .appAnnotations }}
@@ -136,7 +142,7 @@ tolerations: {{- toYaml . | nindent 2}}
 {{- end }}
 
 {{/* Set annotations in subcharts from main chart */}}
-{{/* ex: annotations: {{ include "helper.saAnnotations" ("saAnnotations" .Values.apps.<app>.serviceAccountAnnotations) }} */}}
+{{/* ex: annotations: {{ include "helper.saAnnotations" ("saAnnotations" .Values.components.<app>.serviceAccountAnnotations) }} */}}
 {{- define "helper.saAnnotations" }}
 {{- if .saAnnotations }}
 {{ toYaml .saAnnotations }}
@@ -146,7 +152,7 @@ tolerations: {{- toYaml . | nindent 2}}
 {{- end }}
 
 {{/* Pass the storage class name through from main chart */}}
-{{/* ex: key: {{ include "helper.storageClassName" ("scname" .Values.apps.<app>.storageClassName) }} */}}
+{{/* ex: key: {{ include "helper.storageClassName" ("scname" .Values.components.<app>.storageClassName) }} */}}
 {{- define "helper.storageClassName" }}
 {{- if .scname }}
 {{- toYaml .scname -}}
