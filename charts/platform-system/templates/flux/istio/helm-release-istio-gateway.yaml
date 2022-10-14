@@ -1,5 +1,5 @@
-{{- if and .Values.apps.istio.enabled (eq .Values.solution.name "flux") -}}
-{{- $istioValues := .Values.apps.istio -}}
+{{- if and .Values.components.istio.enabled (eq .Values.solution.name "flux") -}}
+{{- $istioValues := .Values.components.istio -}}
 {{- $istogw := $istioValues.component.gateway }}
 {{- if $istogw.create }}
 ---
@@ -10,7 +10,7 @@ metadata:
   namespace: {{ .Values.solution.namespace | quote }}
 spec:
   releaseName: {{ include "platformSystem.istio.istioGateway.release.name" $ }}
-  targetNamespace: {{ .Values.apps.istio.namespace }}
+  targetNamespace: {{ .Values.components.istio.namespace }}
   dependsOn:
     - name: {{ include "platformSystem.istio.istiod.release.name" $ }}
       namespace: {{ .Values.solution.namespace | quote }}

@@ -5,7 +5,7 @@ metadata:
   name: {{ .Values.components.minioOperator.namespace }}
   labels:
     {{- include "platformSystem.labels" . | nindent 4 }}
-    {{- if or (and .Values.apps.istio.enabled .Values.apps.minioOperator.istioEnabled) (and .Values.apps.istio.enabled .Values.global.istioEnabled) }}
+    {{- if or (and .Values.components.istio.enabled .Values.components.minioOperator.istioEnabled) (and .Values.components.istio.enabled .Values.global.istioEnabled) }}
     istio-injection: enabled
     {{- end }}
 {{ end }}

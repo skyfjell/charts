@@ -1,5 +1,5 @@
 {{ define "platformSystem.istio.repository.name" }}
-{{- printf "%s-%s" .Release.Name .Values.apps.istio.chart.source.repository | replace "+" "_" | trimSuffix "-" }}
+{{- printf "%s-%s" .Release.Name .Values.components.istio.chart.source.repository | replace "+" "_" | trimSuffix "-" }}
 {{- end -}}
 
 {{/*
@@ -11,14 +11,14 @@
 {{- end -}}
 
 {{- define "platformSystem.istio.istioBase.defaultValues" -}}
-{{- $istioValues := .Values.apps.istio }}
+{{- $istioValues := .Values.components.istio }}
 global:
   istioNamespace: {{ $istioValues.namespace }}
 {{- end -}}
 
 {{- define "platformSystem.istio.istioBase.values" }}
 {{- $defaultValues := (include "platformSystem.istio.istioBase.defaultValues" $ | fromYaml ) }}
-{{- (deepCopy .Values.apps.istio.component.base.values | merge $defaultValues) | toYaml }}
+{{- ( mergeOverwrite $defaultValues .Values.components.istio.component.base.values ) | toYaml }}
 {{- end -}}
 
 {{/*
@@ -26,13 +26,27 @@ global:
 */}}
 
 {{- define "platformSystem.istio.istiod.defaultValues" -}}
-{{- $istioValues := .Values.apps.istio }}
+{{- $istioValues := .Values.components.istio }}
 global:
   istioNamespace: {{ $istioValues.namespace }}
+{{- $anno := ( include "platformSystem.helper.annotations" ( list "certManager" $ ) ) }}
+{{- $tol := ( include "platformSystem.helper.tolerations" ( list "certManager" $ ) ) }}
+{{- $sel := ( include "platformSystem.helper.nodeSelector" ( list "certManager" $ ) ) }}
+{{- if or (or $anno $tol) $sel }}
 pilot:
-  podAnnotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.istio.annotations) | indent 4 }}
-  nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.istio.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 4 }}
-  tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.istio.tolerations "globalTolerations" .Values.global.tolerations ) | indent 4 }}
+  {{- with $anno }}
+  podAnnotations:
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+  {{- with $sel }}
+  nodeSelector:
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+  {{- with $tol }}
+  tolerations:
+    {{ . | indent 2 }}
+  {{- end }}
+{{- end -}}
 {{- end -}}
 
 {{ define "platformSystem.istio.istiod.release.name" }}
@@ -41,7 +55,7 @@ pilot:
 
 {{- define "platformSystem.istio.istiod.values" }}
 {{- $defaultValues := (include "platformSystem.istio.istiod.defaultValues" $ | fromYaml ) }}
-{{- (deepCopy $defaultValues | merge .Values.apps.istio.component.istiod.values) | toYaml }}
+{{- ( mergeOverwrite $defaultValues .Values.components.istio.component.istiod.values ) | toYaml }}
 {{- end -}}
 
 {{/*
@@ -53,13 +67,19 @@ pilot:
 {{- end -}}
 
 {{- define "platformSystem.istio.istioGateway.defaultValues" -}}
-{{- $istioValues := .Values.apps.istio }}
-podAnnotations: {{ include "helper.appAnnotations" (dict "appAnnotations" .Values.apps.istio.annotations) | indent 4 }}
-nodeSelector: {{ include "helper.nodeSelector" (dict "appNodeSelector" .Values.apps.istio.nodeSelector "globalNodeSelector" .Values.global.nodeSelector ) | indent 4 }}
-tolerations: {{ include "helper.tolerations" (dict "appTolerations" .Values.apps.istio.tolerations "globalTolerations" .Values.global.tolerations ) | indent 4 }}
+{{- $tol := ( include "platformSystem.helper.tolerations" ( list "certManager" $ ) ) }}
+{{- $sel := ( include "platformSystem.helper.nodeSelector" ( list "certManager" $ ) ) }}
+{{- with $sel }}
+nodeSelector:
+  {{ toYaml . | indent 2 }}
+{{- end }}
+{{- with $tol }}
+tolerations:
+  {{ . }}
+{{- end }}
 {{- end -}}
 
 {{- define "platformSystem.istio.istioGateway.values" }}
 {{- $defaultValues := (include "platformSystem.istio.istioGateway.defaultValues" $ | fromYaml ) }}
-{{- (deepCopy $defaultValues | merge .Values.apps.istio.component.gateway.values) | toYaml }}
+{{- ( mergeOverwrite $defaultValues .Values.components.istio.component.gateway.values ) | toYaml }}
 {{- end -}}

@@ -10,27 +10,51 @@ prefix: ""
 
 components:
   certManager:
+    # enable this component
     enabled: true
+    # istioEnabled for istio integrations
     istioEnabled: true
+    # namespace to be launched in
     namespace: cert-manager
+    # version of the chart
     version: "1.8.2"
+    # webhook component securePort
     webhookSecurePort: 10260
+    # annotations on all components
     annotations: {}
+    # annotations on service account
     serviceAccountAnnotations: {}
+    # nodeSelector on all components
     nodeSelector: {}
+    # tolerations on all components
     tolerations: []
+    # affinity on all components
     affinity: {}
+    # values level overrides for helm chart
+    values: {}
   externalDns:
-    enabled: false
+    # enable this component
+    enabled: true
+    # istioEnabled for istio integrations
     istioEnabled: true
+    # namespace to be launched in
     namespace: external-dns
+    # version of the chart
     version: "6.7.2"
+    # annotations on all components
     annotations: {}
+    # annotations on service account
     serviceAccountAnnotations: {}
+    # nodeSelector on all components
     nodeSelector: {}
+    # tolerations on all components
     tolerations: []
+    # affinity on all components
     affinity: {}
+    # values level overrides for helm chart
+    values: {}
   istio:
+    # enable this component
     enabled: true
     # namespace to target for all HelmReleases
     namespace: istio-system
@@ -68,9 +92,9 @@ components:
         chart:
           # name of chart
           name: base
-          # version of base, defaults to .Values.apps.istio.chart.version
+          # version of base, defaults to .Values.components.istio.chart.version
           version: ""
-          # source of helm release, defaults to .Values.apps.istio.chart.source
+          # source of helm release, defaults to .Values.components.istio.chart.source
           # source:
           #   kind: ""
           #   repository: ""
@@ -89,9 +113,9 @@ components:
         chart:
           # name of chart
           name: istiod
-          # version of base, defaults to .Values.apps.istio.chart.version
+          # version of base, defaults to .Values.components.istio.chart.version
           version: ""
-          # source of helm release, defaults to .Values.apps.istio.chart.source
+          # source of helm release, defaults to .Values.components.istio.chart.source
           # source:
           #   kind: ""
           #   repository: ""
@@ -106,9 +130,9 @@ components:
         chart:
           # name of chart
           name: istio-gateway
-          # version of base, defaults to .Values.apps.istio.chart.version
+          # version of base, defaults to .Values.components.istio.chart.version
           version: ""
-          # source of helm release, defaults to .Values.apps.istio.chart.source
+          # source of helm release, defaults to .Values.components.istio.chart.source
           # source:
           #   kind: ""
           #   repository: ""
@@ -121,54 +145,104 @@ components:
         chart:
           version: "0.0.2"
   kyverno:
+    # enable this component
     enabled: true
+    # istioEnabled for istio integrations
     istioEnabled: true
-    version: "2.5.1"
+    # namespace to be launched in
     namespace: kyverno
+    # version of the chart
+    version: "2.5.1"
+    # annotations on all components
     annotations: {}
+    # serviceAccountAnnotations: annotations on service account
     serviceAccountAnnotations: {}
+    # nodeSelector on all components
     nodeSelector: {}
+    # tolerations on all components
     tolerations: []
+    # affinity on all components
     affinity: {}
+    # values level overrides for helm chart
+    values: {}
   kyvernoPolicies:
+    # enable this component
     enabled: true
+    # istioEnabled for istio integrations
     istioEnabled: true
-    version: "2.5.1"
+    # namespace to be launched in
     namespace: kyverno
+    # version of the chart
+    version: "2.5.1"
+    # podSecurityStandard for kyverno
     podSecurityStandard: "baseline"
-    annotations: {}
-    serviceAccountAnnotations: {}
+    # values level overrides for helm chart
+    values: {}
   minioOperator:
-    enabled: false
-    istioEnabled: true
-    version: "4.4.27"
-    namespace: minio-operator
-    annotations: {}
-    serviceAccountAnnotations: {}
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
-  minioTenant:
-    enabled: false
-    istioEnabled: false
-    version: "4.4.27"
-    namespace: minio-tenant
-    storageClassName: gp2
-    annotations: {}
-    serviceAccountAnnotations: {}
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
-  vaultOperator:
+    # enable this component
     enabled: true
+    # istioEnabled for istio integrations
     istioEnabled: true
-    version: "1.16.1"
-    namespace: vault-operator
+    # version of the chart
+    version: "4.4.27"
+    # namespace to be launched in
+    namespace: minio-operator
+    # annotations on all components
     annotations: {}
+    # serviceAccountAnnotations: annotations on service account
     serviceAccountAnnotations: {}
+    # nodeSelector on all components
     nodeSelector: {}
+    # tolerations on all components
     tolerations: []
+    # affinity on all components
     affinity: {}
+    # values level overrides for helm chart
+    values: {}
+  minioTenant:
+    # enable this component
+    enabled: true
+    # istioEnabled for istio integrations
+    istioEnabled: true
+    # version of the chart
+    version: "4.4.27"
+    # namespace to be launched in
+    namespace: minio-tenant
+    # storageClassName for minio instance
+    storageClassName: gp2
+    # annotations on all components
+    annotations: {}
+    # serviceAccountAnnotations: annotations on service account
+    serviceAccountAnnotations: {}
+    # nodeSelector on all components
+    nodeSelector: {}
+    # tolerations on all components
+    tolerations: []
+    # affinity on all components
+    affinity: {}
+    # values level overrides for helm chart
+    values: {}
+  vaultOperator:
+    # enable this component
+    enabled: true
+    # istioEnabled for istio integrations
+    istioEnabled: true
+    # version of the chart
+    version: "1.16.1"
+    # namespace to be launched in
+    namespace: vault-operator
+    # annotations on all components
+    annotations: {}
+    # serviceAccountAnnotations: annotations on service account
+    serviceAccountAnnotations: {}
+    # nodeSelector on all components
+    nodeSelector: {}
+    # tolerations on all components
+    tolerations: []
+    # affinity on all components
+    affinity: {}
+    # values level overrides for helm chart
+    values: {}
 
 # Global Pod Assignment
 global:

@@ -83,9 +83,9 @@ Ex: {{ include "platformSystem.helper.annotations" (list "kyverno" $)}}
 {{- $path:= first .}}
 {{- $global := last . }}
 {{- $values := $global.Values }}
-{{- $appName :=  ((tpl (printf "{{ default dict ( $.Values.components.%s).annotations | toYaml }}" $path) $global) | fromYaml) }}
+{{- $appName :=  ((tpl (printf "{{ default dict ( $.Values.components.%s ).annotations | toYaml }}" $path) $global) | fromYaml) }}
 {{- with (default $values.global.annotations $appName ) }}
-annotations: {{- toYaml . | nindent 2}}
+{{ . }}
 {{- end -}}
 {{- end -}}
 
@@ -97,23 +97,25 @@ Ex: {{ include "platformSystem.helper.nodeSelector" (list "kyverno" $)}}
 {{- $path := first .}}
 {{- $global := last . }}
 {{- $values := $global.Values }}
-{{- $appName :=  ((tpl (printf "{{ default dict ( $.Values.components.%s).nodeSelector | toYaml }}" $path) $global) | fromYaml) }}
+{{- $appName :=  ((tpl (printf "{{ default dict ( $.Values.components.%s ).nodeSelector | toYaml }}" $path) $global) | fromYaml) }}
 {{- with (default $values.global.nodeSelector $appName ) }}
-nodeSelector: {{- toYaml . | nindent 2}}
+{{ . }}
 {{- end -}}
 {{- end -}}
 
 {{/*
 Sets tolerations for app based on local and global tolerations.
+Because tolerations is an array object, we need to keep it as string.
+
 Ex: {{ include "platformSystem.helper.tolerations" (list "kyverno" $)}}
 */}}
 {{- define "platformSystem.helper.tolerations" }}
 {{- $path:= first .}}
 {{- $global := last . }}
 {{- $values := $global.Values }}
-{{- $appName :=  ((tpl (printf "{{ default dict ( $.Values.components.%s).tolerations | toYaml }}" $path) $global) | fromYaml) }}
-{{- with (default $values.global.tolerations $appName ) }}
-tolerations: {{- toYaml . | nindent 2}}
+{{- $appName :=  ((tpl (printf "{{ default dict $.Values.components.%s | toYaml }}" $path) $global) | fromYaml) }}
+{{- with ( default $values.global.tolerations $appName.tolerations ) }}
+{{ . | toYaml }}
 {{- end -}}
 {{- end -}}
 

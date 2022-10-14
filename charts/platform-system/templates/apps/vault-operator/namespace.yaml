@@ -5,7 +5,7 @@ metadata:
   name: {{ .Values.components.vaultOperator.namespace }}
   labels:
     {{- include "platformSystem.labels" . | nindent 4 }}
-    {{- if or (and .Values.apps.istio.enabled .Values.apps.vaultOperator.istioEnabled) (and .Values.apps.istio.enabled .Values.global.istioEnabled) }}
+    {{- if or (and .Values.components.istio.enabled .Values.components.vaultOperator.istioEnabled) (and .Values.components.istio.enabled .Values.global.istioEnabled) }}
     istio-injection: enabled
     {{- end }}
 {{ end }}
