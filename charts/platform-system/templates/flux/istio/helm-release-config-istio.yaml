@@ -10,7 +10,6 @@ metadata:
   labels:
     {{- include "platformSystem.labels" $ | nindent 4 }}
 spec:
-  releaseName: platform-system-config-istio
   targetNamespace: {{ .Values.components.istio.namespace }}
   dependsOn:
     - name: {{ include "platformSystem.istio.istioBase.release.name" $ }}

@@ -209,7 +209,7 @@ components:
     # namespace to be launched in
     namespace: minio-tenant
     # storageClassName for minio instance
-    storageClassName: gp2
+    storageClassName: default
     # annotations on all components
     annotations: {}
     # serviceAccountAnnotations: annotations on service account
