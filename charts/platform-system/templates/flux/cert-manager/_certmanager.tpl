@@ -2,7 +2,7 @@
 installCRDs: true
 {{- with ( include "platformSystem.helper.annotations" (list "certManager" $) ) }}
 annotations:
-  {{ toYaml . | indent 2}}
+  {{ . | indent 2}}
 {{- end }}
 {{- with ( include "platformSystem.helper.tolerations" (list "certManager" $) ) }}
 tolerations:
@@ -10,7 +10,7 @@ tolerations:
 {{- end }}
 {{- with ( include "platformSystem.helper.nodeSelector" (list "certManager" $) ) }}
 nodeSelector:
-  {{ toYaml . | indent 2}}
+  {{ . | indent 2}}
 {{- end }}
 {{- with .Values.components.certManager.serviceAccountAnnotations }}
 serviceAccount:
@@ -24,7 +24,7 @@ webhook:
   {{- end }}
   {{- with ( include "platformSystem.helper.nodeSelector" (list "certManager" $) ) }}
   nodeSelector:
-    {{ toYaml . | indent 4}}
+    {{ . | indent 4}}
   {{- end }}
 {{ $tol := ( include "platformSystem.helper.tolerations" (list "certManager" $) ) }}
 {{ $nsel := ( include "platformSystem.helper.nodeSelector" (list "certManager" $) ) }}
@@ -36,7 +36,7 @@ cainjector:
   {{- end }}
   {{- with $nsel }}
   nodeSelector:
-    {{ toYaml . | indent 4}}
+    {{ . | indent 4}}
   {{- end }}
 startupapicheck:
   {{- with $tol }}
@@ -45,7 +45,7 @@ startupapicheck:
   {{- end }}
   {{- with $nsel }}
   nodeSelector:
-    {{ toYaml . | indent 4}}
+    {{ . | indent 4}}
   {{- end }}
 {{- end -}}
 {{- end -}}

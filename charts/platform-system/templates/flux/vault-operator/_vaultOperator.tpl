@@ -4,11 +4,11 @@
 {{- $tol := ( include "platformSystem.helper.tolerations" (list "vaultOperator" $) ) }}
 {{- with $anno }}
 podAnnotations:
-  {{ toYaml . | indent 6}}
+  {{ . | indent 6}}
 {{- end }}
 {{- with $sel }}
 nodeSelector:
-  {{ toYaml . | indent 6}}
+  {{ . | indent 6}}
 {{- end }}
 {{- with $tol }}
 tolerations:

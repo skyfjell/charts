@@ -85,7 +85,7 @@ Ex: {{ include "platformSystem.helper.annotations" (list "kyverno" $)}}
 {{- $values := $global.Values }}
 {{- $appName :=  ((tpl (printf "{{ default dict ( $.Values.components.%s ).annotations | toYaml }}" $path) $global) | fromYaml) }}
 {{- with (default $values.global.annotations $appName ) }}
-{{ . }}
+{{ toYaml . }}
 {{- end -}}
 {{- end -}}
 
@@ -99,7 +99,7 @@ Ex: {{ include "platformSystem.helper.nodeSelector" (list "kyverno" $)}}
 {{- $values := $global.Values }}
 {{- $appName :=  ((tpl (printf "{{ default dict ( $.Values.components.%s ).nodeSelector | toYaml }}" $path) $global) | fromYaml) }}
 {{- with (default $values.global.nodeSelector $appName ) }}
-{{ . }}
+{{ toYaml . }}
 {{- end -}}
 {{- end -}}
 
@@ -115,7 +115,7 @@ Ex: {{ include "platformSystem.helper.tolerations" (list "kyverno" $)}}
 {{- $values := $global.Values }}
 {{- $appName :=  ((tpl (printf "{{ default dict $.Values.components.%s | toYaml }}" $path) $global) | fromYaml) }}
 {{- with ( default $values.global.tolerations $appName.tolerations ) }}
-{{ . | toYaml }}
+{{ toYaml . }}
 {{- end -}}
 {{- end -}}
 

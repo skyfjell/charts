@@ -29,18 +29,18 @@ global:
 {{- $istioValues := .Values.components.istio }}
 global:
   istioNamespace: {{ $istioValues.namespace }}
-{{- $anno := ( include "platformSystem.helper.annotations" ( list "certManager" $ ) ) }}
-{{- $tol := ( include "platformSystem.helper.tolerations" ( list "certManager" $ ) ) }}
-{{- $sel := ( include "platformSystem.helper.nodeSelector" ( list "certManager" $ ) ) }}
+{{- $anno := ( include "platformSystem.helper.annotations" ( list "istiod" $ ) ) }}
+{{- $tol := ( include "platformSystem.helper.tolerations" ( list "istiod" $ ) ) }}
+{{- $sel := ( include "platformSystem.helper.nodeSelector" ( list "istiod" $ ) ) }}
 {{- if or (or $anno $tol) $sel }}
 pilot:
   {{- with $anno }}
   podAnnotations:
-    {{ toYaml . | indent 4 }}
+    {{ . | indent 4 }}
   {{- end }}
   {{- with $sel }}
   nodeSelector:
-    {{ toYaml . | indent 4 }}
+    {{ . | indent 4 }}
   {{- end }}
   {{- with $tol }}
   tolerations:
@@ -67,11 +67,11 @@ pilot:
 {{- end -}}
 
 {{- define "platformSystem.istio.istioGateway.defaultValues" -}}
-{{- $tol := ( include "platformSystem.helper.tolerations" ( list "certManager" $ ) ) }}
-{{- $sel := ( include "platformSystem.helper.nodeSelector" ( list "certManager" $ ) ) }}
+{{- $tol := ( include "platformSystem.helper.tolerations" ( list "istioGateway" $ ) ) }}
+{{- $sel := ( include "platformSystem.helper.nodeSelector" ( list "istioGateway" $ ) ) }}
 {{- with $sel }}
 nodeSelector:
-  {{ toYaml . | indent 2 }}
+  {{ . | indent 2 }}
 {{- end }}
 {{- with $tol }}
 tolerations:

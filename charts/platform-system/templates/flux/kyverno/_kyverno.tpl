@@ -2,7 +2,7 @@
 installCRDs: true
 {{- with ( include "platformSystem.helper.annotations" (list "kyverno" $) ) }}
 annotations:
-  {{ toYaml . | indent 2}}
+  {{ . | indent 2}}
 {{- end }}
 {{- with ( include "platformSystem.helper.tolerations" (list "kyverno" $) ) }}
 tolerations:
@@ -10,7 +10,7 @@ tolerations:
 {{- end }}
 {{- with ( include "platformSystem.helper.nodeSelector" (list "kyverno" $) ) }}
 nodeSelector:
-  {{ toYaml . | indent 2}}
+  {{ . | indent 2}}
 {{- end }}
 {{- with .Values.components.kyverno.serviceAccountAnnotations }}
 serviceAccount:

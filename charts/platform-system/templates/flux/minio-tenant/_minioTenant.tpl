@@ -6,10 +6,10 @@ tenant:
   pools:
     - storageClassName: {{ default "default" .Values.components.minioTenant.storageClassName }}
       {{- with $anno }}
-      annotations: {{- toYaml . | nindent 10 }}
+      annotations: {{- . | nindent 10 }}
       {{- end }}
       {{- with $sel }}
-      nodeSelector: {{- toYaml . | nindent 10}}
+      nodeSelector: {{- . | nindent 10}}
       {{- end }}
       {{- with $tol }}
       tolerations: {{- . | nindent 10}}
@@ -18,11 +18,11 @@ tenant:
     storageClassName: {{ default "default" .Values.components.minioTenant.storageClassName }}
     {{- with $anno }}
     annotations:
-      {{ toYaml . | indent 8}}
+      {{ . | indent 8}}
     {{- end }}
     {{- with $sel }}
     nodeSelector:
-      {{ toYaml . | indent 6}}
+      {{ . | indent 6}}
     {{- end }}
     {{- with $tol }}
     tolerations: {{- . | nindent 8}}
@@ -30,11 +30,11 @@ tenant:
   log:
     {{- with $anno }}
     annotations:
-      {{ toYaml . | indent 8}}
+      {{ . | indent 8}}
     {{- end }}
     {{- with $sel }}
     nodeSelector:
-      {{ toYaml . | indent 8}}
+      {{ . | indent 8}}
     {{- end }}
     {{- with $tol }}
     tolerations: {{- . | nindent 8 }}
@@ -43,11 +43,11 @@ tenant:
       storageClassName: {{ default "default" .Values.components.minioTenant.storageClassName }}
       {{- with $anno }}
       annotations:
-        {{ toYaml . | indent 10}}
+        {{ . | indent 10}}
       {{- end }}
       {{- with $sel }}
       nodeSelector:
-        {{ toYaml . | indent 10}}
+        {{ . | indent 10}}
       {{- end }}
       {{- with $tol }}
       tolerations: {{- . | nindent 10}}

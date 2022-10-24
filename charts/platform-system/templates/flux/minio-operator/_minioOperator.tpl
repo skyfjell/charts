@@ -6,11 +6,11 @@
 operator:
   {{- with $anno }}
   annotations:
-    {{ toYaml . | indent 6}}
+    {{ . | indent 6}}
   {{- end }}
   {{- with $sel }}
   nodeSelector:
-    {{ toYaml . | indent 6}}
+    {{ . | indent 6}}
   {{- end }}
   {{- with $tol }}
   tolerations:
@@ -19,11 +19,11 @@ operator:
 console:
   {{- with $anno }}
   annotations:
-    {{ toYaml . | indent 6}}
+    {{ . | indent 6}}
   {{- end }}
   {{- with $sel }}
   nodeSelector:
-    {{ toYaml . | indent 6}}
+    {{ . | indent 6}}
   {{- end }}
   {{- with $tol }}
   tolerations:
