@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: cert-manager
-  namespace: flux-system
+  namespace: {{ .Values.solution.namespace | quote }}
 spec:
   releaseName: cert-manager
   {{- if .Values.components.istio.enabled }}
@@ -18,25 +18,9 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: jetstack
-        namespace: flux-system
+        namespace: {{ .Values.solution.namespace | quote }}
   interval: {{ .Values.solution.interval }}
   values:
-    installCRDs: true
-    {{- include "platformSystem.helper.annotations" (list "certManager" $) | indent 4 }}
-    {{- include "platformSystem.helper.nodeSelector" (list "certManager" $) | indent 4 }}
-    {{- include "platformSystem.helper.tolerations" (list "certManager" $) | indent 4 }}
-    {{- with .Values.components.certManager.serviceAccountAnnotations }}
-    serviceAccount:
-      annotations: {{- toYaml . | nindent 8 }}
-    {{- end }}
-    webhook:
-      securePort: {{ .Values.components.certManager.webhookSecurePort }}
-      {{- include "platformSystem.helper.nodeSelector" (list "certManager" $) | indent 6 }}
-      {{- include "platformSystem.helper.tolerations" (list "certManager" $) | indent 6 }}
-    cainjector:
-      {{- include "platformSystem.helper.nodeSelector" (list "certManager" $) | indent 6 }}
-      {{- include "platformSystem.helper.tolerations" (list "certManager" $) | indent 6 }}
-    startupapicheck:
-      {{- include "platformSystem.helper.nodeSelector" (list "certManager" $) | indent 6 }}
-      {{- include "platformSystem.helper.tolerations" (list "certManager" $) | indent 6 }}
+{{- $defaultValues := ( include "platformSystem.certManager.defaultValues" $ | fromYaml ) }}
+{{ ( mergeOverwrite $defaultValues .Values.components.certManager.values ) | toYaml | indent 4 }}
 {{ end }}

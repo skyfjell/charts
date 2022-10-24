@@ -1,22 +1,28 @@
 {{ if and .Values.components.istio.enabled (eq .Values.solution.name "flux") }}
+{{- $istioValues := .Values.components.istio }}
+{{- $config := $istioValues.component.config }}
+{{- if and $config.create $istioValues.component.base.create }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: platform-system-config-istio
-  namespace: flux-system
+  namespace: {{ .Values.solution.namespace | quote }}
+  labels:
+    {{- include "platformSystem.labels" $ | nindent 4 }}
 spec:
-  releaseName: platform-system-config-istio
   targetNamespace: {{ .Values.components.istio.namespace }}
   dependsOn:
-  - name: istio-base
+    - name: {{ include "platformSystem.istio.istioBase.release.name" $ }}
+      namespace: {{ .Values.solution.namespace | quote }}
   chart:
     spec:
       chart: platform-system-config-istio
-      version: 0.0.2
+      version: {{ $config.chart.version }}
       sourceRef:
         kind: HelmRepository
         name: {{ .Values.helmRepository.name }}
         namespace: {{ .Values.helmRepository.namespace }}
   interval: {{ .Values.solution.interval }}
   values: {{ toYaml .Values | nindent 4 }}
-{{ end }}
+{{- end -}}
+{{- end -}}
