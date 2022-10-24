@@ -12,7 +12,7 @@ metadata:
 spec:
   targetNamespace: {{ .Values.components.istio.namespace }}
   dependsOn:
-    - name: {{ include "platformSystem.istio.istioBase.release.name" $ }}
+    - name: istio-base
       namespace: {{ .Values.solution.namespace | quote }}
   chart:
     spec:

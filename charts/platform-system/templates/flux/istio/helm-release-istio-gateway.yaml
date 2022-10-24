@@ -19,8 +19,8 @@ spec:
       version: {{ default $istioValues.chart.version $istogw.chart.version }}
       sourceRef:
         kind: HelmRepository
-        name: {{ .Values.helmRepository.name }}
-        namespace: {{ .Values.helmRepository.namespace }}
+        name: istio
+        namespace: {{ .Values.solution.namespace }}
   interval: {{ .Values.solution.interval }}
   values:
     {{- include "platformSystem.istio.istioGateway.values" $ | nindent 4 }}
