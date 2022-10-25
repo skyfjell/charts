@@ -21,7 +21,7 @@ spec:
       version: {{ default $istioValues.chart.version $istiod.chart.version }}
       sourceRef:
         kind: HelmRepository
-        name: istio
+        name: platform-system-istio
         namespace: {{ .Values.solution.namespace }}
   interval: {{ .Values.solution.interval }}
   values:

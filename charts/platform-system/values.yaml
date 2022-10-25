@@ -81,7 +81,7 @@ components:
       version: "1.15.1"
       source:
         kind: HelmRepository
-        repository: istio
+        repository: platform-system-istio
     # component of full istio install
     component:
       # base istio chart release
