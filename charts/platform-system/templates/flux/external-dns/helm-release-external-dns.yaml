@@ -10,10 +10,10 @@ spec:
   chart:
     spec:
       chart: external-dns
-      version: {{ .Values.components.externalDns.version }}
+      version: {{ .Values.components.externalDns.chart.version }}
       sourceRef:
-        kind: HelmRepository
-        name: bitnami
+        kind: {{ .Values.components.externalDns.chart.source.kind }}
+        name: {{ .Values.components.externalDns.chart.source.repository }}
         namespace: {{ .Values.solution.namespace | quote }}
   interval: {{ .Values.solution.interval }}
   values:

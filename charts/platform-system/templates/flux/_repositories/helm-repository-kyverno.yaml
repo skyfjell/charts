@@ -2,7 +2,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: kyverno
+  name: platform-system-kyverno
   namespace: {{ .Values.solution.namespace | quote }}
 spec:
   url: https://kyverno.github.io/kyverno

@@ -10,10 +10,10 @@ spec:
   chart:
     spec:
       chart: kyverno
-      version: {{ .Values.components.kyverno.version }}
+      version: {{ .Values.components.kyverno.chart.version }}
       sourceRef:
-        kind: HelmRepository
-        name: kyverno
+        kind: {{ .Values.components.kyverno.chart.source.kind }}
+        name: {{ .Values.components.kyverno.chart.source.repository }}
         namespace: {{ .Values.solution.namespace | quote }}
   interval: {{ .Values.solution.interval }}
   values:
