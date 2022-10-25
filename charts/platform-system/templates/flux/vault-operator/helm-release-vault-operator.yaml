@@ -10,10 +10,10 @@ spec:
   chart:
     spec:
       chart: vault-operator
-      version: {{ .Values.components.vaultOperator.version }}
+      version: {{ .Values.components.vaultOperator.chart.version }}
       sourceRef:
-        kind: HelmRepository
-        name: banzaicloud
+        kind: {{ .Values.components.vaultOperator.chart.source.kind }}
+        name: {{ .Values.components.vaultOperator.chart.source.repository }}
         namespace: {{ .Values.solution.namespace | quote }}
   interval: {{ .Values.solution.interval }}
   values:

@@ -39,8 +39,14 @@ components:
     istioEnabled: true
     # namespace to be launched in
     namespace: external-dns
-    # version of the chart
-    version: "6.7.2"
+    # chart config for HelmReleases
+    chart:
+      # version of the chart
+      version: "6.7.2"
+      # source of the chart
+      source:
+        kind: HelmRepository
+        repository: platform-system-bitnami
     # annotations on all components
     annotations: {}
     # annotations on service account
@@ -81,7 +87,7 @@ components:
       version: "1.15.1"
       source:
         kind: HelmRepository
-        repository: istio
+        repository: platform-system-istio
     # component of full istio install
     component:
       # base istio chart release
@@ -151,8 +157,14 @@ components:
     istioEnabled: true
     # namespace to be launched in
     namespace: kyverno
-    # version of the chart
-    version: "2.5.1"
+    # chart config for HelmReleases
+    chart:
+      # version of the chart
+      version: "2.5.1"
+      # source of the chart
+      source:
+        kind: HelmRepository
+        repository: platform-system-kyverno
     # annotations on all components
     annotations: {}
     # serviceAccountAnnotations: annotations on service account
@@ -172,8 +184,14 @@ components:
     istioEnabled: true
     # namespace to be launched in
     namespace: kyverno
-    # version of the chart
-    version: "2.5.1"
+    # chart config for HelmReleases
+    chart:
+      # version of the chart
+      version: "2.5.1"
+      # source of the chart
+      source:
+        kind: HelmRepository
+        repository: platform-system-kyverno
     # podSecurityStandard for kyverno
     podSecurityStandard: "baseline"
     # values level overrides for helm chart
@@ -183,10 +201,16 @@ components:
     enabled: true
     # istioEnabled for istio integrations
     istioEnabled: true
-    # version of the chart
-    version: "4.4.27"
     # namespace to be launched in
     namespace: minio-operator
+    # chart config for HelmReleases
+    chart:
+      # version of the chart
+      version: "4.4.27"
+      # source of the chart
+      source:
+        kind: HelmRepository
+        repository: platform-system-minio
     # annotations on all components
     annotations: {}
     # serviceAccountAnnotations: annotations on service account
@@ -204,10 +228,16 @@ components:
     enabled: true
     # istioEnabled for istio integrations
     istioEnabled: true
-    # version of the chart
-    version: "4.4.27"
     # namespace to be launched in
     namespace: minio-tenant
+    # chart config for HelmReleases
+    chart:
+      # version of the chart
+      version: "4.4.27"
+      # source of the chart
+      source:
+        kind: HelmRepository
+        repository: platform-system-minio
     # storageClassName for minio instance
     storageClassName: default
     # annotations on all components
@@ -227,10 +257,16 @@ components:
     enabled: true
     # istioEnabled for istio integrations
     istioEnabled: true
-    # version of the chart
-    version: "1.16.1"
     # namespace to be launched in
     namespace: vault-operator
+    # chart config for HelmReleases
+    chart:
+      # version of the chart
+      version: "1.16.1"
+      # source of the chart
+      source:
+        kind: HelmRepository
+        repository: platform-system-banzaicloud
     # annotations on all components
     annotations: {}
     # serviceAccountAnnotations: annotations on service account

@@ -20,8 +20,8 @@ spec:
       chart: {{ $istioValues.component.istiod.chart.name }}
       version: {{ default $istioValues.chart.version $istiod.chart.version }}
       sourceRef:
-        kind: HelmRepository
-        name: istio
+        kind: {{ $istioValues.chart.source.kind }}
+        name: {{ $istioValues.chart.source.repository }}
         namespace: {{ .Values.solution.namespace }}
   interval: {{ .Values.solution.interval }}
   values:

@@ -10,10 +10,10 @@ spec:
   chart:
     spec:
       chart: operator
-      version: {{ .Values.components.minioOperator.version }}
+      version: {{ .Values.components.minioOperator.chart.version }}
       sourceRef:
-        kind: HelmRepository
-        name: minio
+        kind: {{ .Values.components.minioOperator.chart.source.kind }}
+        name: {{ .Values.components.minioOperator.chart.source.repository }}
         namespace: {{ .Values.solution.namespace | quote }}
   interval: {{ .Values.solution.interval }}
   values:
