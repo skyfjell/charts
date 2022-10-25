@@ -17,7 +17,7 @@ spec:
       version: {{ default $istioValues.chart.version $istioValues.component.base.chart.version }}
       sourceRef:
         kind: HelmRepository
-        name: {{ include "platformSystem.istio.repository.name" $ }}
+        name: istio
         namespace: {{ .Values.solution.namespace }}
   interval: {{ $.Values.solution.interval }}
   install:

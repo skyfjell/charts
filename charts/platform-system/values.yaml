@@ -129,7 +129,7 @@ components:
         # chart spec
         chart:
           # name of chart
-          name: istio-gateway
+          name: gateway
           # version of base, defaults to .Values.components.istio.chart.version
           version: ""
           # source of helm release, defaults to .Values.components.istio.chart.source

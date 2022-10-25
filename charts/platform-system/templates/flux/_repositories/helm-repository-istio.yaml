@@ -5,7 +5,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: {{ include "platformSystem.istio.repository.name" $ }}
+  name: istio
   namespace: {{ .Values.solution.namespace }}
 spec:
   url: {{ default "https://istio-release.storage.googleapis.com/charts" $istioValues.source.url }}
