@@ -14,6 +14,25 @@ components:
     enabled: true
     # istioEnabled for istio integrations
     istioEnabled: true
+    # authPolicy management by istio that enabled namespace isolation
+    authPolicy:
+      enabled: true
+      # allowedNamespaces adds additional namespaces
+      allowedNamespaces: []
+      # defaultOverride overrides the default namespaces
+      # configured to allow namespace isolation while not
+      # breaking this component's behavior
+      # defaults:
+      # - default
+      # - istio-system
+      # - cert-manager
+      # - kube-system
+      # defaultOverride: []
+      # rules additional to allow
+      rules:
+        - to:
+            operations:
+              paths: ["/*"]
     # namespace to be launched in
     namespace: cert-manager
     # version of the chart

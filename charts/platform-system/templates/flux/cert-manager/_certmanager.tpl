@@ -17,6 +17,7 @@ serviceAccount:
   annotations: {{- toYaml . | nindent 4 }}
 {{- end }}
 webhook:
+  hostNetwork: true
   securePort: {{ .Values.components.certManager.webhookSecurePort }}
   {{- with ( include "platformSystem.helper.tolerations" (list "certManager" $) ) }}
   tolerations:
@@ -39,6 +40,7 @@ cainjector:
     {{ . | indent 4}}
   {{- end }}
 startupapicheck:
+  enabled: false
   {{- with $tol }}
   tolerations:
     {{ . | indent 4}}
