@@ -1,0 +1,70 @@
+{{- if and .Values.components.certManager.authPolicy.enabled .Values.components.certManager.istioEnabled -}}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: cert-manager-allow-none
+  namespace: {{ .Values.components.certManager.namespace | quote }}
+spec:
+  action: ALLOW
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: cert-manager-allow-by-namespace
+  namespace: {{ .Values.components.certManager.namespace | quote }}
+spec:
+  action: ALLOW
+  rules:
+    - from:
+       - source:            
+            namespaces: 
+            {{- if .Values.components.certManager.authPolicy.defaultOverride }}
+            {{- range .Values.components.certManager.authPolicy.defaultOverride }}
+              - {{ . | quote }}
+            {{- end }}
+            {{- else }}
+              - "default"
+              - {{ .Values.components.istio.namespace | quote }}
+              - {{ .Values.components.certManager.namespace | quote }}
+              - "kube-system"
+            {{- end }}
+            {{- range .Values.components.certManager.authPolicy.allowedNamespaces }}
+              - {{ . | quote }}
+            {{- end -}}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: cert-manager-allow-flux-system-mutate
+  namespace: {{ .Values.components.certManager.namespace | quote }}
+spec:
+  action: ALLOW
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/component: webhook
+  rules:
+    - to:
+        - operation:
+            paths:
+              - "/mutate"
+    - from:
+        - source:
+            namespaces:
+              - {{ .Values.solution.namespace | quote }}
+{{ if .Values.components.certManager.authPolicy.rules }}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: cert-manager-custom-rules
+  namespace: {{ .Values.components.certManager.namespace | quote }}
+spec:
+  action: ALLOW
+  rules:
+  {{- with .Values.components.certManager.authPolicy.rules }}
+    {{- toYaml .  | nindent 4 -}}
+  {{- end -}}
+{{- end -}}
+{{- end -}}

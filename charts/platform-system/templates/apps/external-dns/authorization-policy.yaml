@@ -1,0 +1,49 @@
+{{- if and .Values.components.externalDns.authPolicy.enabled .Values.components.externalDns.istioEnabled -}}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: external-dns-allow-none
+  namespace: {{ .Values.components.externalDns.namespace | quote }}
+spec:
+  action: ALLOW
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: external-dns-allow-by-namespace
+  namespace: {{ .Values.components.externalDns.namespace | quote }}
+spec:
+  action: ALLOW
+  rules:
+    - from:
+       - source:            
+            namespaces: 
+            {{- if .Values.components.externalDns.authPolicy.defaultOverride }}
+            {{- range .Values.components.externalDns.authPolicy.defaultOverride }}
+              - {{ . | quote }}
+            {{- end }}
+            {{- else }}
+              - "default"
+              - {{ .Values.components.istio.namespace | quote }}
+              - {{ .Values.components.externalDns.namespace | quote }}
+              - "kube-system"
+            {{- end }}
+            {{- range .Values.components.externalDns.authPolicy.allowedNamespaces }}
+              - {{ . | quote }}
+            {{- end -}}
+{{ if .Values.components.externalDns.authPolicy.rules }}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: external-dns-custom-rules
+  namespace: {{ .Values.components.externalDns.namespace | quote }}
+spec:
+  action: ALLOW
+  rules:
+  {{- with .Values.components.externalDns.authPolicy.rules }}
+    {{- toYaml .  | nindent 4 -}}
+  {{- end -}}
+{{- end -}}
+{{- end -}}

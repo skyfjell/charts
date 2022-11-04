@@ -1,0 +1,48 @@
+{{- if and .Values.components.istio.authPolicy.enabled .Values.components.istio.enabled -}}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: istio-system-allow-none
+  namespace: {{ .Values.components.istio.namespace | quote }}
+spec:
+  action: ALLOW
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: istio-system-allow-by-namespace
+  namespace: {{ .Values.components.istio.namespace | quote }}
+spec:
+  action: ALLOW
+  rules:
+    - from:
+       - source:            
+            namespaces: 
+            {{- if .Values.components.istio.authPolicy.defaultOverride }}
+            {{- range .Values.components.istio.authPolicy.defaultOverride }}
+              - {{ . | quote }}
+            {{- end }}
+            {{- else }}
+              - "default"
+              - {{ .Values.components.istio.namespace | quote }}
+              - "kube-system"
+            {{- end }}
+            {{- range .Values.components.istio.authPolicy.allowedNamespaces }}
+              - {{ . | quote }}
+            {{- end -}}
+{{ if .Values.components.istio.authPolicy.rules }}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: istio-system-custom-rules
+  namespace: {{ .Values.components.istio.namespace | quote }}
+spec:
+  action: ALLOW
+  rules:
+  {{- with .Values.components.istio.authPolicy.rules }}
+    {{- toYaml .  | nindent 4 -}}
+  {{- end -}}
+{{- end -}}
+{{- end -}}

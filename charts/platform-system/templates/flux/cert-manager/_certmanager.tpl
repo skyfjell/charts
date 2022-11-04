@@ -40,7 +40,6 @@ cainjector:
     {{ . | indent 4}}
   {{- end }}
 startupapicheck:
-  enabled: false
   {{- with $tol }}
   tolerations:
     {{ . | indent 4}}

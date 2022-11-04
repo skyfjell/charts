@@ -29,10 +29,7 @@ components:
       # - kube-system
       # defaultOverride: []
       # rules additional to allow
-      rules:
-        - to:
-            operations:
-              paths: ["/*"]
+      rules: []
     # namespace to be launched in
     namespace: cert-manager
     # version of the chart
@@ -56,6 +53,22 @@ components:
     enabled: true
     # istioEnabled for istio integrations
     istioEnabled: true
+    # authPolicy management by istio that enabled namespace isolation
+    authPolicy:
+      enabled: true
+      # allowedNamespaces adds additional namespaces
+      allowedNamespaces: []
+      # defaultOverride overrides the default namespaces
+      # configured to allow namespace isolation while not
+      # breaking this component's behavior
+      # defaults:
+      # - default
+      # - istio-system
+      # - external-dns
+      # - kube-system
+      # defaultOverride: []
+      # rules additional to allow
+      rules: []
     # namespace to be launched in
     namespace: external-dns
     # chart config for HelmReleases
@@ -85,6 +98,21 @@ components:
     namespace: istio-system
     # mTLSMode options here are UNSET, DISABLE, PERMISSIVE, and STRICT
     mTLSMode: "STRICT"
+    # authPolicy management by istio that enabled namespace isolation
+    authPolicy:
+      enabled: true
+      # allowedNamespaces adds additional namespaces
+      allowedNamespaces: []
+      # defaultOverride overrides the default namespaces
+      # configured to allow namespace isolation while not
+      # breaking this component's behavior
+      # defaults:
+      # - default
+      # - istio-system
+      # - kube-system
+      # defaultOverride: []
+      # rules additional to allow
+      rules: []
     # annotations for istio components
     annotations: {}
     # serviceAccountAnnotations for istio components
