@@ -1,6 +1,11 @@
 # Skyfjell Helm Charts
 
-Install using `helm repo add skyfjell https://charts.skyfjell.io`
+Install using
+
+```
+helm repo add skyfjell https://charts.skyfjell.io
+helm repo update
+```
 
 ## Skyfjell Platform Charts
 
