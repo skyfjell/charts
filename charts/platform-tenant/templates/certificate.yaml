@@ -1,6 +1,8 @@
-{{ if .Values.istio.certManager.createCerts}}
-  {{ include "require.api.certManager.certificate" $}}
+{{ if .Values.istio.certManager.createCerts }}
+  {{ if .Values.crdCheck }}
+  {{ include "require.api.certManager.certificate" $ }}
+  {{ end }}
   {{ range $val := (.Values.istio.gateway ).servers }}
-    {{ include "certManager.certificate" (list $val $)}}
+    {{ include "certManager.certificate" (list $val $) }}
   {{ end }}
 {{ end }}

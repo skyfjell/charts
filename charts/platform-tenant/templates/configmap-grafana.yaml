@@ -1,4 +1,4 @@
-{{- if .Values.o11y.enable -}}
+{{- if .Values.o11y.enabled -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:

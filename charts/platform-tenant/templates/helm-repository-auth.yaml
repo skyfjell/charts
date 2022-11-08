@@ -1,0 +1,17 @@
+{{/*
+  Template for oauth2-proxy
+*/}}
+{{- if .Values.appAuth.apps }}
+  {{- if .Values.crdCheck }}
+    {{- include "require.api.flux.source" . -}}
+  {{- end -}}
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: {{ printf "platform-tenant-oauth2-proxy-%s" .Release.Name | trunc 63 | trimSuffix "-" }}
+  namespace: {{ .Values.flux.namespace }}
+spec:
+  url: {{ .Values.appAuth.proxy.chart.url }}
+  interval: 10m
+{{- end -}}

@@ -1,0 +1,21 @@
+{{ range $val := .Values.appAuth.apps }}
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ printf "oauth2-proxy-tenant-%s" $val.name | trunc 63 | trimSuffix "-" }}
+  namespace: {{ $.Values.targetNamespace.name }}
+spec:
+  chart:
+    spec:
+      chart: {{ $.Values.appAuth.proxy.chart.name }}
+      version: {{ $.Values.appAuth.proxy.chart.version }}
+      sourceRef:
+        kind: HelmRepository
+        name: {{ printf "platform-tenant-oauth2-proxy-%s" $.Release.Name | trunc 63 | trimSuffix "-" }}
+        namespace: {{ $.Values.flux.namespace }}
+  interval: 1h0m0s
+  values:
+{{- $defaultValues := ( include "platform-tenant.oauth2-proxy.template" (list $val $) | fromYaml ) }}
+{{ ( mergeOverwrite $defaultValues $val.overrideValues ) | toYaml | indent 4 }}
+{{ end }}

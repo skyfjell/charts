@@ -1,4 +1,4 @@
-{{- if .Values.istio.enable -}}
+{{- if .Values.istio.enabled -}}
 {{ include "require.api.istio.gateway" $}}
 {{ with .Values.istio.gateway }}
 apiVersion: networking.istio.io/v1beta1

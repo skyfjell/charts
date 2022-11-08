@@ -4,9 +4,10 @@
 
 nameOverride: ""
 fullnameOverride: ""
-# Formatted name of tenant
+# title formatted name of tenant
 title: ""
-
+# crdCheck for installed CRDS
+crdCheck: true
 # The target namespace for this tenant
 targetNamespace:
   create: true
@@ -42,7 +43,7 @@ flux:
     spec: {}
 
 rbac:
-  enable: true
+  enabled: true
   # Cluster role giving * access to flux resources
   tenantClusterRole:
     create: true
@@ -59,7 +60,7 @@ rbac:
 # using kyverno policies
 # to add labels/annotations on objects tenant deploys
 kyverno:
-  enable: true
+  enabled: true
   name: ""
   nodeSelector: {}
   tolerations: []
@@ -69,16 +70,40 @@ kyverno:
 # If loki, prometheus and grafana installed
 # this configures a namespaced dashboard.
 o11y:
-  enable: true
+  enabled: true
   # namespace where prometheus resides
   namespace: o11y
   labels: {}
   annotations: {}
 
+# appAuth configures all external (and internal) access to for named applications inside
+# of the tenant namespace.
+appAuth:
+  # proxy application to use for authentication
+  proxy:
+    # chart configuration for proxy app
+    chart:
+      url: https://oauth2-proxy.github.io/manifests
+      name: oauth2-proxy
+      version: "6.2.7"
+  # provider setup for common OIDC provider, each app can override with overrideValues
+  provider:
+    displayName: ""
+    oidcIssuerUrl: ""
+  # apps:
+  # - name: "Test-App-1"
+  #   existingSecret: "super-secret"
+  #   cookieDomain: "my.domain"
+  #   whitelistDomain: "my.domain"
+  #   overrideValues:
+  #     extraArgs:
+  #       oidc-issuer-url: "test.domain"
+  apps: []
+
 # Use istio to manage networking
 istio:
   # enable all istio CR's
-  enable: true
+  enabled: true
   # namespace istio is installed in
   namespace: "istio-system"
   # Gateways.

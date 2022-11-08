@@ -1,4 +1,4 @@
-{{- if and .Values.rbac.enable .Values.flux.kustomization.create -}}
+{{- if and .Values.rbac.enabled .Values.flux.kustomization.create -}}
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
