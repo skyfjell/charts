@@ -17,5 +17,5 @@ spec:
   interval: 1h0m0s
   values:
 {{- $defaultValues := ( include "platform-tenant.oauth2-proxy.template" (list $val $) | fromYaml ) }}
-{{ ( mergeOverwrite $defaultValues $val.overrideValues ) | toYaml | indent 4 }}
-{{ end }}
+{{ ( mergeOverwrite $defaultValues ( default dict ($val.proxy).overrideValues )) | toYaml | indent 4 }}
+{{- end -}}
