@@ -1,8 +1,8 @@
-{{- if .Values.certManager.enabled -}}
-  {{- if ( and .Values.crdCheck .Values.appAuth.apps ) -}}
+{{- if .Values.components.certManager.enabled -}}
+  {{- if ( and .Values.crdCheck .Values.components.apps ) -}}
     {{ include "require.api.certManager.certificate" $ }}
   {{- end -}}
-{{ range .Values.appAuth.apps }}
+{{ range .Values.components.apps }}
 ---
 {{ include "platform-tenant.app.certificate.template" (list . $) }}
 {{- end -}}

@@ -1,9 +1,9 @@
-{{- if .Values.appAuth.proxy.enabled -}}
+{{- if .Values.components.oauth2Proxy.enabled -}}
 {{- if .Values.crdCheck }}
   {{- include "require.api.istio.vs" . -}}
 {{- end }}
-{{ range .Values.appAuth.apps }}
+{{ range .Values.components.apps }}
 ---
-{{ include "platform-tenant.app.virtualservice.template" (list . $) }}
+{{ include "platform-tenant.app.virtual-service.template" (list . $) }}
 {{- end -}}
 {{- end -}}

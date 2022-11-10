@@ -1,8 +1,8 @@
-{{- if .Values.istio.enabled -}}
-  {{- if ( and .Values.crdCheck .Values.appAuth.apps ) -}}
+{{- if .Values.components.istio.enabled -}}
+  {{- if ( and .Values.crdCheck .Values.components.apps ) -}}
     {{ include "require.api.istio.gateway" $ }}
   {{- end -}}
-{{ range .Values.appAuth.apps }}
+{{ range .Values.components.apps }}
 ---
 {{ include "platform-tenant.app.gateway.template" (list . $) }}
 {{- end -}}

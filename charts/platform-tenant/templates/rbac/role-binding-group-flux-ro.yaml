@@ -1,8 +1,8 @@
-{{- if .Values.rbac.enabled -}}
+{{- if .Values.components.rbac.enabled -}}
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  namespace: {{ .Values.flux.namespace }}
+  namespace: {{ .Values.components.flux.namespace }}
   name: {{ printf "%s-%s" .Release.Name "flux-ro" | trunc 63 | trimSuffix "-" | quote}}
 subjects:
   - kind: Group

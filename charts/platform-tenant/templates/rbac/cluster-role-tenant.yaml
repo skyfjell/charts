@@ -1,4 +1,4 @@
-{{- if and .Values.rbac.enabled .Values.rbac.tenantClusterRole.create -}}
+{{- if and .Values.components.rbac.enabled .Values.components.rbac.tenantClusterRole.enabled -}}
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:

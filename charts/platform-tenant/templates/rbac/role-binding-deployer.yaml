@@ -1,4 +1,4 @@
-{{- if .Values.rbac.enabled -}}
+{{- if .Values.components.rbac.enabled -}}
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -7,7 +7,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: {{ default (include "platform-tenant.fullname" .) .Values.serviceAccount.name }}
-    namespace: {{ .Values.flux.namespace }}
+    namespace: {{ .Values.components.flux.namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

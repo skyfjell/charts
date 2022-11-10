@@ -95,11 +95,11 @@ validation: client
 
 
 {{- define "helper.clusterRoleName" -}}
-{{ (default (printf "%s-%s" .Release.Name "tenant") .Values.rbac.tenantClusterRole.name) | trunc 63 | trimSuffix "-" | quote}}
+{{ (default (printf "%s-%s" .Release.Name "tenant") .Values.components.rbac.tenantClusterRole.name) | trunc 63 | trimSuffix "-" | quote}}
 {{- end }}
 
 {{- define "helper.deployerRoleName" -}}
-{{ (default (printf "%s-%s" .Release.Name "deployer") .Values.rbac.tenantDeploymentRole.name) | trunc 63 | trimSuffix "-" | quote}}
+{{ (default (printf "%s-%s" .Release.Name "deployer") .Values.components.rbac.tenantDeploymentRole.name) | trunc 63 | trimSuffix "-" | quote}}
 {{- end }}  
 
 {{- define "platform-system.helper.tlsName" -}}

@@ -23,64 +23,62 @@ serviceAccount:
   name: ""
   annotations: {}
 
-# flux configs
-flux:
-  namespace: flux-system
-  source:
-    create: true
-    name: "ssh"
-    url: ""
-    # If a private repo, this is the secret for the GitRepository
-    secretName: ""
-    # defaults to
-    # ref:
-    #   branch: main
-    ref: {}
-  kustomization:
-    create: true
+components:
+  # flux configs
+  flux:
+    namespace: flux-system
+    source:
+      create: true
+      name: "ssh"
+      url: ""
+      # If a private repo, this is the secret for the GitRepository
+      secretName: ""
+      # defaults to
+      # ref:
+      #   branch: main
+      ref: {}
+    kustomization:
+      enabled: true
+      name: ""
+      # any spec other than  `serviceAccountName` and `sourceRef`
+      spec: {}
+
+  rbac:
+    enabled: true
+    # Cluster role giving * access to flux resources
+    tenantClusterRole:
+      enabled: true
+      name: ""
+    # Role that gives tenant deployer access to the namespace
+    tenantDeploymentRole:
+      enabled: true
+      name: ""
+      extraRules: []
+      # defaults to tenantDeploymentRole.name
+      # group to map external objects to like IAM
+      groupName: ""
+
+  # using kyverno policies
+  # to add labels/annotations on objects tenant deploys
+  kyverno:
+    enabled: true
     name: ""
-    # any spec other than  `serviceAccountName` and `sourceRef`
-    spec: {}
+    nodeSelector: {}
+    tolerations: []
+    labels: {}
+    annotations: {}
 
-rbac:
-  enabled: true
-  # Cluster role giving * access to flux resources
-  tenantClusterRole:
-    create: true
-    name: ""
-  # Role that gives tenant deployer access to the namespace
-  tenantDeploymentRole:
-    create: true
-    name: ""
-    extraRules: []
-    # defaults to tenantDeploymentRole.name
-    # group to map external objects to like IAM
-    groupName: ""
+  # If loki, prometheus and grafana installed
+  # this configures a namespaced dashboard.
+  o11y:
+    enabled: true
+    # namespace where prometheus resides
+    namespace: o11y
+    labels: {}
+    annotations: {}
 
-# using kyverno policies
-# to add labels/annotations on objects tenant deploys
-kyverno:
-  enabled: true
-  name: ""
-  nodeSelector: {}
-  tolerations: []
-  labels: {}
-  annotations: {}
-
-# If loki, prometheus and grafana installed
-# this configures a namespaced dashboard.
-o11y:
-  enabled: true
-  # namespace where prometheus resides
-  namespace: o11y
-  labels: {}
-  annotations: {}
-
-# appAuth configures all external (and internal) access to for named applications inside
-# of the tenant namespace.
-appAuth:
-  # proxy application to use for authentication
-  proxy:
+  # oauth2Proxy application to use for authentication
+  oauth2Proxy:
     enabed: true
     # chart configuration for proxy app
     chart:
@@ -99,7 +97,6 @@ appAuth:
     whitelistDomain: ""
     # overrideValues for oauth2-proxy chart
     overrideValues: {}
-
   # apps:
   #   - name: "test-app-1"
   #     url: "testapp.domain"
@@ -115,31 +112,15 @@ appAuth:
   #     mode: tls
   apps: []
 
-# certManager config will create certificates based on
-# tls credential names
-certManager:
-  enabled: true
-  issuerRef: {}
+  # certManager config will create certificates based on
+  # tls credential names
+  certManager:
+    enabled: true
+    issuerRef: {}
 
-# Use istio to manage networking
-istio:
-  # enable all istio CR's
-  enabled: true
-  # namespace istio is installed in
-  namespace: "istio-system"
-  # selector for gateways
-  selector: {}
-  # Gateways.
-  #  selector:
-  #    istio: ingressgateway
-  #  servers:
-  #    - port:
-  #        number: 443
-  #        name: https
-  #        protocol: HTTPS
-  #      hosts:
-  #        - example.com
-  #      tls:
-  #        mode: SIMPLE
-  #        credentialName: example-tls
-  gateway: {}
+  # Use istio to manage networking
+  istio:
+    # enable all istio CR's
+    enabled: true
+    # namespace istio is installed in
+    namespace: "istio-system"

@@ -8,9 +8,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
   name: {{ printf "%s-gateway" $val.name | quote }}
-  namespace: {{ $global.Values.istio.namespace | quote }}
+  namespace: {{ $global.Values.components.istio.namespace | quote }}
 spec:
-  {{- with $global.Values.istio.selector }}
+  {{- with $global.Values.components.istio.selector }}
   selector:
     {{ toYaml . | indent 4 }}
   {{- end }}

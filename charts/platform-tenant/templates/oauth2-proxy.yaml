@@ -1,4 +1,4 @@
-{{- if .Values.appAuth.proxy.enabed -}}
+{{- if .Values.components.oauth2Proxy.enabed -}}
 {{- if .Values.crdCheck }}
   {{- include "require.api.flux.helmRelease" . -}}
 {{- end -}}
@@ -11,14 +11,14 @@ metadata:
 spec:
   chart:
     spec:
-      chart: {{ .Values.appAuth.proxy.chart.name }}
-      version: {{ .Values.appAuth.proxy.chart.version }}
+      chart: {{ .Values.components.oauth2Proxy.chart.name }}
+      version: {{ .Values.components.oauth2Proxy.chart.version }}
       sourceRef:
         kind: HelmRepository
         name: {{ include "platform-system.helper.proxyName" $ }}
-        namespace: {{ .Values.flux.namespace }}
+        namespace: {{ .Values.components.flux.namespace }}
   interval: 1h0m0s
   values:
 {{- $defaultValues := ( include "platform-tenant.app.oauth2-proxy.template" $ | fromYaml ) }}
-{{ ( mergeOverwrite $defaultValues (default dict .Values.appAuth.proxy.overrideValues )) | toYaml | indent 4 }}
+{{ ( mergeOverwrite $defaultValues (default dict .Values.components.oauth2Proxy.overrideValues )) | toYaml | indent 4 }}
 {{- end -}}
