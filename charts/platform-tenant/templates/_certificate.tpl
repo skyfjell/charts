@@ -18,4 +18,3 @@ spec:
   {{- end -}}
   issuerRef: {{ $global.Values.certManager.issuerRef | toYaml | nindent 4}}
 {{- end -}}
-

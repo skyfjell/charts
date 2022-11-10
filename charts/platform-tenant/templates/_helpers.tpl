@@ -104,4 +104,8 @@ validation: client
 
 {{- define "platform-system.helper.tlsName" -}}
 {{ printf "%s-tls" . | trunc 63 | trimSuffix "-" | quote }}
+{{- end }}
+
+{{- define "platform-system.helper.proxyName" -}}
+{{ printf "%s-proxy" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
 {{- end }} 

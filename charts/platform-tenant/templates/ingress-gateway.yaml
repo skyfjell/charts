@@ -1,0 +1,6 @@
+{{- if .Values.appAuth.proxy.enabled -}}
+{{ range .Values.appAuth.apps }}
+---
+{{ include "platform-tenant.app.ingressgateway" (list . $) }}
+{{- end -}}
+{{- end -}}

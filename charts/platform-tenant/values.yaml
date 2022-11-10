@@ -81,17 +81,25 @@ o11y:
 appAuth:
   # proxy application to use for authentication
   proxy:
+    enabed: true
     # chart configuration for proxy app
     chart:
       url: https://oauth2-proxy.github.io/manifests
       name: oauth2-proxy
       version: "6.2.7"
-  # provider setup for common OIDC provider, each app can override with overrideValues
-  provider:
     # displayName for sso redirect
     displayName: ""
     # oidcIssuerUrl of the OIDC provider for oauth proxy
     oidcIssuerUrl: ""
+    # existingSecret has client-id, client-secret and cookie-secret keys
+    existingSecret: ""
+    # cookieDomain for proxy
+    cookieDomain: ""
+    # whitelistDomain for proxy
+    whitelistDomain: ""
+    # overrideValues for oauth2-proxy chart
+    overrideValues: {}
+
   # apps:
   # - name: "Test-App-1"
   #   existingSecret: "super-secret"

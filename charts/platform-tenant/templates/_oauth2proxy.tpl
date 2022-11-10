@@ -2,19 +2,19 @@
   Template for building a certificate
 */}}
 {{- define "platform-tenant.oauth2-proxy.template" }}
-{{ $global := last .}}
-{{ $val := first .}}
+{{ $values := .Values.appAuth.proxy}}
 # used by istio
 podLabels:
-  version: {{ $global.Values.appAuth.proxy.chart.version}}
-nameOverride: {{ $val.name }}
-fullnameOverride: {{ $val.name }}
+  version: {{ $values.chart.version}}
+nameOverride: {{ include "platform-system.helper.proxyName" $ }}
+# ensures we get correct service name
+fullnameOverride: {{ include "platform-system.helper.proxyName" $ }}
 config:
-  existingSecret: {{ $val.existingSecret }}
+  existingSecret: {{ $values.existingSecret }}
 extraArgs:
   provider: oidc
-  provider-display-name: {{ $global.Values.appAuth.provider.displayName | quote }}
-  oidc-issuer-url: {{ $global.Values.appAuth.provider.oidcIssuerUrl }}
+  provider-display-name: {{ default (include "platform-system.helper.proxyName" $)  $values.displayName }}
+  oidc-issuer-url: {{ $values.oidcIssuerUrl }}
   upstream: static://200
   set-authorization-header: true
   email-domain: "*" 
@@ -23,8 +23,8 @@ extraArgs:
   cookie-refresh: 1h
   cookie-expire: 4h
   cookie-name: _mock-1_auth
-  cookie-domain: {{ $val.cookieDomain }}
-  whitelist-domain: {{ $val.whitelistDomain }}
+  cookie-domain: {{ $values.cookieDomain }}
+  whitelist-domain: {{ $values.whitelistDomain }}
   skip-provider-button: true
 replicaCount: 1
 resources:

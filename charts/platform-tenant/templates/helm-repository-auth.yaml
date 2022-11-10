@@ -9,7 +9,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: {{ printf "platform-tenant-oauth2-proxy-%s" .Release.Name | trunc 63 | trimSuffix "-" }}
+  name: {{ include "platform-system.helper.proxyName" $ }}
   namespace: {{ .Values.flux.namespace }}
 spec:
   url: {{ .Values.appAuth.proxy.chart.url }}
