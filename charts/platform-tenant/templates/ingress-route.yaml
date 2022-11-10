@@ -1,0 +1,9 @@
+{{- if .Values.components.oauth2Proxy.enabled -}}
+{{- if .Values.crdCheck }}
+  {{- include "require.api.traefik.ingressRoute" . -}}
+{{- end }}
+{{ range .Values.components.apps }}
+---
+{{ include "platform-tenant.app.ingress-route.template" (list . $) }}
+{{- end -}}
+{{- end -}}
