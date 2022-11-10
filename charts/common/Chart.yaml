@@ -2,4 +2,4 @@ apiVersion: v2
 name: skyfjell-common
 description: Skyfjell Common Library Chart
 type: library
-version: 0.0.4
+version: 0.0.5
