@@ -4,6 +4,6 @@
   {{- end -}}
 {{ range .Values.appAuth.apps }}
 ---
-{{ include "platform-tenant.app.certificate" (list . $) }}
+{{ include "platform-tenant.app.certificate.template" (list . $) }}
 {{- end -}}
 {{- end -}}

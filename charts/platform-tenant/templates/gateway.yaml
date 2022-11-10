@@ -4,6 +4,6 @@
   {{- end -}}
 {{ range .Values.appAuth.apps }}
 ---
-{{ include "platform-tenant.app.gateway" (list . $) }}
+{{ include "platform-tenant.app.gateway.template" (list . $) }}
 {{- end -}}
 {{- end -}}

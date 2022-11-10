@@ -1,7 +1,7 @@
 {{/* 
   Template for building a traefik IngressGateway
 */}}
-{{- define "platform-tenant.app.ingressgateway" -}}
+{{- define "platform-tenant.app.ingressgateway.template" -}}
 {{- $global := last . }}
 {{- $val := first . }}
 apiVersion: traefik.containo.us/v1alpha1

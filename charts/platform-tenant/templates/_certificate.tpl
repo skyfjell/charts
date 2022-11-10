@@ -1,7 +1,7 @@
 {{/* 
   Template for building a certificate
 */}}
-{{- define "platform-tenant.app.certificate" }}
+{{- define "platform-tenant.app.certificate.template" }}
 {{ $global := last .}}
 {{ $val := first .}}
 apiVersion: cert-manager.io/v1

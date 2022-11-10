@@ -1,7 +1,7 @@
 {{/* 
   Template for building each app's gateway
 */}}
-{{- define "platform-tenant.app.gateway" }}
+{{- define "platform-tenant.app.gateway.template" }}
 {{- $global := last . }}
 {{- $val := first . }}
 apiVersion: networking.istio.io/v1beta1

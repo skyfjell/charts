@@ -101,15 +101,18 @@ appAuth:
     overrideValues: {}
 
   # apps:
-  # - name: "Test-App-1"
-  #   existingSecret: "super-secret"
-  #   cookieDomain: ".my.domain"
-  #   whitelistDomain: ".my.domain"
-  #   appUrl: "testapp.my.domain"
-  #   proxy:
-  #     overrideValues:
-  #       extraArgs:
-  #         oidc-issuer-url: "sso2.domain"
+  #   - name: "test-app-1"
+  #     url: "testapp.domain"
+  #     service:
+  #       port: 8080
+  #       host: myapp.testns.svc.cluster.local
+  #   - name: "test-app-2"
+  #     url: "testapp2.domain"
+  #     service:
+  #       port: 8080
+  #       host: myapp2.testns.svc.cluster.local
+  #     # "http" or "tls" or "tcp". Exclusion of 'mode' defaults to http
+  #     mode: tls
   apps: []
 
 # certManager config will create certificates based on

@@ -1,7 +1,7 @@
 {{/* 
   Template for building a certificate
 */}}
-{{- define "platform-tenant.oauth2-proxy.template" }}
+{{- define "platform-tenant.app.oauth2-proxy.template" }}
 {{ $values := .Values.appAuth.proxy}}
 # used by istio
 podLabels:
