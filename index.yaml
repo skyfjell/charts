@@ -208,6 +208,15 @@ entries:
     version: 0.0.1
   skyfjell-common:
   - apiVersion: v2
+    created: "2022-11-10T20:19:07.017705439Z"
+    description: Skyfjell Common Library Chart
+    digest: 1a59102179a1e8d493a746ca491de00b03512e3c79fd65e981c287d24de2091e
+    name: skyfjell-common
+    type: library
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/skyfjell-common-0.0.4/skyfjell-common-0.0.4.tgz
+    version: 0.0.4
+  - apiVersion: v2
     created: "2022-09-29T23:09:11.65696481Z"
     description: Common chart for skyfjell helm charts.
     digest: 75eac2f3b5ee72c8fd64dab41f303bae687f90f1ab93a04571773c9318ba8cdf
@@ -234,4 +243,4 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/skyfjell-common-0.0.1/skyfjell-common-0.0.1.tgz
     version: 0.0.1
-generated: "2022-10-25T18:30:20.779713291Z"
+generated: "2022-11-10T20:19:07.018026634Z"
