@@ -1,12 +1,9 @@
 {{- if .Values.istio.enabled -}}
-{{ include "require.api.istio.gateway" $}}
-{{ with .Values.istio.gateway }}
-apiVersion: networking.istio.io/v1beta1
-kind: Gateway
-metadata:
-  name: {{ printf "%s-gateway" (include "platform-tenant.fullname" $)  }}
-  namespace: {{ $.Values.istio.namespace  }}
-spec:
-  {{- toYaml . | nindent 2 }}
-  {{- end }}
+  {{- if ( and .Values.crdCheck .Values.appAuth.apps ) -}}
+    {{ include "require.api.istio.gateway" $ }}
+  {{- end -}}
+{{ range .Values.appAuth.apps }}
+---
+{{ include "platform-tenant.app.gateway" (list . $) }}
+{{- end -}}
 {{- end -}}

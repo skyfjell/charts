@@ -102,3 +102,6 @@ validation: client
 {{ (default (printf "%s-%s" .Release.Name "deployer") .Values.rbac.tenantDeploymentRole.name) | trunc 63 | trimSuffix "-" | quote}}
 {{- end }}  
 
+{{- define "platform-system.helper.tlsName" -}}
+{{ printf "%s-tls" . | trunc 63 | trimSuffix "-" | quote }}
+{{- end }} 

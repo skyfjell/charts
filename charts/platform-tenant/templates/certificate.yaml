@@ -1,8 +1,9 @@
-{{ if .Values.istio.certManager.createCerts }}
-  {{ if .Values.crdCheck }}
-  {{ include "require.api.certManager.certificate" $ }}
-  {{ end }}
-  {{ range $val := (.Values.istio.gateway ).servers }}
-    {{ include "certManager.certificate" (list $val $) }}
-  {{ end }}
-{{ end }}
+{{- if .Values.certManager.enabled -}}
+  {{- if ( and .Values.crdCheck .Values.appAuth.apps ) -}}
+    {{ include "require.api.certManager.certificate" $ }}
+  {{- end -}}
+{{ range .Values.appAuth.apps }}
+---
+{{ include "platform-tenant.app.certificate" (list . $) }}
+{{- end -}}
+{{- end -}}

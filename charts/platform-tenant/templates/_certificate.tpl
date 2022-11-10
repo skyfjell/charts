@@ -1,22 +1,21 @@
 {{/* 
   Template for building a certificate
 */}}
-{{- define "certManager.certificate" }}
+{{- define "platform-tenant.app.certificate" }}
 {{ $global := last .}}
 {{ $val := first .}}
-{{ with $val.tls.credentialName }}
----
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ printf "%s-cert" . }}
-  namespace: {{$global.Values.istio.namespace}}
+  name: {{ printf "%s-cert" $val.name }}
+  namespace: {{ $global.Values.istio.namespace }}
 spec:
-  secretName: {{ . | quote}}
-  dnsNames: {{ $val.hosts | toYaml | nindent 4 }}
-  {{ if not $global.Values.istio.certManager.issuerRef }}
-  {{ fail ".Values.istio.certManager.issuerRef needs to be defined." }}
+  secretName: {{ include "platform-system.helper.tlsName" $val.name }}
+  dnsNames: 
+    - {{ $val.url | quote }}
+  {{ if not $global.Values.certManager.issuerRef }}
+  {{ fail ".Values.certManager.issuerRef needs to be defined." }}
   {{- end -}}
-  issuerRef: {{ $global.Values.istio.certManager.issuerRef | toYaml | nindent 4}}
+  issuerRef: {{ $global.Values.certManager.issuerRef | toYaml | nindent 4}}
 {{- end -}}
-{{- end -}}
+

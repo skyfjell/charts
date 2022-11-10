@@ -88,17 +88,27 @@ appAuth:
       version: "6.2.7"
   # provider setup for common OIDC provider, each app can override with overrideValues
   provider:
+    # displayName for sso redirect
     displayName: ""
+    # oidcIssuerUrl of the OIDC provider for oauth proxy
     oidcIssuerUrl: ""
   # apps:
   # - name: "Test-App-1"
   #   existingSecret: "super-secret"
-  #   cookieDomain: "my.domain"
-  #   whitelistDomain: "my.domain"
-  #   overrideValues:
-  #     extraArgs:
-  #       oidc-issuer-url: "test.domain"
+  #   cookieDomain: ".my.domain"
+  #   whitelistDomain: ".my.domain"
+  #   appUrl: "testapp.my.domain"
+  #   proxy:
+  #     overrideValues:
+  #       extraArgs:
+  #         oidc-issuer-url: "sso2.domain"
   apps: []
+
+# certManager config will create certificates based on
+# tls credential names
+certManager:
+  enabled: true
+  issuerRef: {}
 
 # Use istio to manage networking
 istio:
@@ -106,6 +116,8 @@ istio:
   enabled: true
   # namespace istio is installed in
   namespace: "istio-system"
+  # selector for gateways
+  selector: {}
   # Gateways.
   #  selector:
   #    istio: ingressgateway
@@ -120,8 +132,3 @@ istio:
   #        mode: SIMPLE
   #        credentialName: example-tls
   gateway: {}
-  # will create cert-manager certificates based on
-  # tls credential names
-  certManager:
-    createCerts: true
-    issuerRef: {}

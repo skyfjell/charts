@@ -1,7 +1,7 @@
 {{- if .Values.kyverno.enabled -}}
-  {{ if .Values.crdCheck }}
+  {{- if .Values.crdCheck }}
     {{- include "require.api.kyerno.clusterPolicy" . -}}
-  {{ end }}
+  {{- end }}
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
