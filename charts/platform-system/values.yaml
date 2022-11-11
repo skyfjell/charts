@@ -149,7 +149,7 @@ components:
       config:
         create: true
         chart:
-          version: "0.0.2"
+          version: "0.0.3"
   kyverno:
     # enable this component
     enabled: true

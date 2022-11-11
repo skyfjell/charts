@@ -2,3 +2,4 @@
 charts/*/charts/*.tgz
 charts/*/charts/*.tar.gz
 **/debug/
+.DS_Store
