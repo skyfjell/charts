@@ -9,6 +9,7 @@ kind: Gateway
 metadata:
   name: {{ printf "%s-gateway" $val.name | quote }}
   namespace: {{ $global.Values.components.istio.namespace | quote }}
+  labels: {{- include "skyfjell.common.chartLabels" $global | nindent 4 }}
 spec:
   {{- with $global.Values.components.istio.selector }}
   selector:

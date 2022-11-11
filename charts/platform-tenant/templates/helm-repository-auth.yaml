@@ -11,6 +11,7 @@ kind: HelmRepository
 metadata:
   name: {{ include "platform-system.helper.proxyName" $ }}
   namespace: {{ .Values.components.flux.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   url: {{ .Values.components.oauth2Proxy.chart.url }}
   interval: 10m

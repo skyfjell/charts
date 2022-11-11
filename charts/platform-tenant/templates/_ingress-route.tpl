@@ -9,6 +9,9 @@ kind: IngressRoute
 metadata:
   name: {{ printf "%s-ingress-route" $val.name | quote }}
   namespace: {{ $global.Values.targetNamespace.name | quote }}
+  labels: {{- include "skyfjell.common.chartLabels" $global | nindent 4 }}
+    app.kubernetes.io/name: traefik
+    app.kubernetes.io/instance: platform-auth-auth-proxy
 spec:
   entryPoints:
     - web

@@ -1,12 +1,13 @@
 {{- if .Values.components.flux.source.enabled -}}
-{{ if .Values.crdCheck }}
-{{- include "require.api.flux.source" . -}}
-{{ end }}
+  {{ if .Values.crdCheck }}
+    {{- include "require.api.flux.source" . -}}
+  {{ end }}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: GitRepository
 metadata:
   name: {{ default (include "platform-tenant.fullname" .) .Values.components.flux.source.name }}
   namespace: {{ .Values.components.flux.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   url: {{ .Values.components.flux.source.url }}
   interval: 1m

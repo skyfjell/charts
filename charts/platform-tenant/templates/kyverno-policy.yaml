@@ -6,6 +6,7 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: {{ default (include "platform-tenant.fullname" .) .Values.components.kyverno.name }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
   annotations:
     policies.kyverno.io/title: {{ default (include "platform-tenant.fullname" .) .Values.components.kyverno.name }} policy 
     policies.kyverno.io/category: Pod Scheduling

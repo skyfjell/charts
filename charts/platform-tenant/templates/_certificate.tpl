@@ -9,6 +9,7 @@ kind: Certificate
 metadata:
   name: {{ printf "%s-cert" $val.name }}
   namespace: {{ $global.Values.components.istio.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $global | nindent 4 }}
 spec:
   secretName: {{ include "platform-system.helper.tlsName" $val.name }}
   dnsNames: 

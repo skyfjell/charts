@@ -3,8 +3,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: {{ default (include "platform-tenant.fullname" .) .Values.targetNamespace.name }}
-  {{- with (merge .Values.commonLabels .Values.targetNamespace.labels) }}
-  labels:
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+  {{- with .Values.targetNamespace.labels }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with (merge .Values.commonAnnotations .Values.targetNamespace.annotations) }}

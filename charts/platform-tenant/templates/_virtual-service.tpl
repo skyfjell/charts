@@ -9,6 +9,7 @@ kind: VirtualService
 metadata:
   name: {{ printf "%s-virtual-service" $val.name | quote }}
   namespace: {{ $global.Values.targetNamespace.name | quote }}
+  labels: {{- include "skyfjell.common.chartLabels" $global | nindent 4 }}
 spec:
   hosts:
     - {{ $val.url }}
