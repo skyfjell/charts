@@ -1,6 +1,14 @@
 {{- define "platform-auth.app.postgres.template" -}}
-fullnameOverride: {{ include "platform-auth.helper.postgresName" $ }}
-fullname: {{ include "platform-auth.helper.postgresName" $ }}
+fullnameOverride: {{ include "platform-auth.postgresql.name" $ }}
+fullname: {{ include "platform-auth.postgresql.name" $ }}
+global:
+  postgresql:
+    auth:
+      database: {{ .Values.components.keycloak.storage.auth.database }}
+      existingSecret: {{ .Values.components.keycloak.storage.auth.existingSecret }}
+      username: {{ .Values.components.keycloak.storage.auth.username }}
+      secretKeys:
+      {{- toYaml .Values.components.keycloak.storage.auth.secretKeys | nindent 8 }}  
 {{- $chartName := .Values.components.keycloak.storage.chart.name }}
 {{- if or (eq $chartName "postgresql") (eq $chartName "postgresql-ha") }}
 {{ if eq $chartName "postgresql" }}
@@ -8,11 +16,9 @@ primary:
 {{ else if eq $chartName "postgresql-ha" }}
 postgres:
 {{- end }}
-  {{- with .Values.nodeSelector }}
   nodeSelector:
-    {{ toYaml . | indent 4 }}
-  {{- end -}}
-  {{- with .Values.tolerations }}
+    {{ toYaml .Values.nodeSelector | indent 4 }}
+  {{- if .Values.tolerations }}
   tolerations:
   {{ range .Values.tolerations }}
     - {{ .  | quote}}

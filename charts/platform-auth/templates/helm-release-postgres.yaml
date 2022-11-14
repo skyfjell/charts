@@ -6,8 +6,9 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: {{ include "platform-auth.helper.postgresName" $ }}
+  name: {{ include "platform-auth.postgresql.name" $ }}
   namespace: {{ .Values.components.flux.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   targetNamespace: {{ .Values.components.keycloak.namespace }}
   chart:
@@ -18,7 +19,7 @@ spec:
       {{- end }}
       sourceRef:
         kind: HelmRepository
-        name: {{ include "platform-auth.helper.bitnamiName" $ }}
+        name: {{ include "platform-auth.bitnami.name" $ }}
         namespace: {{ .Values.components.flux.namespace }}
   interval: 1h0m0s
   values:

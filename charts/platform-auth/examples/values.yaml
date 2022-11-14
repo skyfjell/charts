@@ -1,0 +1,26 @@
+crdCheck: false
+components:
+  istio:
+    selector:
+      app: istio-gateway
+  certManager:
+    issuerRef:
+      name: letsencrypt-prod
+      kind: ClusterIssuer
+      group: cert-manager.io
+  keycloak:
+    enabled: true
+    url: sso.mydomain.com
+    admin:
+      usernameSecretRef:
+        name: keycloak-admin
+        key: username
+      passwordSecretRef:
+        name: keycloak-admin
+        key: password
+    storage:
+      enabled: true
+      auth:
+        existingSecret: "secret-pg"
+  traefik:
+    enabled: false

@@ -5,8 +5,9 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: {{ include "platform-auth.helper.codecentricName" $ }}
+  name: {{ include "platform-auth.codecentric.name" $ }}
   namespace: {{ .Values.components.flux.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   url: {{ .Values.components.keycloak.chart.url }}
   interval: 10m

@@ -22,6 +22,8 @@ components:
     enabled: true
     # namespace of istio
     namespace: "istio-system"
+    # selector for istio gateway
+    selector: {}
   # certManager configs
   certManager:
     # enabled cert-manager components
@@ -31,7 +33,9 @@ components:
   keycloak:
     enabled: true
     # namespace to deploy the keycloak helm release into
-    namespace: "keycloak"
+    namespace: "keycloak-test"
+    # url for exposing externally with chart's istio config
+    url: ""
     admin:
       username: "admin"
       # usernameSecretRef:
@@ -50,60 +54,29 @@ components:
     valuesOverride: {}
     # storage configuration for keycloak
     storage:
+      # enabled will launch a storage option managed by this chart. If you want to manage your own, set to false but
+      # still pass in auth params to set on the keycloak chart.
       enabled: true
-      # chart source of storage. Currently only bitnami postgres or bitnami postgres-ha are supported for easy config.
+      # chart source of storage. Currently only bitnami postgresql or bitnami postgresql-ha are supported for easy config.
       chart:
         url: https://charts.bitnami.com/bitnami
-        name: postgres # can be postgres-ha
+        name: postgresql
+        # version can be set to null
         version: "12.1.2"
+      auth:
+        username: "keycloak"
+        # existingSecret coincides with bitnami's secret pattern keys are (username, password, postgres-password)
+        existingSecret: ""
+        secretKeys:
+          adminPasswordKey: "postgres-password"
+          userPasswordKey: "password"
+        database: keycloak
       valuesOverride: {}
-
   traefik:
     enabled: true
     namespace: traefik
     chart:
       url: "https://traefik.github.io/charts"
       name: "traefik"
-      version: "20.1.1"
-# keycloak:
-#   release:
-#     chart:
-#       # Will install the built in helm repository.
-#       enabled: true
-#       name: "keycloakx"
-#       version: "1.6.0"
-#     values:
-#       fullnameOverride: keycloak
-#       nodeSelector:
-#         skyfjell.io/node-selector: platform-services
-#       command:
-#         - "/opt/keycloak/bin/kc.sh"
-#         - "--verbose"
-#         - "start"
-#         - "--auto-build"
-#         - "--http-enabled=true"
-#         - "--http-port=8080"
-#         - "--hostname-strict=false"
-#         - "--hostname-strict-https=false"
-#         - "--spi-events-listener-jboss-logging-success-level=info"
-#         - "--spi-events-listener-jboss-logging-error-level=warn"
-#       dbchecker:
-#         enabled: true
-#       database:
-#         existingSecret: "auth-pguser-keycloak"
-#         vendor: postgres
-#         hostname: "auth-primary"
-#         port: "5432"
-#         username: "keycloak"
-#   cert:
-#     enabled: true
-#     dnsNames: []
-#     # can override with different cluster issuer
-#     # clusterIssuerName: ""
-#   gateway:
-#     enabled: true
-#     istioNamespace: ""
-
-#  - secretName: chart-example-tls
-#    hosts:
-#      - chart-example.local
+      version: null #"20.1.1"
+    valuesOverride: {}

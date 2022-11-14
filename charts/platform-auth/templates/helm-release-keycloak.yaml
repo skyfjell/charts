@@ -6,10 +6,16 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: {{ include "platform-auth.helper.keycloakName" $ }}
+  name: {{ include "platform-auth.keycloak.name" $ }}
   namespace: {{ .Values.components.flux.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}    
 spec:
   targetNamespace: {{ .Values.components.keycloak.namespace }}
+  {{- if .Values.components.keycloak.storage.enabled }}
+  dependsOn:
+    - name: {{ include "platform-auth.postgresql.name" $ }}
+      namespace: {{ .Values.components.flux.namespace }}
+  {{- end }}
   chart:
     spec:
       chart: {{ .Values.components.keycloak.chart.name }}
@@ -18,7 +24,7 @@ spec:
       {{- end }}
       sourceRef:
         kind: HelmRepository
-        name: {{ include "platform-auth.helper.codecentricName" $ }}
+        name: {{ include "platform-auth.codecentric.name" $ }}
         namespace: {{ .Values.components.flux.namespace }}
   interval: 1h0m0s
   values:

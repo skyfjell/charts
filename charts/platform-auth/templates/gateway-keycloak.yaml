@@ -1,0 +1,29 @@
+{{- if and .Values.components.keycloak.url .Values.components.istio.enabled -}}
+  {{- if .Values.crdCheck }}
+    {{- include "require.api.istio.gateway" $ -}}
+  {{- end }}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ include "platform-auth.keycloak.name" $ }}
+  namespace: {{ .Values.components.istio.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+spec:
+  {{- with .Values.components.istio.selector }}
+  selector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  servers:
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - {{ .Values.components.keycloak.url }}
+      {{- if and .Values.components.certManager.enabled .Values.components.certManager.issuerRef }}
+      tls:
+        mode: SIMPLE
+        credentialName: {{ printf "%s-tls" (include "platform-auth.keycloak.name" $) }}
+      {{- end }}
+{{- end -}}

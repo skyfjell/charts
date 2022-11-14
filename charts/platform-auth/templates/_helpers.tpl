@@ -5,24 +5,34 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{- define "platform-auth.helper.codecentricName" -}}
-{{ printf "%s-codecentric" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
+{{- define "platform-auth.codecentric.name" -}}
+{{ printf "%s-codecentric" .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{- define "platform-auth.helper.traefikName" -}}
-{{ printf "%s-traefik" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
+{{- define "platform-auth.traefik.name" -}}
+{{ printf "%s-traefik" .Release.Name | trunc 63 | trimSuffix "-"  }}
 {{- end }}
 
-{{- define "platform-auth.helper.keycloakName" -}}
-{{ printf "%s-keycloak" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
+{{- define "platform-auth.keycloak.name" -}}
+{{ printf "%s-keycloak" .Release.Name | trunc 63 | trimSuffix "-"  }}
 {{- end }}
 
-{{- define "platform-auth.helper.bitnamiName" -}}
-{{ printf "%s-bitnami" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
+{{- define "platform-auth.bitnami.name" -}}
+{{ printf "%s-bitnami" .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{- define "platform-auth.helper.postgresName" -}}
-{{ printf "%s-keycloak-storage" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
+{{- define "platform-auth.postgresql.name" -}}
+{{ printf "%s-keycloak-storage" .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{- define "platform-auth.postgresql.userPasswordKey" -}}
+{{- if .Values.components.keycloak.storage.valuesOverride.global.postgresql.auth.secretKeys.userPasswordKey }}
+  {{- printf "%s" (tpl .Values.components.keycloak.storage.valuesOverride.global.postgresql.auth.secretKeys.userPasswordKey $) -}}
+{{- else if .Values.components.keycloak.storage.valuesOverride.auth.secretKeys.userPasswordKey -}}
+  {{- printf "%s" (tpl .Values.components.keycloak.storage.valuesOverride.auth.secretKeys.userPasswordKey $) -}}
+{{- else -}}
+  {{- print "postgres" -}}
+{{- end -}}
 {{- end }}
 
 {{/*

@@ -1,0 +1,26 @@
+{{- if and .Values.components.keycloak.url .Values.components.istio.enabled -}}
+  {{- if .Values.crdCheck }}
+    {{- include "require.api.istio.vs" $ -}}
+  {{- end }}
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ include "platform-auth.keycloak.name" $ }}
+  namespace: {{ .Values.components.keycloak.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+spec:
+  hosts:
+    - {{ .Values.components.keycloak.url }}
+  gateways:
+    - {{ printf "%s/%s" .Values.components.istio.namespace (include "platform-auth.keycloak.name" $) }}
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            port:
+              number: 80
+            host: {{ printf "%s-http" (include "platform-auth.keycloak.name" $) }}
+{{- end -}}

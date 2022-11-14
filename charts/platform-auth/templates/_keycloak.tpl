@@ -9,8 +9,8 @@ tolerations:
   - {{ .  | quote}}
 {{- end }}
 {{- end }}
-fullnameOverride: {{ include "platform-auth.helper.keycloakName" $ }}
-extraEnv:
+fullnameOverride: {{ include "platform-auth.keycloak.name" $ }}
+extraEnv: |
   {{- if or .Values.components.keycloak.admin.username .Values.components.keycloak.admin.usernameSecretRef }}
   - name: KEYCLOAK_ADMIN
    {{- if .Values.components.keycloak.admin.usernameSecretRef }}
@@ -29,12 +29,17 @@ extraEnv:
     value: {{ .Values.components.keycloak.admin.password | quote }}
   {{- end }}
   {{- end }}
+  - name: KC_DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        key: {{ .Values.components.keycloak.storage.auth.secretKeys.userPasswordKey }}
+        name: {{ .Values.components.keycloak.storage.auth.existingSecret }}
   - name: JAVA_OPTS_APPEND
     value: >-
       -XX:+UseContainerSupport
       -XX:MaxRAMPercentage=50.0
       -Djava.awt.headless=true
-      -Djgroups.dns.query={{ include "platform-auth.helper.keycloakName" $ }}-headless
+      -Djgroups.dns.query={{ include "platform-auth.postgresql.name" $ }}-hl
 command:
   - "/opt/keycloak/bin/kc.sh"
   - "--verbose"
@@ -49,9 +54,9 @@ command:
 dbchecker:
   enabled: true
 database:
-#   existingSecret: "auth-pguser-keycloak"
   vendor: postgres
-  hostname: {{ include "platform-auth.helper.postgresName" $ }}
-  port: "5432"
-#   username: "keycloak"
+  hostname: {{ include "platform-auth.postgresql.name" $ }}
+  port: 5432
+  database: {{ .Values.components.keycloak.storage.auth.database }}
+  username: {{ .Values.components.keycloak.storage.auth.username }}
 {{- end -}}
