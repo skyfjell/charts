@@ -1,24 +1,27 @@
-{{- if and .Values.keycloak.enabled  }}
+{{- if and .Values.components.keycloak.enabled  }}
+{{- if .Values.crdCheck }}
+  {{- include "require.api.flux.helmRelease" . -}}
+{{- end -}}
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: keycloak
-  namespace: {{ .Values.fluxNamespace }}
+  name: {{ include "platform-auth.helper.keycloakName" $ }}
+  namespace: {{ .Values.components.flux.namespace }}
 spec:
-  targetNamespace: {{ .Release.Namespace  }}
+  targetNamespace: {{ .Values.components.keycloak.namespace }}
   chart:
     spec:
-      chart: {{ .Values.keycloak.release.chart.name }}
-      version: {{ .Values.keycloak.release.chart.version }}
+      chart: {{ .Values.components.keycloak.chart.name }}
+      {{- with .Values.components.keycloak.chart.version  }}
+      version: {{ . }}
+      {{- end }}
       sourceRef:
         kind: HelmRepository
-        name: {{ .Release.Name }}-codecentric
-        namespace:  {{ .Values.fluxNamespace }}
+        name: {{ include "platform-auth.helper.codecentricName" $ }}
+        namespace: {{ .Values.components.flux.namespace }}
   interval: 1h0m0s
   values:
-    nodeSelector: {{- include "keycloak.nodeSelector" . }}
-    tolerations: {{- include "keycloak.tolerations" . }}
-    extraEnv: {{- include "keycloak.extraEnv" .  }}
-    {{- include "keycloak.Values" . }}
+{{- $defaultValues := ( include "platform-auth.app.keycloak.template" $ | fromYaml ) }}
+{{ ( mergeOverwrite $defaultValues (default dict .Values.components.keycloak.valuesOverride )) | toYaml | indent 4 }}
 {{- end }}

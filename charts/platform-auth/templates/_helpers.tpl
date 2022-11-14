@@ -5,6 +5,26 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
+{{- define "platform-auth.helper.codecentricName" -}}
+{{ printf "%s-codecentric" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
+{{- end }}
+
+{{- define "platform-auth.helper.traefikName" -}}
+{{ printf "%s-traefik" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
+{{- end }}
+
+{{- define "platform-auth.helper.keycloakName" -}}
+{{ printf "%s-keycloak" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
+{{- end }}
+
+{{- define "platform-auth.helper.bitnamiName" -}}
+{{ printf "%s-bitnami" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
+{{- end }}
+
+{{- define "platform-auth.helper.postgresName" -}}
+{{ printf "%s-keycloak-storage" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
+{{- end }}
+
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
@@ -59,41 +79,6 @@ Create the name of the service account to use
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
-{{- end }}
-
-{{/* Set tolerations from global if available and if not set it from app values*/}}  
-{{/* ex: tolerations: {{ include "helper.tolerations" (dict "globalTolerations" .Values.global.tolerations "appTolerations" .Values.components.<app>.tolerations ) | indent 6 }} */}}
-{{- define "helper.tolerations" }}                                                   
-{{- if .appTolerations }}                                                            
-{{ toYaml .appTolerations | indent 2 }}                                              
-{{- else if .globalTolerations }}                                                    
-{{ toYaml .globalTolerations | indent 2 }}                                           
-{{- else }}                                                                          
-{{- "[]" }}                                                                          
-{{- end }}                                                                           
-{{- end }}                                                                           
-                                                                                     
-{{/* Set nodeSelector from global if available and if not set it from app values*/}} 
-{{/* ex: nodeSelector: {{ include "helper.nodeSelector" (dict "globalNodeSelector" .Values.global.nodeSelector "appNodeSelector" .Values.components.<app>.nodeSelector) | indent 6 }} */}}
-{{- define "helper.nodeSelector" }}                                                  
-{{- if .appNodeSelector }}                                                           
-{{ toYaml .appNodeSelector | indent 2 }}                                             
-{{- else if .globalNodeSelector }}                                                   
-{{ toYaml .globalNodeSelector | indent 2 }}                                          
-{{- else }}                                                                          
-{{- "{}" }}                                                                          
-{{- end }}                                                                           
-{{- end }}                                                                           
-
-
-{{- define "keycloak.nodeSelector" }}
-{{- $nodeSelector := merge (default dict .appNodeSelector ) (default dict .globalNodeSelector ) (default dict .Values.keycloak.release.values.nodeSelector) (default dict .Values.nodeSelector)  }}
-{{- toYaml (default dict $nodeSelector) | nindent 6 }}
-{{- end }}
-
-{{- define "keycloak.tolerations" }}
-{{- $tolerations := concat (default list .appTolerations ) (default list .globalTolerations ) (default list .Values.keycloak.release.values.tolerations) (default list .Values.tolerations)  }}
-{{- toYaml (default list $tolerations | uniq) |  nindent 6 }}
 {{- end }}
 
 

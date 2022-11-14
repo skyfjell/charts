@@ -1,0 +1,27 @@
+{{- if and .Values.components.keycloak.storage.enabled (.Values.components.keycloak.storage).chart }}
+  {{- if .Values.crdCheck }}
+    {{- include "require.api.flux.helmRelease" . -}}
+  {{- end }}
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ include "platform-auth.helper.postgresName" $ }}
+  namespace: {{ .Values.components.flux.namespace }}
+spec:
+  targetNamespace: {{ .Values.components.keycloak.namespace }}
+  chart:
+    spec:
+      chart: {{ .Values.components.keycloak.storage.chart.name }}
+      {{- with .Values.components.keycloak.storage.chart.version }}
+      version: {{ . }}
+      {{- end }}
+      sourceRef:
+        kind: HelmRepository
+        name: {{ include "platform-auth.helper.bitnamiName" $ }}
+        namespace: {{ .Values.components.flux.namespace }}
+  interval: 1h0m0s
+  values:
+{{- $defaultValues := ( include "platform-auth.app.postgres.template" $ | fromYaml ) }}
+{{ ( mergeOverwrite $defaultValues (default dict .Values.components.keycloak.storage.valuesOverride )) | toYaml | indent 4 }}
+{{- end -}}
