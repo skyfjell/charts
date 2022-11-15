@@ -3,7 +3,7 @@ name: platform-system-config
 description: Platform System Configuration Chart
 type: application
 version: 0.0.1
-dependencies:
-  - name: common
-    repository: "@skyfjell"
-    version: "0.0.x"
+# dependencies:
+#   - name: common
+#     repository: "@skyfjell"
+#     version: "0.0.x"
