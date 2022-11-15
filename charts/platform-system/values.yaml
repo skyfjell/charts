@@ -1,3 +1,4 @@
+name: platform-system
 # Supported Values: `flux`
 # TODO: Support `argo`
 solution:
@@ -149,7 +150,7 @@ components:
       config:
         create: true
         chart:
-          version: "0.0.3"
+          version: "0.0.1"
   kyverno:
     # enable this component
     enabled: true

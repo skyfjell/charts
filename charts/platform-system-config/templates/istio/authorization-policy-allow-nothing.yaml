@@ -1,0 +1,11 @@
+# Default allow-nothing policy for all namespaces.
+{{ if .Values.components.istio.enabled -}}
+{{- include "require.api.istio.authorization-policy" . -}}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: platform-system-default-allow-nothing
+  namespace: {{ .Values.components.istio.namespace | quote }}
+spec:
+  action: ALLOW
+{{- end }}

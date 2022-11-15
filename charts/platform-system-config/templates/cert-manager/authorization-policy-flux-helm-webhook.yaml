@@ -1,0 +1,27 @@
+{{ if and .Values.components.istio.enabled .Values.components.certManager.enabled (eq .Values.solution.name "flux") -}}
+{{- include "require.api.istio.authorization-policy" . -}}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: platform-system-flux-helm-webhook
+  namespace: {{ .Values.components.certManager.namespace }}
+spec:
+  action: ALLOW
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/component: webhook
+  rules:
+    - to:
+        - operation:
+            paths:
+              - "/mutate"
+            methods:
+              - GET
+    - from:
+        - source:
+            namespaces:
+              - {{ .Values.solution.namespace }}
+            principals:
+              - cluster.local/ns/{{.Values.solution.namespace}}/sa/helm-controller
+{{- end }}

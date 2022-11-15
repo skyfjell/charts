@@ -1,0 +1,9 @@
+apiVersion: v2
+name: platform-system-config
+description: Platform System Configuration Chart
+type: application
+version: 0.0.1
+dependencies:
+  - name: skyfjell-common
+    repository: "@skyfjell"
+    version: "0.0.x"
