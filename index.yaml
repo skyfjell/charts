@@ -1,5 +1,15 @@
 apiVersion: v1
 entries:
+  common:
+  - apiVersion: v2
+    created: "2022-11-15T23:51:31.001388879Z"
+    description: Skyfjell Common Library Chart
+    digest: eb293d04f29c434bd6ebeb7cd58aef24657f44631fdb911f3d36bc51fb1e6b13
+    name: common
+    type: library
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/common-0.0.1/common-0.0.1.tgz
+    version: 0.0.1
   init:
   - apiVersion: v2
     created: "2022-07-13T20:27:47.601721995Z"
@@ -261,4 +271,4 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/skyfjell-common-0.0.1/skyfjell-common-0.0.1.tgz
     version: 0.0.1
-generated: "2022-11-11T02:14:58.215335657Z"
+generated: "2022-11-15T23:51:31.213822941Z"
