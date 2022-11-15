@@ -1,6 +1,7 @@
-{{- define "platform-auth.app.traefik.template" -}}
-fullnameOverride: {{ include "platform-auth.traefik.name" $ }}
-fullname: {{ include "platform-auth.traefik.name" $ }}
+{{- define "platform-auth.app.traefik.template.values" -}}
+{{ $component := .Values.components.traefik }}
+fullnameOverride: {{ list $component.name $ | include "platform-auth.format.name" }}
+fullname: {{ list $component.name $ | include "platform-auth.format.name" }}
 ingressClass:
   enabled: false
 providers:

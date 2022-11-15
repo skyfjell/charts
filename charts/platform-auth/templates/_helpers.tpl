@@ -2,27 +2,11 @@
 Expand the name of the chart.
 */}}
 {{- define "platform-auth.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+  {{- default .Chart.Name .Values.nameOverride }}
 {{- end }}
 
-{{- define "platform-auth.codecentric.name" -}}
-{{ printf "%s-codecentric" .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{- define "platform-auth.traefik.name" -}}
-{{ printf "%s-traefik" .Release.Name | trunc 63 | trimSuffix "-"  }}
-{{- end }}
-
-{{- define "platform-auth.keycloak.name" -}}
-{{ printf "%s-keycloak" .Release.Name | trunc 63 | trimSuffix "-"  }}
-{{- end }}
-
-{{- define "platform-auth.bitnami.name" -}}
-{{ printf "%s-bitnami" .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{- define "platform-auth.postgresql.name" -}}
-{{ printf "%s-keycloak-storage" .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- define "platform-auth.format.name" -}}
+  {{- last . | include "platform-auth.name" | prepend . | initial | include "skyfjell.common.format.name" -}}
 {{- end }}
 
 {{- define "platform-auth.postgresql.userPasswordKey" -}}
@@ -89,61 +73,4 @@ Create the name of the service account to use
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
-{{- end }}
-
-
-{{- define "keycloak.dnsQuery" }}
-name: JAVA_OPTS_APPEND
-value: >-
-  -XX:+UseContainerSupport
-  -XX:MaxRAMPercentage=50.0
-  -Djava.awt.headless=true
-  -Djgroups.dns.query=keycloak-headless
-{{- end }}
-
-{{- define "keycloak.adminUser" }}
-{{- if or .Values.keycloak.admin.username .Values.keycloak.admin.usernameSecretRef }}
-name: KEYCLOAK_ADMIN
-{{- if .Values.keycloak.admin.username }}
-value: {{ .Values.keycloak.admin.username | quote}}
-{{- else if .Values.keycloak.admin.usernameSecretRef }}
-valueFrom:
-  secretKeyRef:
-    {{- with .Values.keycloak.admin.usernameSecretRef }}
-    {{ toYaml . | nindent 8}}
-    {{- end}}
-  {{- end }}
-{{- end }}
-{{- end }}
-
-{{- define "keycloak.adminPassword" }}
-{{- if or .Values.keycloak.admin.password .Values.keycloak.admin.passwordSecretRef }}
-name: KEYCLOAK_ADMIN_PASSWORD
-{{- if .Values.keycloak.admin.password }}
-value: {{ .Values.keycloak.admin.password | quote}}
-{{- else if .Values.keycloak.admin.passwordSecretRef }}
-valueFrom:
-  secretKeyRef:
-    {{- with .Values.keycloak.admin.passwordSecretRef }}
-    {{ toYaml . | nindent 8}}
-    {{- end}}
-{{- end }}
-{{- end }}
-{{- end }}
-
-
-{{- define "keycloak.extraEnv" }}
-{{- $extraEnv := concat (list (include "keycloak.dnsQuery" . | fromYaml))  (default list .Values.keycloak.release.values.extraEnv ) }}
-{{- with (include "keycloak.adminUser" . | fromYaml ) }}
-{{- $extraEnv = concat (list .) $extraEnv}}
-{{- end }}
-{{- with (include "keycloak.adminPassword" . | fromYaml ) }}
-{{- $extraEnv = concat (list .) $extraEnv}}
-{{- end }}
-{{- toYaml (default list $extraEnv | uniq) | nindent 6 }}
-{{- end }}
-
-{{- define "keycloak.Values" }}
-{{- $values := omit .Values.keycloak.release.values "nodeSelector" "tolerations" "extraEnv" }}
-{{- toYaml $values | nindent 4 }}
 {{- end }}

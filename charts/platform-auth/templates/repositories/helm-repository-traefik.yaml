@@ -1,14 +1,14 @@
-{{- if .Values.components.keycloak.enabled }}
+{{- if .Values.components.traefik.enabled }}
   {{- if .Values.crdCheck }}
     {{- include "require.api.flux.source" . -}}
   {{- end -}}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: {{ include "platform-auth.codecentric.name" $ }}
+  name: {{ list "traefik" $ | include "platform-auth.format.name" }}
   namespace: {{ .Values.components.flux.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
-  url: {{ .Values.components.keycloak.chart.url }}
+  url: {{ .Values.components.traefik.chart.url }}
   interval: 10m
 {{- end }}

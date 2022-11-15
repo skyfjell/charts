@@ -1,6 +1,6 @@
 dependencies:
-- name: skyfjell-common
+- name: common
   repository: https://charts.skyfjell.io
-  version: 0.0.5
-digest: sha256:4fab56e97c6cb864a26cf2fce239263d6c37a5e49ef45151f29115fb6caa6da7
-generated: "2022-11-14T12:56:26.76474-06:00"
+  version: 0.0.2
+digest: sha256:bfc59278fb891bc2a0e2b1a440a8c41a9ed1ea89b8934a1ce829bfee2ffdd273
+generated: "2022-11-15T18:48:49.256856-06:00"

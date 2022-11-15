@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # crdCheck for installed CRDS
-crdCheck: true
+crdCheck: false
 
 commonAnnotations: {}
 commonLabels: {}
@@ -32,6 +32,8 @@ components:
     issuerRef: {}
   keycloak:
     enabled: true
+    # Component release name. Will be prefixed by parent component
+    name: keycloak
     # namespace to deploy the keycloak helm release into
     namespace: "keycloak-test"
     # url for exposing externally with chart's istio config
@@ -42,7 +44,7 @@ components:
       #   name: ""
       #   key: ""
       # don't use me in production
-      # password: "asd"
+      # password: ""
       # passwordSecretRef:
       #   name: ""
       #   key: ""
@@ -53,30 +55,33 @@ components:
       version: "1.6.0"
     valuesOverride: {}
     # storage configuration for keycloak
-    storage:
-      # enabled will launch a storage option managed by this chart. If you want to manage your own, set to false but
-      # still pass in auth params to set on the keycloak chart.
-      enabled: true
-      # chart source of storage. Currently only bitnami postgresql or bitnami postgresql-ha are supported for easy config.
-      chart:
-        url: https://charts.bitnami.com/bitnami
-        name: postgresql
-        # version can be set to null
-        version: "12.1.2"
-      auth:
-        username: "keycloak"
-        # existingSecret coincides with bitnami's secret pattern keys are (username, password, postgres-password)
-        existingSecret: ""
-        secretKeys:
-          adminPasswordKey: "postgres-password"
-          userPasswordKey: "password"
-        database: keycloak
-      valuesOverride: {}
+    components:
+      database:
+        # enabled will launch a storage option managed by this chart. If you want to manage your own, set to false but
+        # still pass in auth params to set on the keycloak chart.
+        enabled: true
+        # Component release name. Will be prefixed by parent component
+        name: db
+        # chart source of storage. Currently only bitnami postgresql or bitnami postgresql-ha are supported for easy config.
+        chart:
+          url: https://charts.bitnami.com/bitnami
+          name: postgresql
+          # version can be set to null
+          version: "12.1.2"
+        auth:
+          username: "keycloak"
+          # existingSecret coincides with bitnami's secret pattern keys are (username, password, postgres-password)
+          existingSecret: ""
+          secretKeys:
+            adminPasswordKey: "postgres-password"
+            userPasswordKey: "password"
+          database: keycloak
+        valuesOverride: {}
   traefik:
     enabled: true
     namespace: traefik
     chart:
       url: "https://traefik.github.io/charts"
       name: "traefik"
-      version: null #"20.1.1"
+      version: 20.2.0
     valuesOverride: {}

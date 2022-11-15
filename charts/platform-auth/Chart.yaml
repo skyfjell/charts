@@ -4,6 +4,6 @@ description: Skyfjell Platform Auth Chart
 type: application
 version: 0.0.1
 dependencies:
-  - name: skyfjell-common
+  - name: common
     repository: "@skyfjell"
     version: "0.0.x"
