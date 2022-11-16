@@ -1,7 +1,7 @@
-{{- define "platformSystem.minioOperator.defaultValues" -}}
-{{- $anno := ( include "platformSystem.helper.annotations" (list "minioOperator" $) ) }}
-{{- $sel := ( include "platformSystem.helper.nodeSelector" (list "minioOperator" $) ) }}
-{{- $tol := ( include "platformSystem.helper.tolerations" (list "minioOperator" $) ) }}
+{{- define "platform-system.components.minio-operator.defaultValues" -}}
+{{- $anno := ( include "platform-system.helper.annotations" (list "minioOperator" $) ) }}
+{{- $sel := ( include "platform-system.helper.nodeSelector" (list "minioOperator" $) ) }}
+{{- $tol := ( include "platform-system.helper.tolerations" (list "minioOperator" $) ) }}
 {{- if or ( or $tol $sel ) $anno }}
 operator:
   {{- with $anno }}

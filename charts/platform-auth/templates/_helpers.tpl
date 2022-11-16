@@ -2,7 +2,21 @@
 Expand the name of the chart.
 */}}
 {{- define "platform-auth.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+  {{- default .Chart.Name .Values.nameOverride }}
+{{- end }}
+
+{{- define "platform-auth.format.name" -}}
+  {{- last . | include "platform-auth.name" | prepend . | initial | include "skyfjell.common.format.name" -}}
+{{- end }}
+
+{{- define "platform-auth.postgresql.userPasswordKey" -}}
+{{- if .Values.components.keycloak.storage.valuesOverride.global.postgresql.auth.secretKeys.userPasswordKey }}
+  {{- printf "%s" (tpl .Values.components.keycloak.storage.valuesOverride.global.postgresql.auth.secretKeys.userPasswordKey $) -}}
+{{- else if .Values.components.keycloak.storage.valuesOverride.auth.secretKeys.userPasswordKey -}}
+  {{- printf "%s" (tpl .Values.components.keycloak.storage.valuesOverride.auth.secretKeys.userPasswordKey $) -}}
+{{- else -}}
+  {{- print "postgres" -}}
+{{- end -}}
 {{- end }}
 
 {{/*
@@ -60,27 +74,3 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
-
-{{/* Set tolerations from global if available and if not set it from app values*/}}  
-{{/* ex: tolerations: {{ include "helper.tolerations" (dict "globalTolerations" .Values.global.tolerations "appTolerations" .Values.components.<app>.tolerations ) | indent 6 }} */}}
-{{- define "helper.tolerations" }}                                                   
-{{- if .appTolerations }}                                                            
-{{ toYaml .appTolerations | indent 2 }}                                              
-{{- else if .globalTolerations }}                                                    
-{{ toYaml .globalTolerations | indent 2 }}                                           
-{{- else }}                                                                          
-{{- "[]" }}                                                                          
-{{- end }}                                                                           
-{{- end }}                                                                           
-                                                                                     
-{{/* Set nodeSelector from global if available and if not set it from app values*/}} 
-{{/* ex: nodeSelector: {{ include "helper.nodeSelector" (dict "globalNodeSelector" .Values.global.nodeSelector "appNodeSelector" .Values.components.<app>.nodeSelector) | indent 6 }} */}}
-{{- define "helper.nodeSelector" }}                                                  
-{{- if .appNodeSelector }}                                                           
-{{ toYaml .appNodeSelector | indent 2 }}                                             
-{{- else if .globalNodeSelector }}                                                   
-{{ toYaml .globalNodeSelector | indent 2 }}                                          
-{{- else }}                                                                          
-{{- "{}" }}                                                                          
-{{- end }}                                                                           
-{{- end }}                                                                           

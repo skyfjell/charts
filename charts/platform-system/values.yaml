@@ -10,9 +10,17 @@ solution:
 prefix: ""
 
 components:
+  config:
+    enabled: true
+    # Component release name. Will be prefixed by parent component(s)
+    name: config
+    chart:
+      version: "0.0.3"
   certManager:
     # enable this component
     enabled: true
+    # Component release name. Will be prefixed by parent component(s)
+    name: cert-manager
     # istioEnabled for istio integrations
     istioEnabled: true
     # namespace to be launched in
@@ -36,6 +44,8 @@ components:
   externalDns:
     # enable this component
     enabled: true
+    # Component release name. Will be prefixed by parent component(s)
+    name: external-dns
     # istioEnabled for istio integrations
     istioEnabled: true
     # namespace to be launched in
@@ -63,6 +73,8 @@ components:
   istio:
     # enable this component
     enabled: true
+    # Component release name. Will be prefixed by parent component(s)
+    name: istio
     # namespace to target for all HelmReleases
     namespace: istio-system
     # mTLSMode options here are UNSET, DISABLE, PERMISSIVE, and STRICT
@@ -79,7 +91,7 @@ components:
     affinity: {}
     # source of helm release
     source:
-      create: true
+      enabled: true
       # type: HelmRepository
       # url: https://istio-release.storage.googleapis.com/charts
     # chart config for HelmReleases
@@ -90,11 +102,13 @@ components:
         kind: HelmRepository
         repository: platform-system-istio
     # component of full istio install
-    component:
+    components:
       # base istio chart release
       base:
         # create the base chart via HelmRelease. The base chart installs CRDs and RBAC
-        create: true
+        enabled: true
+        # Component release name. Will be prefixed by parent component(s)
+        name: base
         # chart spec
         chart:
           # name of chart
@@ -115,7 +129,9 @@ components:
       # istiod istio chart release
       istiod:
         # create the base chart via HelmRelease. The base chart installs CRDs and RBAC
-        create: true
+        enabled: true
+        # Component release name. Will be prefixed by parent component(s)
+        name: istiod
         # chart spec
         chart:
           # name of chart
@@ -132,7 +148,9 @@ components:
       # gateway istio chart release
       gateway:
         # create the base chart via HelmRelease. The base chart installs CRDs and RBAC
-        create: true
+        enabled: true
+        # Component release name. Will be prefixed by parent component(s)
+        name: ingress
         # chart spec
         chart:
           # name of chart
@@ -146,14 +164,11 @@ components:
           source: {}
         # values override HelmRelease values
         values: {}
-      # config chart from skyfjell
-      config:
-        create: true
-        chart:
-          version: "0.0.1"
   kyverno:
     # enable this component
     enabled: true
+    # Component release name. Will be prefixed by parent component(s)
+    name: kyverno
     # istioEnabled for istio integrations
     istioEnabled: true
     # namespace to be launched in
@@ -181,6 +196,8 @@ components:
   kyvernoPolicies:
     # enable this component
     enabled: true
+    # Component release name. Will be prefixed by parent component(s)
+    name: kyverno-policies
     # istioEnabled for istio integrations
     istioEnabled: true
     # namespace to be launched in
@@ -200,6 +217,8 @@ components:
   minioOperator:
     # enable this component
     enabled: true
+    # Component release name. Will be prefixed by parent component(s)
+    name: minio-operator
     # istioEnabled for istio integrations
     istioEnabled: true
     # namespace to be launched in
@@ -227,6 +246,8 @@ components:
   minioTenant:
     # enable this component
     enabled: true
+    # Component release name. Will be prefixed by parent component(s)
+    name: minio-tenant
     # istioEnabled for istio integrations
     istioEnabled: true
     # namespace to be launched in
@@ -256,6 +277,8 @@ components:
   vaultOperator:
     # enable this component
     enabled: true
+    # Component release name. Will be prefixed by parent component(s)
+    name: vault-operator
     # istioEnabled for istio integrations
     istioEnabled: true
     # namespace to be launched in

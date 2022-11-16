@@ -1,8 +1,12 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "platformSystem.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- define "platform-system.name" -}}
+  {{- default .Chart.Name .Values.nameOverride }}
+{{- end }}
+
+{{- define "platform-system.format.name" -}}
+  {{- last . | include "platform-system.name" | prepend . | initial | include "skyfjell.common.format.name" -}}
 {{- end }}
 
 {{/*
@@ -10,7 +14,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "platformSystem.fullname" -}}
+{{- define "platform-system.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +30,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "platformSystem.chart" -}}
+{{- define "platform-system.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "platformSystem.labels" -}}
-helm.sh/chart: {{ include "platformSystem.chart" . }}
-{{ include "platformSystem.selectorLabels" . }}
+{{- define "platform-system.labels" -}}
+helm.sh/chart: {{ include "platform-system.chart" . }}
+{{ include "platform-system.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +49,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "platformSystem.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "platformSystem.name" . }}
+{{- define "platform-system.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "platform-system.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "platformSystem.serviceAccountName" -}}
+{{- define "platform-system.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "platformSystem.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "platform-system.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
@@ -77,9 +81,9 @@ Create the name of the service account to use
 
 {{/*
 Sets annotations for app based on local and global annoations.
-Ex: {{ include "platformSystem.helper.annotations" (list "kyverno" $)}}
+Ex: {{ include "platform-system.helper.annotations" (list "kyverno" $)}}
 */}}
-{{- define "platformSystem.helper.annotations" }}
+{{- define "platform-system.helper.annotations" }}
 {{- $path:= first .}}
 {{- $global := last . }}
 {{- $values := $global.Values }}
@@ -91,9 +95,9 @@ Ex: {{ include "platformSystem.helper.annotations" (list "kyverno" $)}}
 
 {{/*
 Sets nodeSelector for app based on local and global nodeSelector.
-Ex: {{ include "platformSystem.helper.nodeSelector" (list "kyverno" $)}}
+Ex: {{ include "platform-system.helper.nodeSelector" (list "kyverno" $)}}
 */}}
-{{- define "platformSystem.helper.nodeSelector" }}
+{{- define "platform-system.helper.nodeSelector" }}
 {{- $path := first .}}
 {{- $global := last . }}
 {{- $values := $global.Values }}
@@ -107,9 +111,9 @@ Ex: {{ include "platformSystem.helper.nodeSelector" (list "kyverno" $)}}
 Sets tolerations for app based on local and global tolerations.
 Because tolerations is an array object, we need to keep it as string.
 
-Ex: {{ include "platformSystem.helper.tolerations" (list "kyverno" $)}}
+Ex: {{ include "platform-system.helper.tolerations" (list "kyverno" $)}}
 */}}
-{{- define "platformSystem.helper.tolerations" }}
+{{- define "platform-system.helper.tolerations" }}
 {{- $path:= first .}}
 {{- $global := last . }}
 {{- $values := $global.Values }}

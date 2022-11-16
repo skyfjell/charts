@@ -17,6 +17,6 @@ spec:
         namespace: {{ .Values.solution.namespace | quote }}
   interval: {{ .Values.solution.interval }}
   values:
-{{- $defaultValues := ( include "platformSystem.vaultOperator.defaultValues" $ | fromYaml ) }}
+{{- $defaultValues := ( include "platform-system.components.vault-operator.defaultValues" $ | fromYaml ) }}
 {{ ( mergeOverwrite $defaultValues .Values.components.vaultOperator.values ) | toYaml | indent 4 }}
 {{ end }}

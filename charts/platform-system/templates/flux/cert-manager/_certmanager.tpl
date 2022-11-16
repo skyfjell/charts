@@ -1,14 +1,14 @@
-{{- define "platformSystem.certManager.defaultValues" -}}
+{{- define "platform-system.components.cert-manager.defaultValues" -}}
 installCRDs: true
-{{- with ( include "platformSystem.helper.annotations" (list "certManager" $) ) }}
+{{- with ( include "platform-system.helper.annotations" (list "certManager" $) ) }}
 annotations:
   {{ . | indent 2}}
 {{- end }}
-{{- with ( include "platformSystem.helper.tolerations" (list "certManager" $) ) }}
+{{- with ( include "platform-system.helper.tolerations" (list "certManager" $) ) }}
 tolerations:
   {{ . | indent 2}}
 {{- end }}
-{{- with ( include "platformSystem.helper.nodeSelector" (list "certManager" $) ) }}
+{{- with ( include "platform-system.helper.nodeSelector" (list "certManager" $) ) }}
 nodeSelector:
   {{ . | indent 2}}
 {{- end }}
@@ -19,16 +19,16 @@ serviceAccount:
 webhook:
   hostNetwork: true
   securePort: {{ .Values.components.certManager.webhookSecurePort }}
-  {{- with ( include "platformSystem.helper.tolerations" (list "certManager" $) ) }}
+  {{- with ( include "platform-system.helper.tolerations" (list "certManager" $) ) }}
   tolerations:
     {{ . | indent 4}}
   {{- end }}
-  {{- with ( include "platformSystem.helper.nodeSelector" (list "certManager" $) ) }}
+  {{- with ( include "platform-system.helper.nodeSelector" (list "certManager" $) ) }}
   nodeSelector:
     {{ . | indent 4}}
   {{- end }}
-{{ $tol := ( include "platformSystem.helper.tolerations" (list "certManager" $) ) }}
-{{ $nsel := ( include "platformSystem.helper.nodeSelector" (list "certManager" $) ) }}
+{{ $tol := ( include "platform-system.helper.tolerations" (list "certManager" $) ) }}
+{{ $nsel := ( include "platform-system.helper.nodeSelector" (list "certManager" $) ) }}
 {{ with (or $tol $nsel)}}
 cainjector:
   {{- with $tol }}

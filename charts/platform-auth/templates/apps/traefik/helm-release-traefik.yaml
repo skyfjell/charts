@@ -1,0 +1,31 @@
+{{ $component := .Values.components.traefik }}
+{{- if $component.enabled }}
+  {{- if .Values.crdCheck }}
+    {{- include "require.api.flux.helmRelease" . -}}
+  {{- end }}
+{{ $repoName := list .Values.helmRepositories.traefik.name $ | include "platform-auth.format.name" }}
+{{ $repoName := default $repoName $component.chart.sourceRef.name }}
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ list $component.name $ | include "platform-auth.format.name" }}
+  namespace: {{ .Values.components.flux.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+spec:
+  targetNamespace: {{ .Values.components.traefik.namespace }}
+  chart:
+    spec:
+      chart: {{ .Values.components.traefik.chart.name }}
+      {{- with .Values.components.traefik.chart.version }}
+      version: {{ . }}
+      {{- end }}
+      sourceRef:
+        kind: {{ $component.chart.sourceRef.kind }}
+        name: {{ $repoName }}
+        namespace: {{ .Values.components.flux.namespace }}
+  interval: 1h0m0s
+  values:
+{{- $defaultValues := ( include "platform-auth.app.traefik.template.values" $ | fromYaml ) }}
+{{ ( mergeOverwrite $defaultValues (default dict $component.valuesOverride )) | toYaml | indent 4 }}
+{{- end -}}

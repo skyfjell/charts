@@ -1,7 +1,7 @@
-{{- define "platformSystem.vaultOperator.defaultValues" -}}
-{{- $anno := ( include "platformSystem.helper.annotations" (list "vaultOperator" $) ) }}
-{{- $sel := ( include "platformSystem.helper.nodeSelector" (list "vaultOperator" $) ) }}
-{{- $tol := ( include "platformSystem.helper.tolerations" (list "vaultOperator" $) ) }}
+{{- define "platform-system.components.vault-operator.defaultValues" -}}
+{{- $anno := ( include "platform-system.helper.annotations" (list "vaultOperator" $) ) }}
+{{- $sel := ( include "platform-system.helper.nodeSelector" (list "vaultOperator" $) ) }}
+{{- $tol := ( include "platform-system.helper.tolerations" (list "vaultOperator" $) ) }}
 {{- with $anno }}
 podAnnotations:
   {{ . | indent 6}}

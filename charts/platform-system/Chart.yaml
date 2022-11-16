@@ -3,3 +3,7 @@ name: platform-system
 description: Skyfjell Platform System Chart
 type: application
 version: 0.0.11
+dependencies:
+  - name: common
+    repository: "@skyfjell"
+    version: "0.0.x"
