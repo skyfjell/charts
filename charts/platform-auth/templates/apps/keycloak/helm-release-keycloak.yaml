@@ -1,10 +1,12 @@
 {{ $component := .Values.components.keycloak }}
-{{ $name := list $component.name $ | include "platform-auth.format.name" }}
-{{ $dbName := list $component.name $component.components.database.name $ | include "platform-auth.format.name" }}
 {{- if and $component.enabled  }}
 {{- if .Values.crdCheck }}
   {{- include "require.api.flux.helmRelease" . -}}
 {{- end -}}
+{{ $name := list $component.name $ | include "platform-auth.format.name" }}
+{{ $dbName := list $component.name $component.components.database.name $ | include "platform-auth.format.name" }}
+{{ $repoName := list .Values.helmRepositories.codecentric.name $ | include "platform-auth.format.name" }}
+{{ $repoName := default $repoName $component.chart.sourceRef.name }}
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
@@ -26,8 +28,8 @@ spec:
       version: {{ . }}
       {{- end }}
       sourceRef:
-        kind: HelmRepository
-        name: {{ list "codecentric" $ | include "platform-auth.format.name" }}
+        kind: {{ $component.chart.sourceRef.kind }}
+        name: {{ $repoName }}
         namespace: {{ .Values.components.flux.namespace }}
   interval: 1h0m0s
   values:

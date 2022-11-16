@@ -1,14 +1,16 @@
-{{- if .Values.components.keycloak.components.database.enabled -}}
+{{ $repo := .Values.helmRepositories.bitnami }}
+
+{{- if and $repo.enabled .Values.components.keycloak.components.database.enabled -}}
   {{- if .Values.crdCheck }}
     {{- include "require.api.flux.source" . -}}
   {{- end -}}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: {{ list "bitnami" $ | include "platform-auth.format.name" }}
+  name: {{ list $repo.name $ | include "platform-auth.format.name" }}
   namespace: {{ .Values.components.flux.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
-  url: {{ .Values.components.keycloak.components.database.chart.url }}
+  url: {{ $repo.url }}
   interval: 10m
-{{- end -}}
+{{- end }}

@@ -35,7 +35,7 @@ components:
     # Component release name. Will be prefixed by parent component
     name: keycloak
     # namespace to deploy the keycloak helm release into
-    namespace: "keycloak-test"
+    namespace: keycloak
     # url for exposing externally with chart's istio config
     url: ""
     admin:
@@ -50,9 +50,12 @@ components:
       #   key: ""
     # chart source config
     chart:
-      url: "https://codecentric.github.io/helm-charts"
       name: "keycloakx"
       version: "1.6.0"
+      sourceRef:
+        # Defaults to `codecentric` repo if not set
+        name: ""
+        kind: HelmRepository
     valuesOverride: {}
     # storage configuration for keycloak
     components:
@@ -64,10 +67,13 @@ components:
         name: db
         # chart source of storage. Currently only bitnami postgresql or bitnami postgresql-ha are supported for easy config.
         chart:
-          url: https://charts.bitnami.com/bitnami
           name: postgresql
           # version can be set to null
           version: "12.1.2"
+          sourceRef:
+            # Defaults to `bitnami` repo if not set.
+            name: ""
+            kind: HelmRepository
         auth:
           username: "keycloak"
           # existingSecret coincides with bitnami's secret pattern keys are (username, password, postgres-password)
@@ -81,7 +87,24 @@ components:
     enabled: true
     namespace: traefik
     chart:
-      url: "https://traefik.github.io/charts"
       name: "traefik"
       version: 20.2.0
+      sourceRef:
+        # Defaults to `traefik` HelmRepository if not set
+        name: ""
+        kind: HelmRepository
     valuesOverride: {}
+
+helmRepositories:
+  traefik:
+    name: traefik
+    url: https://traefik.github.io/charts
+    enabled: true
+  codecentric:
+    name: codecentric
+    url: https://codecentric.github.io/helm-charts
+    enabled: true
+  bitnami:
+    name: bitnami
+    url: https://charts.bitnami.com/bitnami
+    enabled: true

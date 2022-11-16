@@ -1,14 +1,16 @@
-{{- if .Values.components.keycloak.enabled }}
+{{ $repo := .Values.helmRepositories.codecentric }}
+
+{{- if and $repo.enabled .Values.components.keycloak.enabled }}
   {{- if .Values.crdCheck }}
     {{- include "require.api.flux.source" . -}}
   {{- end -}}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: {{ list "codecentric" $ | include "platform-auth.format.name" }}
+  name: {{ list $repo.name $ | include "platform-auth.format.name" }}
   namespace: {{ .Values.components.flux.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
-  url: {{ .Values.components.keycloak.chart.url }}
+  url: {{ $repo.url }}
   interval: 10m
 {{- end }}

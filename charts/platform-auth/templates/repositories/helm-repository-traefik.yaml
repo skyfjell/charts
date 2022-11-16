@@ -1,14 +1,17 @@
-{{- if .Values.components.traefik.enabled }}
+{{ $repo := .Values.helmRepositories.traefik }}
+
+# TODO: Check all dependent components enabled *and* sourceRef.name is empty.
+{{- if and $repo.enabled .Values.components.traefik.enabled }}
   {{- if .Values.crdCheck }}
     {{- include "require.api.flux.source" . -}}
   {{- end -}}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: {{ list "traefik" $ | include "platform-auth.format.name" }}
+  name: {{ list $repo.name $ | include "platform-auth.format.name" }}
   namespace: {{ .Values.components.flux.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
-  url: {{ .Values.components.traefik.chart.url }}
+  url: {{ $repo.url }}
   interval: 10m
 {{- end }}
