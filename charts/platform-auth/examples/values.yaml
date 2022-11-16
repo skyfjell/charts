@@ -2,7 +2,7 @@ crdCheck: false
 components:
   istio:
     selector:
-      app: istio-gateway
+      app: istio-system-istio-gateway
   certManager:
     issuerRef:
       name: letsencrypt-prod
@@ -10,7 +10,7 @@ components:
       group: cert-manager.io
   keycloak:
     enabled: true
-    url: sso.mydomain.com
+    host: sso.example.com
     admin:
       usernameSecretRef:
         name: keycloak-admin
@@ -18,9 +18,8 @@ components:
       passwordSecretRef:
         name: keycloak-admin
         key: password
-    storage:
-      enabled: true
-      auth:
-        existingSecret: "secret-pg"
-  traefik:
-    enabled: false
+    components:
+      database:
+        enabled: true
+        auth:
+          existingSecret: "secret-pg"

@@ -1,0 +1,27 @@
+{{- if and .Values.components.keycloak.host .Values.components.istio.enabled -}}
+  {{- if .Values.crdCheck }}
+    {{- include "require.api.istio.authorization-policy" $ -}}
+  {{- end }}
+
+{{ $component := .Values.components.keycloak }}
+{{ $istio := .Values.components.istio }}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ list $component.namespace $component.name "http" $ | include "platform-auth.format.name" }}
+  namespace: {{ $istio.namespace }}
+spec:
+  action: ALLOW
+  selector:
+    matchLabels:
+      app: {{ list $istio.namespace $istio.gateway | include "skyfjell.common.format.name" }}
+  rules:
+    - to:
+        - operation:
+            hosts:
+              - {{ $component.host }}
+            ports:
+              - "80"
+              - "443"
+{{- end -}}

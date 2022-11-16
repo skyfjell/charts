@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # crdCheck for installed CRDS
-crdCheck: false
+crdCheck: true
 
 commonAnnotations: {}
 commonLabels: {}
@@ -23,7 +23,7 @@ components:
     # namespace of istio
     namespace: "istio-system"
     # selector for istio gateway
-    selector: {}
+    gateway: "platform-system-ingress"
   # certManager configs
   certManager:
     # enabled cert-manager components
@@ -32,12 +32,12 @@ components:
     issuerRef: {}
   keycloak:
     enabled: true
-    # Component release name. Will be prefixed by parent component
+    # Component release name. Will be prefixed by parent component(s)
     name: keycloak
     # namespace to deploy the keycloak helm release into
     namespace: keycloak
-    # url for exposing externally with chart's istio config
-    url: ""
+    # Public hostname
+    host: ""
     admin:
       username: "admin"
       # usernameSecretRef:
@@ -63,7 +63,7 @@ components:
         # enabled will launch a storage option managed by this chart. If you want to manage your own, set to false but
         # still pass in auth params to set on the keycloak chart.
         enabled: true
-        # Component release name. Will be prefixed by parent component
+        # Component release name. Will be prefixed by parent component(s)
         name: db
         # chart source of storage. Currently only bitnami postgresql or bitnami postgresql-ha are supported for easy config.
         chart:

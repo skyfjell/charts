@@ -1,0 +1,26 @@
+{{- if .Values.components.istio.enabled -}}
+  {{- if .Values.crdCheck }}
+    {{- include "require.api.istio.authorization-policy" $ -}}
+  {{- end }}
+
+{{ $component := .Values.components.keycloak }}
+{{ $database := .Values.components.keycloak.components.database }}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: keycloak-postgres-allow
+  namespace: auth
+spec:
+  action: ALLOW
+  selector:
+    matchLabels:
+      app: {{ $name := list $component.name $database.name $ | include "platform-auth.format.name" }}
+  rules:
+    - from:
+        - source:
+            namespaces:
+              - {{ $component.namespace }}
+            principals:
+              - {{ printf "cluster.local/ns/%s/sa/%s" $component.namespace $name }}
+{{- end -}}

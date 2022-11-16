@@ -11,6 +11,8 @@ tolerations:
 {{- end }}
 {{- end }}
 fullnameOverride: {{ list $component.name $ | include "platform-auth.format.name" }}
+serviceAccount:
+  name: {{ list $component.name $ | include "platform-auth.format.name" }}
 extraEnv: |
   {{- if or $component.admin.username $component.admin.usernameSecretRef }}
   - name: KEYCLOAK_ADMIN

@@ -1,7 +1,12 @@
 {{ $repo := .Values.helmRepositories.traefik }}
+{{ 
+  $enabled := and 
+    $repo.enabled 
+    .Values.components.traefik.enabled 
+    (empty .Values.components.traefik.chart.sourceRef.name) 
+}}
 
-# TODO: Check all dependent components enabled *and* sourceRef.name is empty.
-{{- if and $repo.enabled .Values.components.traefik.enabled }}
+{{- if $enabled }}
   {{- if .Values.crdCheck }}
     {{- include "require.api.flux.source" . -}}
   {{- end -}}

@@ -1,6 +1,12 @@
 {{ $repo := .Values.helmRepositories.codecentric }}
+{{ 
+  $enabled := and 
+    $repo.enabled 
+    .Values.components.keycloak.enabled 
+    (empty .Values.components.keycloak.chart.sourceRef.name) 
+}}
 
-{{- if and $repo.enabled .Values.components.keycloak.enabled }}
+{{- if $enabled }}
   {{- if .Values.crdCheck }}
     {{- include "require.api.flux.source" . -}}
   {{- end -}}

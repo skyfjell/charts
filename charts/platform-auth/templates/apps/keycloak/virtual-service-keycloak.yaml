@@ -1,4 +1,4 @@
-{{- if and .Values.components.keycloak.url .Values.components.istio.enabled -}}
+{{- if and .Values.components.keycloak.host .Values.components.istio.enabled -}}
 {{ $component := .Values.components.keycloak }}
   {{- if .Values.crdCheck }}
     {{- include "require.api.istio.vs" $ -}}
@@ -12,7 +12,7 @@ metadata:
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   hosts:
-    - {{ .Values.components.keycloak.url }}
+    - {{ .Values.components.keycloak.host }}
   gateways:
     - {{ printf "%s/%s" .Values.components.istio.namespace (list $component.name $ | include "platform-auth.format.name") }}
   http:
@@ -23,5 +23,5 @@ spec:
         - destination:
             port:
               number: 80
-            host: {{ printf "%s-http" (list $component.name $ | include "platform-auth.format.name") }}
+            host: {{ list $component.name "http" $ | include "platform-auth.format.name" }}
 {{- end -}}
