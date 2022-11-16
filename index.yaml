@@ -226,6 +226,19 @@ entries:
     version: 0.0.1
   platform-tenant:
   - apiVersion: v2
+    created: "2022-11-16T00:49:56.49951209Z"
+    dependencies:
+    - name: common
+      repository: '@skyfjell'
+      version: 0.0.x
+    description: Skyfjell Platform Tenant Chart
+    digest: 646914dfaad19270e1a9485f79073e99281caaf08f6e7f89404391267eadf0ce
+    name: platform-tenant
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-tenant-0.0.3/platform-tenant-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
     created: "2022-10-06T19:03:38.83266624Z"
     dependencies:
     - name: skyfjell-common
@@ -294,4 +307,4 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/skyfjell-common-0.0.1/skyfjell-common-0.0.1.tgz
     version: 0.0.1
-generated: "2022-11-16T00:32:59.714466288Z"
+generated: "2022-11-16T00:49:56.499983491Z"
