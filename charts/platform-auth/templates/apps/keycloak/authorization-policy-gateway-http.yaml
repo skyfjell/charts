@@ -16,7 +16,12 @@ spec:
   action: ALLOW
   selector:
     matchLabels:
-      app: {{ $istio.gateway }}
+    {{- $selector := $component.components.gateway.selector | default $istio.components.gateway.selector }}
+    {{- if $selector }}
+    {{- $selector | toYaml | nindent 4 }}
+    {{- else }}
+    app: {{ $istio.components.gateway.name }}
+    {{- end }}
   rules:
     - to:
         - operation:
