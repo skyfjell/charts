@@ -11,30 +11,37 @@ nodeSelector: {}
 tolerations: []
 
 components:
-  # flux configs
+  # Flux Configuration
   flux:
+    # Enable Flux Resources
     enabled: true # will break without but testing
-    # namespace of flux
+    # Flux Namespace
     namespace: flux-system
-  # istio configs
+  # Istio Configuration
   istio:
-    # enabled istio injections and networkings
+    # Enable Istio Resources
     enabled: true
-    # namespace of istio
+    # Istio Namespace
     namespace: "istio-system"
-    # selector for istio gateway
-    gateway: platform-system-ingress
-  # certManager configs
+    components:
+      gateway:
+        # Existing gateway `app` label
+        name: platform-system-ingress
+        # selector for istio gateway
+        selector: {}
+
+  # cert-manager Configuration
   certManager:
-    # enabled cert-manager components
+    # Enable cert-manager Resources
     enabled: true
-    # issuerRef to create cert
+    # Certificate `issuerRef``
     issuerRef: {}
   keycloak:
+    # Enable/Install Keycloak
     enabled: true
     # Component release name. Will be prefixed by parent component(s)
     name: keycloak
-    # namespace to deploy the keycloak helm release into
+    # Keycloak Namespace
     namespace: keycloak
     # Public hostname
     host: ""
@@ -57,7 +64,6 @@ components:
         name: ""
         kind: HelmRepository
     valuesOverride: {}
-    # storage configuration for keycloak
     components:
       database:
         # enabled will launch a storage option managed by this chart. If you want to manage your own, set to false but
@@ -83,6 +89,9 @@ components:
             userPasswordKey: "password"
           database: keycloak
         valuesOverride: {}
+      gateway:
+        # selector for istio gateway
+        selector: {}
   traefik:
     enabled: true
     namespace: traefik

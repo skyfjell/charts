@@ -1,10 +1,10 @@
-{{- if and .Values.components.keycloak.host .Values.components.istio.enabled -}}
+{{ $component := .Values.components.keycloak }}
+{{ $istio := .Values.components.istio }}
+
+{{- if and $component.host $istio.enabled -}}
   {{- if .Values.crdCheck }}
     {{- include "require.api.istio.gateway" $ -}}
   {{- end }}
-
-{{ $component := .Values.components.keycloak }}
-{{ $istio := .Values.components.istio }}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
@@ -14,8 +14,29 @@ metadata:
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   selector:
-    app: {{ list $istio.namespace $istio.gateway | include "skyfjell.common.format.name" }}
+    {{- $selector := $component.components.gateway.selector | default $istio.components.gateway.selector }}
+    {{- if $selector }}
+    {{- $selector | toYaml | nindent 4 }}
+    {{- else }}
+    app: {{ $istio.components.gateway.name }}
+    {{- end }}
   servers:
+    - hosts:
+        - {{ $component.host }}
+      port:
+        name: http2
+        number: 80
+        protocol: HTTP2
+      tls:
+        httpsRedirect: true
+    - hosts:
+        - {{ $component.host }}
+      port:
+        name: http
+        number: 80
+        protocol: HTTP
+      tls:
+        httpsRedirect: true
     - port:
         number: 443
         name: https
