@@ -1,0 +1,9 @@
+components:
+  istio:
+    components:
+      istiod:
+        components:
+          externalAuth:
+            enabled: true
+      gateway:
+        enabled: true

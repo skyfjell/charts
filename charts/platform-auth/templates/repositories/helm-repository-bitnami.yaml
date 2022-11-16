@@ -1,0 +1,24 @@
+{{ $repo := .Values.helmRepositories.bitnami }}
+{{ 
+  $enabled := (and 
+    $repo.enabled 
+    .Values.components.keycloak.enabled 
+    .Values.components.keycloak.components.database.enabled
+    (empty .Values.components.keycloak.components.database.chart.sourceRef.name)
+  )
+}}
+
+{{- if $enabled -}}
+  {{- if .Values.crdCheck }}
+    {{- include "require.api.flux.source" . -}}
+  {{- end -}}
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: {{ list $repo.name $ | include "platform-auth.format.name" }}
+  namespace: {{ .Values.components.flux.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+spec:
+  url: {{ $repo.url }}
+  interval: 10m
+{{- end }}

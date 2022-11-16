@@ -1,10 +1,12 @@
-{{ if and .Values.components.certManager.enabled (eq .Values.solution.name "flux") }}
+{{- $component := .Values.components.helmRepositories.components.jetstack -}}
+
+{{- if and $component.enabled .Values.components.certManager.enabled (eq .Values.solution.name "flux") -}}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: jetstack
+  name: {{ list $component.name $ | include "platform-system.format.name" }}
   namespace: {{ .Values.solution.namespace | quote }}
 spec:
-  url: https://charts.jetstack.io
-  interval: 10m
-{{ end }}
+  url: {{ $component.url }}
+  interval: {{ default .Values.solution.interval $component.interval }}
+{{- end }}

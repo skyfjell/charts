@@ -20,3 +20,5 @@
    {{- include $tpl (printf "kind of '%s' from '%s'" $kind $api ) -}}
   {{- end }}
 {{- end -}}
+
+

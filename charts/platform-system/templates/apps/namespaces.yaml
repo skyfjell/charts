@@ -1,0 +1,20 @@
+{{- $components := values .Values.components -}}
+# Add child components that need their own ns.
+{{- $components := append $components .Values.components.istio.components.gateway -}}
+
+{{- $istio := .Values.components.istio -}}
+
+{{- range $components -}}
+{{- if .enabled }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ list . $ | include "skyfjell.common.format.component.namespace" }}
+  labels:
+    {{- include "platform-system.labels" $ | nindent 4 }}
+    {{- if or (and $istio.enabled .istioEnabled) (and $istio.enabled $.Values.global.istioEnabled) }}
+    istio-injection: enabled
+    {{- end }}
+{{- end -}}
+{{- end }}

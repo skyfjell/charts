@@ -1,30 +1,40 @@
-{{ if and .Values.components.istio.enabled (eq .Values.solution.name "flux") }}
-{{ $istioValues := .Values.components.istio}}
-{{ if $istioValues.component.base.create }}
+{{ $key := "base" }}
+{{ $parent := .Values.components.istio }}
+{{ $component := get $parent.components $key }}
+{{ $solution := .Values.solution }}
+
+{{- $repo := .Values.components.helmRepositories.components.istio -}}
+{{- $sourceName := list $repo.name $ | include "platform-system.format.name" -}}
+{{- $sourceName := default $sourceName $parent.chart.source.name $component.chart.source.name -}}
+
+{{ if and $component.enabled $parent.enabled (eq $solution.name "flux") }}
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: istio-base
-  namespace: {{ .Values.solution.namespace | quote }}
+  name: {{ list $parent.name $component.name $ | include "platform-system.format.name" }}
+  namespace: {{ $solution.namespace | quote }}
   labels:
-    {{- include "platformSystem.labels" $ | nindent 4 }}
+    {{- include "platform-system.labels" $ | nindent 4 }}
+    {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
-  targetNamespace: {{ $istioValues.namespace | quote }}
+  releaseName: {{ list $parent.name $component.name $ | include "platform-system.format.name" }}
+  targetNamespace: {{ list $parent $ | include "skyfjell.common.format.component.namespace" }}
+  dependsOn:
+    {{- include "platform-system.require.dependencies" $ | nindent 4 }}
   chart:
     spec:
-      chart: {{ $istioValues.component.base.chart.name }}
-      version: {{ default $istioValues.chart.version $istioValues.component.base.chart.version }}
+      chart: {{ $component.chart.name }}
+      version: {{ default $parent.chart.version $component.chart.version }}
       sourceRef:
-        kind: {{ $istioValues.chart.source.kind }}
-        name: {{ $istioValues.chart.source.repository }}
-        namespace: {{ .Values.solution.namespace }}
-  interval: {{ $.Values.solution.interval }}
+        kind: {{ default $parent.chart.source.kind $component.chart.source.kind }}
+        name: {{ $sourceName }}
+        namespace: {{ $solution.namespace }}
+  interval: {{ $solution.interval }}
   install:
-    crds: {{ $istioValues.component.base.crds.install }}
+    crds: {{ $component.crds.install }}
   upgrade:
-    crds: {{ $istioValues.component.base.crds.update }}
+    crds: {{ $component.crds.update }}
   values:
-    {{- include "platformSystem.istio.istioBase.values" $ | nindent 4 }}
-{{- end -}}
-{{- end -}}
+    {{- include "platform-system.components.istio.components.base.values" $ | nindent 4 }}
+{{- end }}

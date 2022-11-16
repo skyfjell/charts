@@ -1,24 +1,33 @@
-{{ if and .Values.components.externalDns.enabled (eq .Values.solution.name "flux") }}
+{{ $component := .Values.components.externalDns }}
+{{ $solution := .Values.solution }}
+
+{{- $repo := .Values.components.helmRepositories.components.bitnami -}}
+{{- $sourceName := list $repo.name $ | include "platform-system.format.name" -}}
+{{- $sourceName := default $sourceName $component.chart.source.name -}}
+
+{{ if and $component.enabled (eq $solution.name "flux") }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: external-dns
-  namespace: {{ .Values.solution.namespace | quote }}
+  name: {{ list $component.name $ | include "platform-system.format.name" }}
+  namespace: {{ $solution.namespace | quote }}
 spec:
-  releaseName: external-dns
-  targetNamespace: {{ .Values.components.externalDns.namespace }}
+  releaseName: {{ list $component.name $ | include "platform-system.format.name" }}
+  targetNamespace: {{ list $component . | include "skyfjell.common.format.component.namespace" }}
+  dependsOn:
+    {{- include "platform-system.require.dependencies" $ | nindent 4 }}
   chart:
     spec:
       chart: external-dns
-      version: {{ .Values.components.externalDns.chart.version }}
+      version: {{ $component.chart.version }}
       sourceRef:
-        kind: {{ .Values.components.externalDns.chart.source.kind }}
-        name: {{ .Values.components.externalDns.chart.source.repository }}
-        namespace: {{ .Values.solution.namespace | quote }}
-  interval: {{ .Values.solution.interval }}
+        kind: {{ $component.chart.source.kind }}
+        name: {{ $sourceName }}
+        namespace: {{ $solution.namespace | quote }}
+  interval: {{ $solution.interval }}
   values:
-{{- $defaultValues := ( include "platformSystem.externalDns.defaultValues" $ | fromYaml ) }}
-{{ ( mergeOverwrite $defaultValues .Values.components.externalDns.values ) | toYaml | indent 4 }}
+{{- $defaultValues := ( include "platform-system.components.external-dns.defaultValues" $ | fromYaml ) }}
+{{ mergeOverwrite $defaultValues $component.values | toYaml | indent 4 }}
 {{ end }}
 
 

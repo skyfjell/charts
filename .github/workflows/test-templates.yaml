@@ -1,0 +1,39 @@
+name: Test Charts
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-charts:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - workingDirectory: charts/platform-auth
+            chartName: Platform-Auth
+          - workingDirectory: charts/platform-system
+            chartName: Platform-System
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.8.1
+      - name: Setup Deps
+        working-directory: ${{ matrix.workingDirectory }}
+        run: |
+          helm repo add skyfjell https://charts.skyfjell.io
+          helm dependency update
+      - name: Test ${{ matrix.chartName }} Defaults
+        working-directory: ${{ matrix.workingDirectory }}
+        run: |
+          helm template --dry-run --debug test-auth . --set crdCheck=false
+      - name: Test ${{ matrix.chartName }} Examples
+        working-directory: ${{ matrix.workingDirectory }}
+        run: |
+          helm template --dry-run --debug test-auth . --set crdCheck=false -f examples/values.yaml

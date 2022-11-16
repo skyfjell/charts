@@ -22,4 +22,6 @@
 *.tmproj
 .vscode/
 
+# Dev
+examples/
 debug/

@@ -2,81 +2,118 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
+# crdCheck for installed CRDS
+crdCheck: true
 
-image:
-  repository: nginx
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
-
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
-
-podAnnotations: {}
-
-podSecurityContext: {}
-  # fsGroup: 2000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
-service:
-  type: ClusterIP
-  port: 80
-
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-
+commonAnnotations: {}
+commonLabels: {}
 nodeSelector: {}
-
 tolerations: []
 
-affinity: {}
+components:
+  # Flux Configuration
+  flux:
+    # Enable Flux Resources
+    enabled: true # will break without but testing
+    # Flux Namespace
+    namespace: flux-system
+  # Istio Configuration
+  istio:
+    # Enable Istio Resources
+    enabled: true
+    # Istio Namespace
+    namespace: "istio-system"
+    components:
+      gateway:
+        # Existing gateway `app` label
+        name: platform-system-ingress
+        # selector for istio gateway
+        selector: {}
+
+  # cert-manager Configuration
+  certManager:
+    # Enable cert-manager Resources
+    enabled: true
+    # Certificate `issuerRef``
+    issuerRef: {}
+  keycloak:
+    # Enable/Install Keycloak
+    enabled: true
+    # Component release name. Will be prefixed by parent component(s)
+    name: keycloak
+    # Keycloak Namespace
+    namespace: keycloak
+    # Public hostname
+    host: ""
+    admin:
+      username: "admin"
+      # usernameSecretRef:
+      #   name: ""
+      #   key: ""
+      # don't use me in production
+      # password: ""
+      # passwordSecretRef:
+      #   name: ""
+      #   key: ""
+    # chart source config
+    chart:
+      name: "keycloakx"
+      version: "1.6.0"
+      sourceRef:
+        # Defaults to `codecentric` repo if not set
+        name: ""
+        kind: HelmRepository
+    valuesOverride: {}
+    components:
+      database:
+        # enabled will launch a storage option managed by this chart. If you want to manage your own, set to false but
+        # still pass in auth params to set on the keycloak chart.
+        enabled: true
+        # Component release name. Will be prefixed by parent component(s)
+        name: db
+        # chart source of storage. Currently only bitnami postgresql or bitnami postgresql-ha are supported for easy config.
+        chart:
+          name: postgresql
+          # version can be set to null
+          version: "12.1.2"
+          sourceRef:
+            # Defaults to `bitnami` repo if not set.
+            name: ""
+            kind: HelmRepository
+        auth:
+          username: "keycloak"
+          # existingSecret coincides with bitnami's secret pattern keys are (username, password, postgres-password)
+          existingSecret: ""
+          secretKeys:
+            adminPasswordKey: "postgres-password"
+            userPasswordKey: "password"
+          database: keycloak
+        valuesOverride: {}
+      gateway:
+        # selector for istio gateway
+        selector: {}
+  traefik:
+    enabled: true
+    namespace: traefik
+    chart:
+      name: "traefik"
+      version: 20.2.0
+      sourceRef:
+        # Defaults to `traefik` HelmRepository if not set
+        name: ""
+        kind: HelmRepository
+    valuesOverride: {}
+
+helmRepositories:
+  traefik:
+    name: traefik
+    url: https://traefik.github.io/charts
+    enabled: true
+  codecentric:
+    name: codecentric
+    url: https://codecentric.github.io/helm-charts
+    enabled: true
+  bitnami:
+    name: bitnami
+    url: https://charts.bitnami.com/bitnami
+    enabled: true

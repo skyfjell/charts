@@ -1,0 +1,36 @@
+global:
+  istioEnabled: true
+  tolerations:
+    - key: values
+  nodeSelector:
+    "skyfjell.io/node-selector": "platform-system"
+components:
+  istio:
+    component:
+      istiod:
+        values:
+          meshConfig:
+            rootNamespace: istio-system
+            enablePrometheusMerge: true
+            enableTracing: true
+            defaultConfig:
+              proxyMetadata:
+                # Enable basic DNS proxying
+                ISTIO_META_DNS_CAPTURE: "true"
+                # Enable automatic address allocation, optional
+                ISTIO_META_DNS_AUTO_ALLOCATE: "true"
+            extensionProviders:
+              - name: "oauth2-proxy"
+                envoyExtAuthzHttp:
+                  service: "auth-proxy-auth-traefik.auth-proxy.svc.cluster.local"
+                  port: "80"
+                  headersToUpstreamOnAllow:
+                    - authorization
+                  headersToDownstreamOnDeny:
+                    - set-cookie
+                  includeRequestHeadersInCheck:
+                    - cookie
+                  includeAdditionalHeadersInCheck:
+                    # Optional for oauth2-proxy to enforce https
+                    # X-Auth-Request-Redirect: "https://%REQ(:authority)%%REQ(:path)%"
+                    X-Forwarded-Host: "%REQ(:authority)%"

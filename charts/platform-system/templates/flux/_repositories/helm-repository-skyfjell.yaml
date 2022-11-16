@@ -1,0 +1,12 @@
+{{- $component := .Values.components.helmRepositories.components.skyfjell -}}
+
+{{- if and $component.enabled (eq .Values.solution.name "flux") -}}
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: {{ list $component.name $ | include "platform-system.format.name" }}
+  namespace: {{ .Values.solution.namespace | quote }}
+spec:
+  url: {{ $component.url }}
+  interval: {{ default .Values.solution.interval $component.interval }}
+{{- end }}

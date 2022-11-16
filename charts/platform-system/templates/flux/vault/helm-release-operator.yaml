@@ -1,0 +1,32 @@
+{{ $parent := .Values.components.vault }}
+{{ $component := $parent.components.operator }}
+{{ $solution := .Values.solution }}
+
+{{- $repo := .Values.components.helmRepositories.components.banzaicloud -}}
+{{- $sourceName := list $repo.name $ | include "platform-system.format.name" -}}
+{{- $sourceName := default $sourceName $component.chart.source.name -}}
+
+{{ if and $component.enabled (eq $solution.name "flux") }}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ list $component.name $ | include "platform-system.format.name" }}
+  namespace: {{ $solution.namespace | quote }}
+spec:
+  releaseName: {{ $component.name }}
+  targetNamespace: {{ list $parent . | include "skyfjell.common.format.component.namespace" }}
+  dependsOn:
+    {{- include "platform-system.require.dependencies" $ | nindent 4 }}
+  chart:
+    spec:
+      chart: vault-operator
+      version: {{ $component.chart.version }}
+      sourceRef:
+        kind: {{ $component.chart.source.kind }}
+        name: {{ $sourceName }}
+        namespace: {{ $solution.namespace | quote }}
+  interval: {{ $solution.interval }}
+  values:
+{{- $defaultValues := include "platform-system.components.vault-operator.defaultValues" $ | fromYaml }}
+{{ mergeOverwrite $defaultValues $component.values | toYaml | indent 4 }}
+{{ end }}
