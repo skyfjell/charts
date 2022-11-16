@@ -1,8 +1,5 @@
 crdCheck: false
 components:
-  istio:
-    selector:
-      app: istio-system-istio-gateway
   certManager:
     issuerRef:
       name: letsencrypt-prod
