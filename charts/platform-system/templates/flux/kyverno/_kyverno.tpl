@@ -1,14 +1,14 @@
-{{- define "platformSystem.kyverno.defaultValues" -}}
+{{- define "platform-system.components.kyverno.defaultValues" -}}
 installCRDs: true
-{{- with ( include "platformSystem.helper.annotations" (list "kyverno" $) ) }}
+{{- with ( include "platform-system.helper.annotations" (list "kyverno" $) ) }}
 annotations:
   {{ . | indent 2}}
 {{- end }}
-{{- with ( include "platformSystem.helper.tolerations" (list "kyverno" $) ) }}
+{{- with ( include "platform-system.helper.tolerations" (list "kyverno" $) ) }}
 tolerations:
   {{ . | indent 2}}
 {{- end }}
-{{- with ( include "platformSystem.helper.nodeSelector" (list "kyverno" $) ) }}
+{{- with ( include "platform-system.helper.nodeSelector" (list "kyverno" $) ) }}
 nodeSelector:
   {{ . | indent 2}}
 {{- end }}

@@ -16,7 +16,7 @@ spec:
   action: ALLOW
   selector:
     matchLabels:
-      app: {{ list $istio.namespace $istio.gateway | include "skyfjell.common.format.name" }}
+      app: {{ $istio.gateway }}
   rules:
     - to:
         - operation:

@@ -1,14 +1,14 @@
-{{- define "platformSystem.externalDns.defaultValues" -}}
+{{- define "platform-system.components.external-dns.defaultValues" -}}
 installCRDs: true
-{{- with ( include "platformSystem.helper.annotations" (list "externalDns" $) ) }}
+{{- with ( include "platform-system.helper.annotations" (list "externalDns" $) ) }}
 annotations:
   {{ . | indent 2}}
 {{- end }}
-{{- with ( include "platformSystem.helper.tolerations" (list "externalDns" $) ) }}
+{{- with ( include "platform-system.helper.tolerations" (list "externalDns" $) ) }}
 tolerations:
   {{ . | indent 2}}
 {{- end }}
-{{- with ( include "platformSystem.helper.nodeSelector" (list "externalDns" $) ) }}
+{{- with ( include "platform-system.helper.nodeSelector" (list "externalDns" $) ) }}
 nodeSelector:
   {{ . | indent 2}}
 {{- end }}

@@ -23,7 +23,7 @@ components:
     # namespace of istio
     namespace: "istio-system"
     # selector for istio gateway
-    gateway: "platform-system-ingress"
+    gateway: platform-system-ingress
   # certManager configs
   certManager:
     # enabled cert-manager components
