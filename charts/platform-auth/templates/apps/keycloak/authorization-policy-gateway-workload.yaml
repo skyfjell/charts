@@ -10,7 +10,8 @@ apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: {{ list $component.namespace $component.name "istio" "gateway" $ | include "platform-auth.format.name" }}
-  namespace: auth
+  namespace: {{ $component.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   action: ALLOW
   selector:

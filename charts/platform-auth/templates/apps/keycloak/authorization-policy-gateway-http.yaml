@@ -11,6 +11,7 @@ kind: AuthorizationPolicy
 metadata:
   name: {{ list $component.namespace $component.name "http" $ | include "platform-auth.format.name" }}
   namespace: {{ $istio.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   action: ALLOW
   selector:

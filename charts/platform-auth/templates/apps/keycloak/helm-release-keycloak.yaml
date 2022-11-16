@@ -13,7 +13,7 @@ kind: HelmRelease
 metadata:
   name: {{ $name }}
   namespace: {{ .Values.components.flux.namespace }}
-  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}    
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   targetNamespace: {{ $component.namespace }}
   {{- if $component.components.database.enabled }}
