@@ -1,4 +1,5 @@
 {{- if and .Values.components.keycloak.url .Values.components.istio.enabled -}}
+{{ $component := .Values.components.keycloak }}
   {{- if .Values.crdCheck }}
     {{- include "require.api.istio.gateway" $ -}}
   {{- end }}
@@ -6,7 +7,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: {{ include "platform-auth.keycloak.name" $ }}
+  name: {{ list $component.name $ | include "platform-auth.format.name" }}
   namespace: {{ .Values.components.istio.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
@@ -24,6 +25,6 @@ spec:
       {{- if and .Values.components.certManager.enabled .Values.components.certManager.issuerRef }}
       tls:
         mode: SIMPLE
-        credentialName: {{ printf "%s-tls" (include "platform-auth.keycloak.name" $) }}
+        credentialName: {{ printf "%s-tls" (list $component.name $ | include "platform-auth.format.name") }}
       {{- end }}
 {{- end -}}

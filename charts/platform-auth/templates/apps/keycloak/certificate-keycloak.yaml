@@ -1,4 +1,5 @@
 {{- if and .Values.components.keycloak.url .Values.components.certManager.enabled -}}
+{{ $component := .Values.components.keycloak }}
   {{- if .Values.crdCheck }}
     {{- include "require.api.certManager.certificate" $ -}}
   {{- end }}
@@ -6,11 +7,11 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ include "platform-auth.keycloak.name" $ }}
+  name: {{ list $component.name $ | include "platform-auth.format.name" }}
   namespace: {{ .Values.components.istio.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
-  secretName: {{ printf "%s-tls" (include "platform-auth.keycloak.name" $) }}
+  secretName: {{ printf "%s-tls" (list $component.name $ | include "platform-auth.format.name") }}
   dnsNames:
     - {{ .Values.components.keycloak.url }}
   {{- with .Values.components.certManager.issuerRef }}
