@@ -1,5 +1,5 @@
 {{/* 
-  Template for building a certificate
+  Template for building a oauth2-proxy helm release values
 */}}
 {{- define "platform-tenant.app.oauth2-proxy.template" }}
 {{ $values := .Values.components.oauth2Proxy}}

@@ -1,4 +1,4 @@
-{{- if .Values.components.oauth2Proxy.enabed -}}
+{{- if .Values.components.oauth2Proxy.enabled -}}
 {{- if .Values.crdCheck }}
   {{- include "require.api.flux.helmRelease" . -}}
 {{- end -}}

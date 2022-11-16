@@ -79,7 +79,7 @@ components:
 
   # oauth2Proxy application to use for authentication
   oauth2Proxy:
-    enabed: true
+    enabled: true
     # chart configuration for proxy app
     chart:
       url: https://oauth2-proxy.github.io/manifests
@@ -99,7 +99,7 @@ components:
     overrideValues: {}
   # apps:
   #   - name: "test-app-1"
-  #     url: "testapp.domain"
+  #     : "testapp.domain"
   #     service:
   #       port: 8080
   #       host: myapp.testns.svc.cluster.local
