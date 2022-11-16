@@ -1,30 +1,31 @@
-{{- if and .Values.components.istio.enabled (eq .Values.solution.name "flux") }}
-{{- $istioValues := .Values.components.istio }}
-{{- $istiod := $istioValues.components.istiod }}
-{{- if $istiod.create }}
+{{ $key := "istiod" }}
+{{ $parent := .Values.components.istio }}
+{{ $component := get $parent.components $key }}
+
+{{ if and $component.enabled $parent.enabled (eq .Values.solution.name "flux") }}
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: istiod
+  name: {{ list $parent.name $component.name $ | include "platform-system.format.name" }}
   namespace: {{ .Values.solution.namespace | quote }}
   labels:
     {{- include "platform-system.labels" $ | nindent 4 }}
+    {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   targetNamespace: {{ .Values.components.istio.namespace }}
   dependsOn:
-    - name: istio-base
+    - name: {{ list $parent.name $parent.components.base.name $ | include "platform-system.format.name" }}
       namespace: {{ .Values.solution.namespace | quote }}
   chart:
     spec:
-      chart: {{ $istioValues.components.istiod.chart.name }}
-      version: {{ default $istioValues.chart.version $istiod.chart.version }}
+      chart: {{ $component.chart.name }}
+      version: {{ default $parent.chart.version $component.chart.version }}
       sourceRef:
-        kind: {{ $istioValues.chart.source.kind }}
-        name: {{ $istioValues.chart.source.repository }}
+        kind: {{ $parent.chart.source.kind }}
+        name: {{ $parent.chart.source.repository }}
         namespace: {{ .Values.solution.namespace }}
   interval: {{ .Values.solution.interval }}
   values:
     {{- include "platform-system.components.istio.components.istiod.values" $ | nindent 4 }}
-{{- end -}}
 {{- end -}}

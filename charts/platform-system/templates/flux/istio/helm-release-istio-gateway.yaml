@@ -9,10 +9,13 @@ kind: HelmRelease
 metadata:
   name: {{ list $parent.name $component.name $ | include "platform-system.format.name" }}
   namespace: {{ .Values.solution.namespace | quote }}
+  labels:
+    {{- include "platform-system.labels" $ | nindent 4 }}
+    {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   targetNamespace: {{ $parent.namespace }}
   dependsOn:
-    - name: istiod
+    - name: {{ list $parent.name $parent.components.istiod.name $ | include "platform-system.format.name" }}
       namespace: {{ .Values.solution.namespace | quote }}
   chart:
     spec:

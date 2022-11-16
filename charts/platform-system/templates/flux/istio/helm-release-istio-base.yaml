@@ -1,5 +1,6 @@
+{{ $key := "base" }}
 {{ $parent := .Values.components.istio }}
-{{ $component := $parent.components.base }}
+{{ $component := get $parent.components $key }}
 
 {{ if and $component.enabled $parent.enabled (eq .Values.solution.name "flux") }}
 ---
@@ -10,6 +11,7 @@ metadata:
   namespace: {{ .Values.solution.namespace | quote }}
   labels:
     {{- include "platform-system.labels" $ | nindent 4 }}
+    {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   targetNamespace: {{ $parent.namespace | quote }}
   chart:
