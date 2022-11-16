@@ -1,0 +1,11 @@
+{{ if .Values.components.istio.enabled -}}
+{{- include "require.api.istio.peer-authentication" . -}}
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: platform-system-default
+  namespace: {{ .Values.components.istio.namespace | quote }}
+spec:
+  mtls:
+    mode: {{ .Values.components.istio.mTLSMode | default "STRICT" | quote }}
+{{- end }}
