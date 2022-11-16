@@ -24,5 +24,5 @@ spec:
         - {{ $val.url | quote }}
        tls:
         mode: SIMPLE
-        credentialName: {{ include "platform-system.helper.tlsName" $val.name }}
+        credentialName: {{ include "platform-tenant.tls.name" $val.name }}
 {{- end -}}

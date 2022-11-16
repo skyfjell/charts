@@ -3,7 +3,7 @@ kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   namespace: {{ default (include "platform-tenant.fullname" .) .Values.targetNamespace.name }}
-  name: {{ include "helper.deployerRoleName" .}}
+  name: {{ include "platform-tenant.deployer.role.name" .}}
 rules:
   - apiGroups: ["", "extensions", "apps"]
     resources: ["*"]

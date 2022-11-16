@@ -17,8 +17,8 @@ spec:
     - web
   routes:
     - kind: Rule
-      match: {{ printf "Headers(`X-Forwarded-Host`, `%s`)" $val.url }}
+      match: {{ printf "Headers(`X-Forwarded-Host`, `%s`)" (first $val.hosts).host }}
       services:
-        - name: {{ include "platform-system.helper.proxyName" $global }}
+        - name: {{ include "platform-tenant.proxy.name" $global }}
           port: 80
 {{- end -}}

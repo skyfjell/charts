@@ -14,6 +14,6 @@ spec:
     name: {{ default (include "platform-tenant.fullname" .) .Values.components.flux.source.name }}
   serviceAccountName: {{ default (include "platform-tenant.fullname" .) .Values.serviceAccount.name }}
   {{- $customSpec := omit .Values.components.flux.kustomization.spec "serviceAccountName" "sourceRef" }}
-  {{- $defaultSpec := (include "helper.kustomizationSpec" . | fromYaml) }}
+  {{- $defaultSpec := (include "platform-tenant.kustomization.spec" . | fromYaml) }}
   {{- toYaml (merge $customSpec $defaultSpec) | nindent 2 }}
 {{- end -}}

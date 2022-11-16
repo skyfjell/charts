@@ -6,10 +6,10 @@ metadata:
   name: {{ printf "%s-%s" .Release.Name "group-deployer" | trunc 63 | trimSuffix "-" | quote}}
 subjects:
   - kind: Group
-    name: {{ include "helper.deployerRoleName" .}}
+    name: {{ include "platform-tenant.deployer.role.name" .}}
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ include "helper.deployerRoleName" .}}
+  name: {{ include "platform-tenant.deployer.role.name" .}}
 {{- end -}}

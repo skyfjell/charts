@@ -9,7 +9,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: {{ include "platform-system.helper.proxyName" $ }}
+  name: {{ include "platform-tenant.proxy.name" . }}
   namespace: {{ .Values.components.flux.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:

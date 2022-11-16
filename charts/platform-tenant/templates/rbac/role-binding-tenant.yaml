@@ -3,7 +3,7 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   namespace: {{ default (include "platform-tenant.fullname" .) .Values.targetNamespace.name }}
-  name: {{ include "helper.clusterRoleName" .}}
+  name: {{ include "platform-tenant.cluster-role.name" .}}
 subjects:
   - kind: ServiceAccount
     name: {{ default (include "platform-tenant.fullname" .) .Values.serviceAccount.name }}
@@ -11,5 +11,5 @@ subjects:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "helper.clusterRoleName" .}}
+  name: {{ include "platform-tenant.cluster-role.name" .}}
 {{- end -}}

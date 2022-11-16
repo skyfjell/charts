@@ -2,7 +2,7 @@
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ include "helper.clusterRoleName" .}}
+  name: {{ include "platform-tenant.cluster-role.name" .}}
 rules:
   - apiGroups: ["", "extensions", "apps", "batch"]
     resources: ["*"]

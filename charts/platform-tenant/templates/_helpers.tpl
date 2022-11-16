@@ -53,7 +53,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "platform-tenant.serviceAccountName" -}}
+{{- define "platform-tenant.serviceAccount.name" -}}
 {{- if .Values.serviceAccount.create }}
 {{- default (include "platform-tenant.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
@@ -61,51 +61,42 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
-{{/* Set tolerations from global if available and if not set it from app values*/}}  
-{{/* ex: tolerations: {{ include "helper.tolerations" (dict "globalTolerations" .Values.global.tolerations "appTolerations" .Values.components.<app>.tolerations ) | indent 6 }} */}}
-{{- define "helper.tolerations" }}                                                   
-{{- if .appTolerations }}                                                            
-{{ toYaml .appTolerations | indent 2 }}                                              
-{{- else if .globalTolerations }}                                                    
-{{ toYaml .globalTolerations | indent 2 }}                                           
-{{- else }}                                                                          
-{{- "[]" }}                                                                          
-{{- end }}                                                                           
-{{- end }}                                                                           
-                                                                                     
-{{/* Set nodeSelector from global if available and if not set it from app values*/}} 
-{{/* ex: nodeSelector: {{ include "helper.nodeSelector" (dict "globalNodeSelector" .Values.global.nodeSelector "appNodeSelector" .Values.components.<app>.nodeSelector) | indent 6 }} */}}
-{{- define "helper.nodeSelector" }}                                                  
-{{- if .appNodeSelector }}                                                           
-{{ toYaml .appNodeSelector | indent 2 }}                                             
-{{- else if .globalNodeSelector }}                                                   
-{{ toYaml .globalNodeSelector | indent 2 }}                                          
-{{- else }}                                                                          
-{{- "{}" }}                                                                          
-{{- end }}                                                                           
-{{- end }}                                                                           
-
 # defaults for kustomization spec
-{{- define "helper.kustomizationSpec" -}}
+{{- define "platform-tenant.kustomization.spec" -}}
 interval: 1m0s
 path: /
 prune: true
 validation: client
 {{- end }}                                                                           
 
-
-{{- define "helper.clusterRoleName" -}}
+{{- define "platform-tenant.cluster-role.name" -}}
 {{ (default (printf "%s-%s" .Release.Name "tenant") .Values.components.rbac.tenantClusterRole.name) | trunc 63 | trimSuffix "-" | quote}}
 {{- end }}
 
-{{- define "helper.deployerRoleName" -}}
+{{- define "platform-tenant.deployer.role.name" -}}
 {{ (default (printf "%s-%s" .Release.Name "deployer") .Values.components.rbac.tenantDeploymentRole.name) | trunc 63 | trimSuffix "-" | quote}}
 {{- end }}  
 
-{{- define "platform-system.helper.tlsName" -}}
+{{- define "platform-tenant.tls.name" -}}
 {{ printf "%s-tls" . | trunc 63 | trimSuffix "-" | quote }}
 {{- end }}
 
-{{- define "platform-system.helper.proxyName" -}}
+{{- define "platform-tenant.proxy.name" -}}
 {{ printf "%s-proxy" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
-{{- end }} 
+{{- end }}
+
+{{- define "platform-tenant.require.defaultHost" -}}
+{{/* Check application host defaults */}}
+{{- range $app := .Values.components.apps }}
+{{ $defaultList := list  }}
+{{ range $app.hosts }}
+{{ $defaultList = append $defaultList ( default .default false )}}
+{{- end }}
+{{- if and (gt ( len $app.hosts ) 1) ( not ( has true $defaultList )) }}
+  {{ fail (printf "When passing multiple, one default host has to be set for app host: '%s'" $app.name )}}
+{{- end }}
+{{- if ( gt ( len ( without $defaultList nil ) ) 1)  }}
+  {{ fail ( printf "Only one default host has to be set for app host: '%s'" $app.name )}}
+{{- end }}
+{{- end }}
+{{- end }}

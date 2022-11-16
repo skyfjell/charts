@@ -91,20 +91,22 @@ components:
     oidcIssuerUrl: ""
     # existingSecret has client-id, client-secret and cookie-secret keys
     existingSecret: ""
-    # cookieDomain for proxy
-    cookieDomain: ""
     # whitelistDomain for proxy
     whitelistDomain: ""
     # overrideValues for oauth2-proxy chart
     overrideValues: {}
   # apps:
   #   - name: "test-app-1"
-  #     : "testapp.domain"
+  #     hosts:
+  #       - host: "testapp.domain"
+  #         default: true # only one allowed to be default
   #     service:
   #       port: 8080
   #       host: myapp.testns.svc.cluster.local
   #   - name: "test-app-2"
-  #     url: "testapp2.domain"
+  #     hosts:
+  #       - host: "testapp2.domain"
+  #         default: true # only one allowed to be default
   #     service:
   #       port: 8080
   #       host: myapp2.testns.svc.cluster.local

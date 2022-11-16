@@ -2,11 +2,12 @@
 {{- if .Values.crdCheck }}
   {{- include "require.api.flux.helmRelease" . -}}
 {{- end -}}
+{{- include "platform-tenant.require.defaultHost" . }}
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: {{ include "platform-system.helper.proxyName" $ }}
+  name: {{ include "platform-tenant.proxy.name" . }}
   namespace: {{ $.Values.targetNamespace.name }}
 spec:
   chart:
@@ -15,10 +16,10 @@ spec:
       version: {{ .Values.components.oauth2Proxy.chart.version }}
       sourceRef:
         kind: HelmRepository
-        name: {{ include "platform-system.helper.proxyName" $ }}
+        name: {{ include "platform-tenant.proxy.name" . }}
         namespace: {{ .Values.components.flux.namespace }}
   interval: 1h0m0s
   values:
-{{- $defaultValues := ( include "platform-tenant.app.oauth2-proxy.template" $ | fromYaml ) }}
+{{- $defaultValues := ( include "platform-tenant.app.oauth2-proxy.template" . | fromYaml ) }}
 {{ ( mergeOverwrite $defaultValues (default dict .Values.components.oauth2Proxy.overrideValues )) | toYaml | indent 4 }}
 {{- end -}}
