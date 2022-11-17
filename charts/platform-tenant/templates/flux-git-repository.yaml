@@ -9,7 +9,7 @@ metadata:
   namespace: {{ .Values.components.flux.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
-  url: {{ .Values.components.flux.source.url }}
+  url: {{ default (printf "tenant-%s" .Release.Name ) .Values.components.flux.source.url }}
   interval: 1m
   ref:
     {{- if .Values.components.flux.source.ref }}

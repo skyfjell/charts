@@ -29,7 +29,7 @@ components:
     namespace: flux-system
     source:
       create: true
-      name: "ssh"
+      name: ""
       url: ""
       # If a private repo, this is the secret for the GitRepository
       secretName: ""
