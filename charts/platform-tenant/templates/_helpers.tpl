@@ -78,11 +78,23 @@ validation: client
 {{- end }}  
 
 {{- define "platform-tenant.tls.name" -}}
-{{ printf "%s-tls" . | trunc 63 | trimSuffix "-" | quote }}
+{{ printf "%s-tls" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
 {{- end }}
 
 {{- define "platform-tenant.proxy.name" -}}
 {{ printf "%s-proxy" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
+{{- end }}
+
+{{- define "platform-tenant.gateway.name" -}}
+{{ printf "%s-gateway" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
+{{- end }}
+
+{{- define "platform-tenant.certificate.name" -}}
+{{ printf "%s-certificate" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
+{{- end }}
+
+{{- define "platform-tenant.ingress-route.name" -}}
+{{ printf "%s-ingress-route" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
 {{- end }}
 
 {{- define "platform-tenant.require.defaultHost" -}}
@@ -99,4 +111,20 @@ validation: client
   {{ fail ( printf "Only one default host has to be set for app host: '%s'" $app.name )}}
 {{- end }}
 {{- end }}
+{{- end }}
+
+{{/*
+  Template helper for pulling the hosts keys from
+  the nests apps
+
+  Returns a map[hosts:[host1,host2,...]]
+
+  Use like {{ $apphosts := (include "platform-tenant.apps.hosts" . | fromYaml ).hosts }}
+*/}}
+{{- define "platform-tenant.apps.hosts" }}
+{{- $wlDomains := list }}
+{{- range .Values.components.apps }}
+{{- $wlDomains = append $wlDomains .host }}
+{{- end }}
+{{- dict "hosts" $wlDomains | toYaml }}
 {{- end }}

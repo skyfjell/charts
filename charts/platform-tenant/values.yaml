@@ -91,27 +91,27 @@ components:
     oidcIssuerUrl: ""
     # existingSecret has client-id, client-secret and cookie-secret keys
     existingSecret: ""
-    # whitelistDomain for proxy
-    whitelistDomain: ""
+    # cookieDomain for proxy root domain. You have a tentant with base url `tenant.mydomain.com` and set this to
+    # cookieDomain: ".tenant.mydomain.com"
+    # Such that every app can be `webapp1.tenant.mydomain.com` and `webapp2.tenant.mydomain.com`.
+    cookieDomain: ""
     # overrideValues for oauth2-proxy chart
     overrideValues: {}
   # apps:
   #   - name: "test-app-1"
-  #     hosts:
-  #       - host: "testapp.domain"
-  #         default: true # only one allowed to be default
+  #     host: "webapp1.tenant.mydomain.com"
   #     service:
   #       port: 8080
   #       host: myapp.testns.svc.cluster.local
+  #     routingOverride: {}
   #   - name: "test-app-2"
-  #     hosts:
-  #       - host: "testapp2.domain"
-  #         default: true # only one allowed to be default
+  #     host: "webapp2.tenant.mydomain.com"
   #     service:
   #       port: 8080
   #       host: myapp2.testns.svc.cluster.local
   #     # "http" or "tls" or "tcp". Exclusion of 'mode' defaults to http
   #     mode: tls
+  #     routingOverride: {}
   apps: []
 
   # certManager config will create certificates based on

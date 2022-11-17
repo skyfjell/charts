@@ -1,6 +1,7 @@
 {{/* 
   Template for building a oauth2-proxy helm release values
 */}}
+
 {{- define "platform-tenant.app.oauth2-proxy.template" }}
 {{ $values := .Values.components.oauth2Proxy}}
 # used by istio
@@ -22,9 +23,9 @@ extraArgs:
   cookie-samesite: strict
   cookie-refresh: 1h
   cookie-expire: 4h
-  cookie-name: _mock-1_auth
-  cookie-domain: {{ $values. }}
-  whitelist-domain: {{ $values.whitelistDomain }}
+  cookie-name: {{ printf "_%s_tenant_auth" ( $values.cookieDomain | replace "." "_" | lower ) }}
+  cookie-domain: {{ $values.cookieDomain }}
+  whitelist-domain: {{ join "," (include "platform-tenant.apps.hosts" . | fromYaml ).hosts | indent 4}}
   skip-provider-button: true
 replicaCount: 1
 resources:

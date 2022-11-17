@@ -2,8 +2,26 @@
 {{- if .Values.crdCheck }}
   {{- include "require.api.traefik.ingressRoute" . -}}
 {{- end }}
-{{ range .Values.components.apps }}
 ---
-{{ include "platform-tenant.app.ingress-route.template" (list . $) }}
-{{- end -}}
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "platform-tenant.ingress-route.name" . }}
+  namespace: {{ .Values.targetNamespace.name | quote }}
+  labels: {{- include "skyfjell.common.chartLabels" . | nindent 4 }}
+    app.kubernetes.io/name: traefik
+    app.kubernetes.io/instance: platform-auth-auth-proxy
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      {{- $match := list }}
+      {{- range $host := (include "platform-tenant.apps.hosts" . | fromYaml ).hosts }}
+      {{- $match = append $match (printf "Headers(`X-Forwarded-Host`, `%s`)" $host) }}
+      {{- end }}
+      match: {{ join " || " $match }}
+      services:
+        - name: {{ include "platform-tenant.proxy.name" . }}
+          port: 80
 {{- end -}}
