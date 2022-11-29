@@ -3,18 +3,19 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   namespace: {{ .Values.components.o11y.namespace }}
-  name: {{ printf "%s-%s" (include "platform-tenant.fullname" $) "dasboard" | trunc 63 | trimSuffix "-" }}
+  name: {{ list "dashboard" $ | include "platform-tenant.format.name.shared" }}
   {{- with .Values.components.o11y.annotations }}
   annotations:
-  {{ toYaml . | indent 4}}  
+  {{ toYaml . | indent 4}}
   {{- end }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
   {{- with .Values.components.o11y.labels }}
   {{ toYaml . | nindent 4 }}
   {{- end }}
 {{ include "platform-tenant.labels" $ | indent 4 }}
+{{ $namespace := list . | include "platform-tenant.format.name.shared" }}
 data:
-  {{ include "platform-tenant.name" . | indent 2 }}: |-
+  {{ list $ | include "platform-tenant.format.name.shared" | indent 2 }}: |-
       {
         "annotations": {
           "list": [
@@ -87,7 +88,7 @@ data:
                   "uid": "${logsource}"
                 },
                 "editorMode": "code",
-                "expr": "{pod=~\"kustomize-controller.+\",namespace=\"{{ .Values.components.flux.namespace }}\"} |~ \"\\\"namespace\\\":\\\"{{ .Values.targetNamespace.name }}\\\"\"",
+                "expr": "{pod=~\"kustomize-controller.+\",namespace=\"{{ .Values.components.flux.namespace }}\"} |~ \"\\\"namespace\\\":\\\"{{ $namespace }}\\\"\"",
                 "queryType": "range",
                 "refId": "A"
               }
@@ -124,7 +125,7 @@ data:
                   "uid": "${logsource}"
                 },
                 "editorMode": "code",
-                "expr": "{pod=~\"source-controller.+\",namespace=\"{{ .Values.components.flux.namespace }}\"} |~ \"\\\"namespace\\\":\\\"{{ .Values.targetNamespace.name }}\\\"\"",
+                "expr": "{pod=~\"source-controller.+\",namespace=\"{{ .Values.components.flux.namespace }}\"} |~ \"\\\"namespace\\\":\\\"{{ $namespace }}\\\"\"",
                 "queryType": "range",
                 "refId": "A"
               }
@@ -161,7 +162,7 @@ data:
                   "uid": "${logsource}"
                 },
                 "editorMode": "code",
-                "expr": "{pod=~\"helm-controller.+\",namespace=\"{{ .Values.components.flux.namespace }}\"} |~ \"\\\"namespace\\\":\\\"{{ .Values.targetNamespace.name }}\\\"\"",
+                "expr": "{pod=~\"helm-controller.+\",namespace=\"{{ .Values.components.flux.namespace }}\"} |~ \"\\\"namespace\\\":\\\"{{ $namespace }}\\\"\"",
                 "queryType": "range",
                 "refId": "A"
               }
@@ -829,7 +830,7 @@ data:
             {
               "hide": 2,
               "name": "namespace",
-              "query": "{{ .Values.targetNamespace.name }}",
+              "query": "{{ $namespace }}",
               "skipUrlSync": false,
               "type": "constant"
             },

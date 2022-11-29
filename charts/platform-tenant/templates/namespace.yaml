@@ -1,13 +1,14 @@
-{{- if .Values.targetNamespace.create -}}
+{{ $component := .Values.namespace }}
+{{- if $component.enabled -}}
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: {{ default (include "platform-tenant.fullname" .) .Values.targetNamespace.name }}
+  name: {{ default (include "platform-tenant.fullname" .) $component.name }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
-  {{- with .Values.targetNamespace.labels }}
+  {{- with $component.labels }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with (merge .Values.commonAnnotations .Values.targetNamespace.annotations) }}
+  {{- with (merge .Values.commonAnnotations $component.annotations) }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}

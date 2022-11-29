@@ -2,61 +2,66 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# Prefix for resources in shared namespaces(istio, flux, etc)
+prefix: "tenant"
+# Override .Release.Name
 nameOverride: ""
+# Override all naming. Ignores `prefix`
 fullnameOverride: ""
-# title formatted name of tenant
+# Title Display
 title: ""
 # crdCheck for installed CRDS
 crdCheck: true
-# The target namespace for this tenant
-targetNamespace:
-  create: true
-  name: ""
-  labels: {}
-  annotations: {}
 
 commonAnnotations: {}
 commonLabels: {}
 
-serviceAccount:
-  create: true
-  name: ""
-  annotations: {}
-
 components:
+  # The target namespace for this tenant
+  namespace:
+    enabled: true
+    name: ""
+    labels: {}
+    annotations: {}
+  serviceAccount:
+    enabled: true
+    name: ""
+    annotations: {}
   # flux configs
   flux:
     namespace: flux-system
-    source:
-      create: true
-      name: ""
-      url: ""
-      # If a private repo, this is the secret for the GitRepository
-      secretName: ""
-      # defaults to
-      # ref:
-      #   branch: main
-      ref: {}
-    kustomization:
-      enabled: true
-      name: ""
-      # any spec other than  `serviceAccountName` and `sourceRef`
-      spec: {}
+    components:
+      source:
+        enabled: true
+        name: ""
+        url: ""
+        # If a private repo, this is the secret for the GitRepository
+        secretName: ""
+        # defaults to
+        # ref:
+        #   branch: main
+        ref: {}
+      kustomization:
+        enabled: true
+        name: ""
+        # any spec other than  `serviceAccountName` and `sourceRef`
+        spec: {}
 
   rbac:
     enabled: true
-    # Cluster role giving * access to flux resources
-    tenantClusterRole:
-      enabled: true
-      name: ""
-    # Role that gives tenant deployer access to the namespace
-    tenantDeploymentRole:
-      enabled: true
-      name: ""
-      extraRules: []
-      # defaults to tenantDeploymentRole.name
-      # group to map external objects to like IAM
-      groupName: ""
+    components:
+      # Cluster role giving * access to flux resources
+      tenantClusterRole:
+        enabled: true
+        name: ""
+      # Role that gives tenant deployer access to the namespace
+      tenantDeploymentRole:
+        enabled: true
+        name: ""
+        extraRules: []
+        # defaults to tenantDeploymentRole.name
+        # group to map external objects to like IAM
+        groupName: ""
 
   # using kyverno policies
   # to add labels/annotations on objects tenant deploys
@@ -80,6 +85,7 @@ components:
   # oauth2Proxy application to use for authentication
   oauth2Proxy:
     enabled: true
+    namespace: auth-proxy
     # chart configuration for proxy app
     chart:
       url: https://oauth2-proxy.github.io/manifests

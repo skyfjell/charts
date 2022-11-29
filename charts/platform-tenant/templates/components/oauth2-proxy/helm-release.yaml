@@ -6,8 +6,8 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: {{ include "platform-tenant.proxy.name" . }}
-  namespace: {{ $.Values.targetNamespace.name }}
+  name: {{ list "proxy" . | include "platform-tenant.format.name.shared" }}
+  namespace: {{ list . | include "platform-tenant.format.name.shared" }}
 spec:
   chart:
     spec:
@@ -15,7 +15,7 @@ spec:
       version: {{ .Values.components.oauth2Proxy.chart.version }}
       sourceRef:
         kind: HelmRepository
-        name: {{ include "platform-tenant.proxy.name" . }}
+        name: {{ list "proxy" . | include "platform-tenant.format.name.shared" }}
         namespace: {{ .Values.components.flux.namespace }}
   interval: 1h0m0s
   values:

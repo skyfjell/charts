@@ -2,26 +2,23 @@
 Expand the name of the chart.
 */}}
 {{- define "platform-tenant.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+  {{- default (.Release.Name | trimPrefix "tenant-") .Values.nameOverride -}}
 {{- end }}
 
-{{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
-*/}}
-{{- define "platform-tenant.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
-{{- end }}
+{{- define "platform-tenant.format.name.local" -}}
+  {{- $ := last . -}}
+  {{- $name := last . | include "platform-tenant.name" -}}
+  {{- $name := default $name $.Values.fullnameOverride -}}
+  {{- $name | prepend . | initial | include "skyfjell.common.format.name" -}}
+{{- end -}}
+
+{{- define "platform-tenant.format.name.shared" -}}
+  {{- $ := last . -}}
+  {{- $prefix := $.Values.prefix -}}
+  {{- $name := . | include "platform-tenant.format.name.local" -}}
+  {{- $name := list $prefix $name | include "skyfjell.common.format.name" -}}
+  {{- default $name $.Values.fullnameOverride -}}
+{{- end -}}
 
 {{/*
 Create chart name and version as used by the chart label.
@@ -54,7 +51,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Create the name of the service account to use
 */}}
 {{- define "platform-tenant.serviceAccount.name" -}}
-{{- if .Values.serviceAccount.create }}
+{{- if .Values.serviceAccount.enabled }}
 {{- default (include "platform-tenant.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
@@ -67,34 +64,6 @@ interval: 1m0s
 path: /
 prune: true
 validation: client
-{{- end }}                                                                           
-
-{{- define "platform-tenant.cluster-role.name" -}}
-{{ (default (printf "%s-%s" .Release.Name "tenant") .Values.components.rbac.tenantClusterRole.name) | trunc 63 | trimSuffix "-" | quote}}
-{{- end }}
-
-{{- define "platform-tenant.deployer.role.name" -}}
-{{ (default (printf "%s-%s" .Release.Name "deployer") .Values.components.rbac.tenantDeploymentRole.name) | trunc 63 | trimSuffix "-" | quote}}
-{{- end }}  
-
-{{- define "platform-tenant.tls.name" -}}
-{{ printf "%s-tls" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
-{{- end }}
-
-{{- define "platform-tenant.proxy.name" -}}
-{{ printf "%s-proxy" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
-{{- end }}
-
-{{- define "platform-tenant.gateway.name" -}}
-{{ printf "%s-gateway" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
-{{- end }}
-
-{{- define "platform-tenant.certificate.name" -}}
-{{ printf "%s-certificate" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
-{{- end }}
-
-{{- define "platform-tenant.ingress-route.name" -}}
-{{ printf "%s-ingress-route" .Release.Name | trunc 63 | trimSuffix "-" | quote }}
 {{- end }}
 
 {{- define "platform-tenant.require.defaultHost" -}}

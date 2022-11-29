@@ -1,23 +1,23 @@
-{{- if .Values.components.flux.source.enabled -}}
+{{- if .Values.components.flux.components.source.enabled -}}
   {{ if .Values.crdCheck }}
     {{- include "require.api.flux.source" . -}}
   {{ end }}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: GitRepository
 metadata:
-  name: {{ default (include "platform-tenant.fullname" .) .Values.components.flux.source.name }}
+  name: {{ list .Values.components.flux.components.source.name . | include "platform-tenant.format.name.shared" }}
   namespace: {{ .Values.components.flux.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
-  url: {{ .Values.components.flux.source.url }}
+  url: {{ .Values.components.flux.components.source.url }}
   interval: 1m
   ref:
-    {{- if .Values.components.flux.source.ref }}
+    {{- if .Values.components.flux.components.source.ref }}
     {{- toYaml . | indent 6 }}
     {{ else }}
     branch: name
     {{- end }}
-  {{- with .Values.components.flux.source.secretName }}
+  {{- with .Values.components.flux.components.source.secretName }}
   secretRef:
     name: {{ . | quote }}
     {{- end }}

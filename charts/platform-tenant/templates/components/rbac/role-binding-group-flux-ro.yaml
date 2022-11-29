@@ -3,13 +3,13 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   namespace: {{ .Values.components.flux.namespace }}
-  name: {{ printf "%s-%s" .Release.Name "flux-ro" | trunc 63 | trimSuffix "-" | quote}}
+  name: {{ list "flux-ro" . | include "platform-tenant.format.name.shared" }}
 subjects:
   - kind: Group
-    name: {{ include "platform-tenant.deployer.role.name" .}}
+    name: {{ list "deployer" . | include "platform-tenant.format.name.shared" }}
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ printf "%s-%s" .Release.Name "flux-ro" | trunc 63 | trimSuffix "-" | quote}}
+  name: {{ list "flux-ro" . | include "platform-tenant.format.name.shared" }}
 {{- end -}}

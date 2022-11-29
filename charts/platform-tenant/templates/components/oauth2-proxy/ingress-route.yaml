@@ -6,8 +6,8 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: {{ include "platform-tenant.ingress-route.name" . }}
-  namespace: {{ .Values.targetNamespace.name | quote }}
+  name: {{ list . | include "platform-tenant.format.name.shared" }}
+  namespace: {{ list . | include "platform-tenant.format.name.shared" }}
   labels: {{- include "skyfjell.common.chartLabels" . | nindent 4 }}
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: platform-auth-auth-proxy
@@ -22,6 +22,6 @@ spec:
       {{- end }}
       match: {{ join " || " $match }}
       services:
-        - name: {{ include "platform-tenant.proxy.name" . }}
+        - name: {{ list "proxy" . | include "platform-tenant.format.name.shared" }}
           port: 80
 {{- end -}}

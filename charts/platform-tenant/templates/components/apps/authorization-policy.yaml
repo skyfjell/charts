@@ -1,0 +1,24 @@
+{{- if .Values.components.istio.enabled -}}
+{{ range .Values.components.apps }}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ list .name $ | include "platform-tenant.format.name.shared" }}
+  namespace: {{ list $ | include "platform-tenant.format.name.shared" }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  rules:
+    - from:
+        - source:
+            namespaces:
+              - istio-system
+            principals:
+              - cluster.local/ns/istio-system/sa/istio-system-istio-gateway
+      to:
+        - operation:
+            hosts:
+              - {{ .host }}
+{{- end -}}
+{{- end -}}

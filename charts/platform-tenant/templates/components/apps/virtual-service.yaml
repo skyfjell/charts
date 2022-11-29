@@ -1,4 +1,4 @@
-{{- if .Values.components.oauth2Proxy.enabled -}}
+{{- if and .Values.components.oauth2Proxy.enabled .Values.components.apps -}}
 {{- if .Values.crdCheck }}
   {{- include "require.api.istio.vs" . -}}
 {{- end }}

@@ -1,0 +1,16 @@
+{{- if and .Values.components.rbac.enabled .Values.components.flux.components.kustomization.enabled -}}
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: {{ .Values.components.flux.namespace }}
+  name: {{ list "flux-ro" . | include "platform-tenant.format.name.shared" }}
+rules:
+  - apiGroups: ["kustomize.toolkit.fluxcd.io"]
+    resources: ["kustomization"]
+    resourceNames:
+      - {{ list .Values.components.flux.components.kustomization.name $ | include "platform-tenant.format.name.shared" }}
+    verbs:
+      - get
+      - list
+      - watch
+{{- end -}}

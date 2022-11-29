@@ -1,3 +1,4 @@
+#TODO: We can't create a HelmRepository per tenant for shared resources. Need a base tenant chart.
 {{/*
   Template for oauth2-proxy
 */}}
@@ -9,7 +10,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: {{ include "platform-tenant.proxy.name" . }}
+  name: {{ list "proxy" . | include "platform-tenant.format.name.shared" }}
   namespace: {{ .Values.components.flux.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:

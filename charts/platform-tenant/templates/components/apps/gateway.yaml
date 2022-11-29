@@ -6,7 +6,7 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: {{ include "platform-tenant.gateway.name" . }}
+  name: {{ list . | include "platform-tenant.format.name.shared" }}
   namespace: {{ .Values.components.istio.namespace | quote }}
   labels: {{- include "skyfjell.common.chartLabels" . | nindent 4 }}
 spec:
@@ -20,10 +20,10 @@ spec:
          name: https
          protocol: HTTPS
        host:
-       {{- range (include "platform-tenant.apps.hosts" . | fromYaml ).hosts }}       
+       {{- range (include "platform-tenant.apps.hosts" . | fromYaml ).hosts }}
         - {{ . | quote }}
        {{- end }}
        tls:
         mode: SIMPLE
-        credentialName: {{ include "platform-tenant.tls.name" . }}
+        credentialName: {{ list . | include "platform-tenant.format.name.shared" }}
 {{- end -}}

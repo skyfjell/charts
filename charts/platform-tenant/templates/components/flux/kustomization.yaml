@@ -1,0 +1,19 @@
+{{- if .Values.components.flux.components.kustomization.enabled -}}
+  {{ if .Values.crdCheck }}
+    {{- include "require.api.flux.kustomize" . -}}
+  {{ end }}
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: {{ list .Values.components.flux.components.kustomization.name . | include "platform-tenant.format.name.shared" }}
+  namespace: {{ .Values.components.flux.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: {{ list . | include "platform-tenant.format.name.shared" }}
+  serviceAccountName: {{ default (list . | include "platform-tenant.format.name.shared") .Values.components.serviceAccount.name }}
+  {{- $customSpec := omit .Values.components.flux.components.kustomization.spec "serviceAccountName" "sourceRef" }}
+  {{- $defaultSpec := (include "platform-tenant.kustomization.spec" . | fromYaml) }}
+  {{- toYaml (merge $customSpec $defaultSpec) | nindent 2 }}
+{{- end -}}
