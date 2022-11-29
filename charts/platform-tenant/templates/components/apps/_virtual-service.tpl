@@ -20,7 +20,7 @@ http:
 */}}
 {{- define "platform-tenant.app.virtual-service.template" }}
 {{- $ := last . }}
-{{- $val := first . }}
+{{- $app := first . }}
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
@@ -29,9 +29,9 @@ metadata:
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   hosts:
-    - {{ $val.host }}
+    - {{ $app.host }}
   gateways:
     - {{ list $ | include "platform-tenant.format.name.shared" | printf "%s/%s" $.Values.components.istio.namespace }}
-  {{- $defaultValues := (include "platform-tenant.app.virtual-service.routing" $val | fromYaml) }}
-{{ (mergeOverwrite $defaultValues (default dict $val.routingOverride)) | toYaml | indent 2 }}
+  {{- $defaultValues := (include "platform-tenant.app.virtual-service.routing" $app | fromYaml) }}
+{{ (mergeOverwrite $defaultValues (default dict $app.routingOverride)) | toYaml | indent 2 }}
 {{- end -}}

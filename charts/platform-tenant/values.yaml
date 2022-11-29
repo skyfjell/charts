@@ -13,8 +13,8 @@ title: ""
 # crdCheck for installed CRDS
 crdCheck: true
 
-commonAnnotations: {}
-commonLabels: {}
+annotations: {}
+labels: {}
 
 components:
   # The target namespace for this tenant
@@ -23,10 +23,12 @@ components:
     name: ""
     labels: {}
     annotations: {}
+
   serviceAccount:
     enabled: true
     name: ""
     annotations: {}
+
   # flux configs
   flux:
     namespace: flux-system
@@ -41,11 +43,15 @@ components:
         # ref:
         #   branch: main
         ref: {}
+        serviceAccount:
+          name: flux-system-source-controller
       kustomization:
         enabled: true
         name: ""
         # any spec other than  `serviceAccountName` and `sourceRef`
         spec: {}
+        serviceAccount:
+          name: flux-system-source-controller
 
   rbac:
     enabled: true
@@ -105,16 +111,16 @@ components:
     overrideValues: {}
   # apps:
   #   - name: "test-app-1"
-  #     host: "webapp1.tenant.mydomain.com"
+  #     host: "test-app-1.tenant-example.example.com"
   #     service:
   #       port: 8080
-  #       host: myapp.testns.svc.cluster.local
+  #       host: test-app-1.tenant-example.svc.cluster.local
   #     routingOverride: {}
   #   - name: "test-app-2"
-  #     host: "webapp2.tenant.mydomain.com"
+  #     host: "test-app-2.tenant-example.example.com"
   #     service:
   #       port: 8080
-  #       host: myapp2.testns.svc.cluster.local
+  #       host: test-app-2.tenant-example.svc.cluster.local
   #     # "http" or "tls" or "tcp". Exclusion of 'mode' defaults to http
   #     mode: tls
   #     routingOverride: {}
@@ -132,3 +138,8 @@ components:
     enabled: true
     # namespace istio is installed in
     namespace: "istio-system"
+    components:
+      gateway:
+        name: istio-ingress
+      externalAuth:
+        name: oauth2-proxy

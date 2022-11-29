@@ -8,7 +8,7 @@ metadata:
   {{- with $component.labels }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with (merge .Values.commonAnnotations $component.annotations) }}
+  {{- with merge .Values.annotations $component.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}

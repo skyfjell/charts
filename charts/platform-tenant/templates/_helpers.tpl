@@ -90,10 +90,10 @@ validation: client
 
   Use like {{ $apphosts := (include "platform-tenant.apps.hosts" . | fromYaml ).hosts }}
 */}}
-{{- define "platform-tenant.apps.hosts" }}
-{{- $wlDomains := list }}
-{{- range .Values.components.apps }}
-{{- $wlDomains = append $wlDomains .host }}
-{{- end }}
-{{- dict "hosts" $wlDomains | toYaml }}
-{{- end }}
+{{- define "platform-tenant.apps.hosts" -}}
+{{- $hosts := list -}}
+{{- range .Values.components.apps -}}
+{{- $hosts = append $hosts .host -}}
+{{- end -}}
+{{- dict "hosts" $hosts | toYaml -}}
+{{- end -}}

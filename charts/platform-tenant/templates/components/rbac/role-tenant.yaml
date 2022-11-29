@@ -3,7 +3,7 @@ kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   namespace: {{ list . | include "platform-tenant.format.name.shared" }}
-  name: {{ list "flux" . | include "platform-tenant.format.name.shared" }}
+  name: {{ list . | include "platform-tenant.format.name.shared" }}
 rules:
   - apiGroups: ["", "extensions", "apps", "batch"]
     resources: ["*"]

@@ -1,3 +1,4 @@
+{{- if and .Values.components.oauth2Proxy.enabled .Values.components.istio.enabled -}}
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
@@ -14,3 +15,4 @@ spec:
               - {{ $.Values.components.oauth2Proxy.namespace }}
             principals:
               - cluster.local/ns/auth-proxy/sa/auth-proxy-auth-traefik
+{{- end -}}
