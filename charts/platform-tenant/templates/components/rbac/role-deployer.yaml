@@ -1,0 +1,22 @@
+# {{- if and .Values.components.rbac.enabled -}}
+# kind: Role
+# apiVersion: rbac.authorization.k8s.io/v1
+# metadata:
+#   namespace: {{ list . | include "platform-tenant.format.name.shared" }}
+#   name: {{ list "deployer" $ | include "platform-tenant.format.name.shared" }}
+# rules:
+#   - apiGroups: ["", "extensions", "apps"]
+#     resources: ["*"]
+#     verbs: ["*"]
+#     {{- if .Values.components.flux.components.kustomization.enabled }}
+#   - apiGroups: ["kustomize.toolkit.fluxcd.io"]
+#     resources: ["kustomization"]
+#     resourceNames:
+#       - {{ list .Values.components.flux.components.kustomization.name $ | include "platform-tenant.format.name.shared" }}
+#     verbs:
+#       - get
+#     {{- end }}
+#   {{- with .Values.components.rbac.extraRules }}
+#     {{- toYaml . | nindent 2}}
+#   {{- end }}
+# {{- end -}}

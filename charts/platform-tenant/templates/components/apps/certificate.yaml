@@ -1,0 +1,22 @@
+{{- if .Values.components.certManager.enabled -}}
+  {{- if ( and .Values.crdCheck .Values.components.apps ) -}}
+    {{ include "require.api.certManager.certificate" $ }}
+  {{- end -}}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ list . | include "platform-tenant.format.name.shared" }}
+  namespace: {{ .Values.components.istio.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" . | nindent 4 }}
+spec:
+  secretName: {{ list . | include "platform-tenant.format.name.shared" }}
+  dnsNames:
+  {{- range (include "platform-tenant.apps.hosts" . | fromYaml ).hosts }}
+  - {{ . | quote }}
+  {{- end }}
+  {{ if not .Values.components.certManager.issuerRef }}
+  {{ fail ".Values.components.certManager.issuerRef needs to be defined." }}
+  {{- end -}}
+  issuerRef: {{ .Values.components.certManager.issuerRef | toYaml | nindent 4}}
+{{- end -}}

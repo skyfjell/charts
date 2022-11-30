@@ -1,0 +1,57 @@
+{{- if .Values.components.kyverno.enabled -}}
+  {{- if .Values.crdCheck }}
+    {{- include "require.api.kyerno.clusterPolicy" . -}}
+  {{- end }}
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: {{ list .Values.components.kyverno.name $ | include "platform-tenant.format.name.shared" }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+  annotations:
+    policies.kyverno.io/title: {{ list .Values.components.kyverno.name $ | include "platform-tenant.format.name.shared" }}
+    policies.kyverno.io/category: Pod Scheduling
+    policies.kyverno.io/description: >-
+      Adds metadata to all jobs, deployments, daemons etc in the monitoring
+      namespace.
+spec:
+  validationFailureAction: enforce
+  rules:
+    - name: add-metadata
+      match:
+        resources:
+          kinds:
+            - Job
+            - DaemonSet
+            - Deployment
+            - StatefulSet
+            - ReplicaSet
+          namespaces:
+            - {{ list $ | include "platform-tenant.format.name.shared" }}
+      mutate:
+        patchStrategicMerge:
+          metadata:
+          {{- with .Values.components.kyverno.annotations }}
+            annotations:
+              {{- toYaml . | nindent 14 }}
+          {{- end }}
+            labels:
+              app.kubernetes.io/part-of: {{ list $ | include "platform-tenant.format.name.shared" }}
+              {{- with (omit .Values.components.kyverno.labels "app.kubernetes.io/part-of") }}
+              {{- toYaml . | nindent 14 }}
+              {{- end }}
+          spec:
+            template:
+              {{- if or .Values.components.kyverno.nodeSelector .Values.components.kyverno.tolerations }}
+              spec:
+              {{- with .Values.components.kyverno.nodeSelector }}
+                nodeSelector:
+                  {{- toYaml . | nindent 18 }}
+              {{- end }}
+              {{- with .Values.components.kyverno.tolerations }}
+                tolerations:
+                  {{- toYaml . | nindent 18}}
+              {{- end }}
+              {{- else }}
+              spec: {}
+              {{- end }}
+{{- end -}}

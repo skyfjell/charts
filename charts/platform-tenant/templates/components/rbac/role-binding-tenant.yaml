@@ -1,0 +1,15 @@
+# {{- if .Values.components.rbac.enabled -}}
+# kind: RoleBinding
+# apiVersion: rbac.authorization.k8s.io/v1
+# metadata:
+#   namespace: {{ list . | include "platform-tenant.format.name.shared" }}
+#   name: {{ list . | include "platform-tenant.format.name.shared" }}
+# subjects:
+#   - kind: ServiceAccount
+#     name: {{ list . | include "platform-tenant.format.name.shared" }}
+#     namespace: {{ .Values.components.flux.namespace }}
+# roleRef:
+#   apiGroup: rbac.authorization.k8s.io
+#   kind: Role
+#   name: {{ list . | include "platform-tenant.format.name.shared" }}
+# {{- end -}}

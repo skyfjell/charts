@@ -1,0 +1,29 @@
+{{- if .Values.components.istio.enabled -}}
+  {{- if ( and .Values.crdCheck .Values.components.apps ) -}}
+    {{ include "require.api.istio.gateway" $ }}
+  {{- end -}}
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ list . | include "platform-tenant.format.name.shared" }}
+  namespace: {{ .Values.components.istio.namespace | quote }}
+  labels: {{- include "skyfjell.common.chartLabels" . | nindent 4 }}
+spec:
+  {{- with .Values.components.istio.selector }}
+  selector:
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+  servers:
+     - port:
+         number: 443
+         name: https
+         protocol: HTTPS
+       host:
+       {{- range (include "platform-tenant.apps.hosts" . | fromYaml ).hosts }}
+        - {{ . | quote }}
+       {{- end }}
+       tls:
+        mode: SIMPLE
+        credentialName: {{ list . | include "platform-tenant.format.name.shared" }}
+{{- end -}}

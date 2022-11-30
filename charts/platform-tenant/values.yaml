@@ -2,101 +2,144 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# Prefix for resources in shared namespaces(istio, flux, etc)
+prefix: "tenant"
+# Override .Release.Name
 nameOverride: ""
+# Override all naming. Ignores `prefix`
 fullnameOverride: ""
-# Formatted name of tenant
+# Title Display
 title: ""
+# crdCheck for installed CRDS
+crdCheck: true
 
-# The target namespace for this tenant
-targetNamespace:
-  create: true
-  name: ""
-  labels: {}
-  annotations: {}
+annotations: {}
+labels: {}
 
-commonAnnotations: {}
-commonLabels: {}
-
-serviceAccount:
-  create: true
-  name: ""
-  annotations: {}
-
-# flux configs
-flux:
-  namespace: flux-system
-  source:
-    create: true
-    name: "ssh"
-    url: ""
-    # If a private repo, this is the secret for the GitRepository
-    secretName: ""
-    # defaults to
-    # ref:
-    #   branch: main
-    ref: {}
-  kustomization:
-    create: true
+components:
+  # The target namespace for this tenant
+  namespace:
+    enabled: true
     name: ""
-    # any spec other than  `serviceAccountName` and `sourceRef`
-    spec: {}
+    labels: {}
+    annotations: {}
 
-rbac:
-  enable: true
-  # Cluster role giving * access to flux resources
-  tenantClusterRole:
-    create: true
+  serviceAccount:
+    enabled: true
     name: ""
-  # Role that gives tenant deployer access to the namespace
-  tenantDeploymentRole:
-    create: true
+    annotations: {}
+
+  # flux configs
+  flux:
+    namespace: flux-system
+    components:
+      source:
+        enabled: true
+        name: ""
+        url: ""
+        # If a private repo, this is the secret for the GitRepository
+        secretName: ""
+        # defaults to
+        # ref:
+        #   branch: main
+        ref: {}
+        serviceAccount:
+          name: flux-system-source-controller
+      kustomization:
+        enabled: true
+        name: ""
+        # any spec other than  `serviceAccountName` and `sourceRef`
+        spec: {}
+        serviceAccount:
+          name: flux-system-source-controller
+
+  rbac:
+    enabled: true
+    components:
+      # Cluster role giving * access to flux resources
+      tenantClusterRole:
+        enabled: true
+        name: ""
+      # Role that gives tenant deployer access to the namespace
+      tenantDeploymentRole:
+        enabled: true
+        name: ""
+        extraRules: []
+        # defaults to tenantDeploymentRole.name
+        # group to map external objects to like IAM
+        groupName: ""
+
+  # using kyverno policies
+  # to add labels/annotations on objects tenant deploys
+  kyverno:
+    enabled: true
     name: ""
-    extraRules: []
-    # defaults to tenantDeploymentRole.name
-    # group to map external objects to like IAM
-    groupName: ""
+    nodeSelector: {}
+    tolerations: []
+    labels: {}
+    annotations: {}
 
-# using kyverno policies
-# to add labels/annotations on objects tenant deploys
-kyverno:
-  enable: true
-  name: ""
-  nodeSelector: {}
-  tolerations: []
-  labels: {}
-  annotations: {}
+  # If loki, prometheus and grafana installed
+  # this configures a namespaced dashboard.
+  o11y:
+    enabled: true
+    # namespace where prometheus resides
+    namespace: o11y
+    labels: {}
+    annotations: {}
 
-# If loki, prometheus and grafana installed
-# this configures a namespaced dashboard.
-o11y:
-  enable: true
-  # namespace where prometheus resides
-  namespace: o11y
-  labels: {}
-  annotations: {}
+  # oauth2Proxy application to use for authentication
+  oauth2Proxy:
+    enabled: true
+    namespace: auth-proxy
+    # chart configuration for proxy app
+    chart:
+      url: https://oauth2-proxy.github.io/manifests
+      name: oauth2-proxy
+      version: "6.2.7"
+    # displayName for sso redirect
+    displayName: ""
+    # oidcIssuerUrl of the OIDC provider for oauth proxy
+    oidcIssuerUrl: ""
+    # existingSecret has client-id, client-secret and cookie-secret keys
+    existingSecret: ""
+    # cookieDomain for proxy root domain. You have a tentant with base url `tenant.mydomain.com` and set this to
+    # cookieDomain: ".tenant.mydomain.com"
+    # Such that every app can be `webapp1.tenant.mydomain.com` and `webapp2.tenant.mydomain.com`.
+    cookieDomain: ""
+    # overrideValues for oauth2-proxy chart
+    overrideValues: {}
+  # apps:
+  #   - name: "test-app-1"
+  #     host: "test-app-1.tenant-example.example.com"
+  #     service:
+  #       port: 8080
+  #       host: test-app-1.tenant-example.svc.cluster.local
+  #     routingOverride: {}
+  #   - name: "test-app-2"
+  #     host: "test-app-2.tenant-example.example.com"
+  #     service:
+  #       port: 8080
+  #       host: test-app-2.tenant-example.svc.cluster.local
+  #     # "http" or "tls" or "tcp". Exclusion of 'mode' defaults to http
+  #     mode: tls
+  #     routingOverride: {}
+  apps: []
 
-# Use istio to manage networking
-istio:
-  # enable all istio CR's
-  enable: true
-  # namespace istio is installed in
-  namespace: "istio-system"
-  # Gateways.
-  #  selector:
-  #    istio: ingressgateway
-  #  servers:
-  #    - port:
-  #        number: 443
-  #        name: https
-  #        protocol: HTTPS
-  #      hosts:
-  #        - example.com
-  #      tls:
-  #        mode: SIMPLE
-  #        credentialName: example-tls
-  gateway: {}
-  # will create cert-manager certificates based on
+  # certManager config will create certificates based on
   # tls credential names
   certManager:
-    createCerts: true
+    enabled: true
     issuerRef: {}
+
+  # Use istio to manage networking
+  istio:
+    # enable all istio CR's
+    enabled: true
+    # namespace istio is installed in
+    namespace: "istio-system"
+    components:
+      gateway:
+        name: istio-ingress
+      externalAuth:
+        name: oauth2-proxy

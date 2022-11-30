@@ -1,0 +1,18 @@
+{{- if .Values.components.istio.enabled -}}
+{{ range .Values.components.apps }}
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: {{ list .name $ | include "platform-tenant.format.name.shared" }}
+  namespace: {{ list $ | include "platform-tenant.format.name.shared" }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  jwtRules:
+    - issuer: {{ $.Values.components.oauth2Proxy.issuer }}
+      jwksUri: {{ $.Values.components.oauth2Proxy.jwksUri }}
+      audiences:
+        - {{ $.Values.components.oauth2Proxy.clientId }}
+{{- end -}}
+{{- end -}}

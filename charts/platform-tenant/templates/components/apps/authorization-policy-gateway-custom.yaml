@@ -1,0 +1,23 @@
+{{- if .Values.components.istio.enabled -}}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ list "custom" "http" . | include "platform-tenant.format.name.shared" }}
+  namespace: {{ $.Values.components.istio.namespace }}
+spec:
+  action: CUSTOM
+  selector:
+    matchLabels:
+      app: {{ $.Values.components.istio.components.gateway.name }}
+  provider:
+    name: {{ $.Values.components.oauth2Proxy.name }}
+  rules:
+    - to:
+        - operation:
+            hosts:
+              {{- range (include "platform-tenant.apps.hosts" $ | fromYaml).hosts }}
+              - {{ . | quote }}
+              {{- end }}
+            ports:
+              - "443"
+{{- end -}}

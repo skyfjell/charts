@@ -1,0 +1,36 @@
+# helm install example ./ -f examples/values.yaml
+
+components:
+  certManager:
+    issuerRef:
+      name: letsencrypt-prod
+      kind: ClusterIssuer
+      group: cert-manager.io
+
+  oauth2Proxy:
+    displayName: "Login With Keycloak"
+    oidcIssuerUrl: "sso.example.com"
+    existingSecret: "super-secret"
+    cookieDomain: ".tenant.example.com"
+
+  apps:
+    - name: "test-app-1"
+      host: "tenant.example.com"
+      service:
+        port: 8001
+        host: test-app-1.tenant.svc.cluster.local
+      routingOverride:
+        http:
+          - match:
+              - uri:
+                  prefix: /
+            route:
+              - destination:
+                  port:
+                    number: 8002
+    - name: "test-app-2"
+      host: "test-app-2.tenant.example.com"
+      service:
+        port: 8080
+        host: test-app-2.tenant.svc.cluster.local
+      mode: tls

@@ -1,0 +1,1030 @@
+{{- if .Values.components.o11y.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Values.components.o11y.namespace }}
+  name: {{ list "dashboard" $ | include "platform-tenant.format.name.shared" }}
+  {{- with .Values.components.o11y.annotations }}
+  annotations:
+  {{ toYaml . | indent 4}}
+  {{- end }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+  {{- with .Values.components.o11y.labels }}
+  {{ toYaml . | nindent 4 }}
+  {{- end }}
+{{ include "platform-tenant.labels" $ | indent 4 }}
+{{ $namespace := list . | include "platform-tenant.format.name.shared" }}
+data:
+  {{ list $ | include "platform-tenant.format.name.shared" | indent 2 }}: |-
+      {
+        "annotations": {
+          "list": [
+            {
+              "builtIn": 1,
+              "datasource": {
+                "type": "grafana",
+                "uid": "-- Grafana --"
+              },
+              "enable": true,
+              "hide": true,
+              "iconColor": "rgba(0, 211, 255, 1)",
+              "name": "Annotations & Alerts",
+              "target": {
+                "limit": 100,
+                "matchAny": false,
+                "tags": [],
+                "type": "dashboard"
+              },
+              "type": "dashboard"
+            }
+          ]
+        },
+        "editable": true,
+        "fiscalYearStartMonth": 0,
+        "graphTooltip": 0,
+        "id": 1,
+        "links": [],
+        "liveNow": false,
+        "panels": [
+          {
+            "collapsed": false,
+            "gridPos": {
+              "h": 1,
+              "w": 24,
+              "x": 0,
+              "y": 0
+            },
+            "id": 22,
+            "panels": [],
+            "title": "Flux Logs",
+            "type": "row"
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "${logsource}"
+            },
+            "gridPos": {
+              "h": 8,
+              "w": 24,
+              "x": 0,
+              "y": 1
+            },
+            "id": 20,
+            "options": {
+              "dedupStrategy": "none",
+              "enableLogDetails": true,
+              "prettifyLogMessage": false,
+              "showCommonLabels": false,
+              "showLabels": false,
+              "showTime": false,
+              "sortOrder": "Descending",
+              "wrapLogMessage": false
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "${logsource}"
+                },
+                "editorMode": "code",
+                "expr": "{pod=~\"kustomize-controller.+\",namespace=\"{{ .Values.components.flux.namespace }}\"} |~ \"\\\"namespace\\\":\\\"{{ $namespace }}\\\"\"",
+                "queryType": "range",
+                "refId": "A"
+              }
+            ],
+            "title": "Flux: Kustomize Controller",
+            "type": "logs"
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "${logsource}"
+            },
+            "gridPos": {
+              "h": 8,
+              "w": 24,
+              "x": 0,
+              "y": 9
+            },
+            "id": 18,
+            "options": {
+              "dedupStrategy": "none",
+              "enableLogDetails": true,
+              "prettifyLogMessage": false,
+              "showCommonLabels": false,
+              "showLabels": false,
+              "showTime": false,
+              "sortOrder": "Descending",
+              "wrapLogMessage": false
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "${logsource}"
+                },
+                "editorMode": "code",
+                "expr": "{pod=~\"source-controller.+\",namespace=\"{{ .Values.components.flux.namespace }}\"} |~ \"\\\"namespace\\\":\\\"{{ $namespace }}\\\"\"",
+                "queryType": "range",
+                "refId": "A"
+              }
+            ],
+            "title": "Flux: Source Controller",
+            "type": "logs"
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "${logsource}"
+            },
+            "gridPos": {
+              "h": 9,
+              "w": 24,
+              "x": 0,
+              "y": 17
+            },
+            "id": 16,
+            "options": {
+              "dedupStrategy": "none",
+              "enableLogDetails": true,
+              "prettifyLogMessage": false,
+              "showCommonLabels": false,
+              "showLabels": false,
+              "showTime": true,
+              "sortOrder": "Descending",
+              "wrapLogMessage": true
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "${logsource}"
+                },
+                "editorMode": "code",
+                "expr": "{pod=~\"helm-controller.+\",namespace=\"{{ .Values.components.flux.namespace }}\"} |~ \"\\\"namespace\\\":\\\"{{ $namespace }}\\\"\"",
+                "queryType": "range",
+                "refId": "A"
+              }
+            ],
+            "title": "Flux: Helm Controller",
+            "type": "logs"
+          },
+          {
+            "collapsed": false,
+            "gridPos": {
+              "h": 1,
+              "w": 24,
+              "x": 0,
+              "y": 26
+            },
+            "id": 14,
+            "panels": [],
+            "title": "Tenant Namespace",
+            "type": "row"
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "${logsource}"
+            },
+            "gridPos": {
+              "h": 9,
+              "w": 24,
+              "x": 0,
+              "y": 27
+            },
+            "id": 12,
+            "options": {
+              "dedupStrategy": "none",
+              "enableLogDetails": true,
+              "prettifyLogMessage": true,
+              "showCommonLabels": false,
+              "showLabels": false,
+              "showTime": true,
+              "sortOrder": "Descending",
+              "wrapLogMessage": false
+            },
+            "pluginVersion": "9.2.0-beta1",
+            "targets": [
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "${logsource}"
+                },
+                "editorMode": "code",
+                "expr": "{container=\"$container\", namespace=\"$namespace\"}",
+                "queryType": "range",
+                "refId": "A"
+              }
+            ],
+            "title": "Container Logs",
+            "type": "logs"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${metricsource}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "custom": {
+                  "axisCenteredZero": false,
+                  "axisColorMode": "text",
+                  "axisLabel": "",
+                  "axisPlacement": "auto",
+                  "barAlignment": 0,
+                  "drawStyle": "line",
+                  "fillOpacity": 100,
+                  "gradientMode": "none",
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  },
+                  "lineInterpolation": "linear",
+                  "lineWidth": 0,
+                  "pointSize": 5,
+                  "scaleDistribution": {
+                    "type": "linear"
+                  },
+                  "showPoints": "never",
+                  "spanNulls": false,
+                  "stacking": {
+                    "group": "A",
+                    "mode": "normal"
+                  },
+                  "thresholdsStyle": {
+                    "mode": "off"
+                  }
+                },
+                "mappings": [],
+                "min": 0,
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                },
+                "unit": "bytes"
+              },
+              "overrides": [
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "quota - requests"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "#F2495C",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.fillOpacity",
+                      "value": 0
+                    },
+                    {
+                      "id": "custom.lineWidth",
+                      "value": 2
+                    },
+                    {
+                      "id": "custom.stacking",
+                      "value": {
+                        "group": false,
+                        "mode": "normal"
+                      }
+                    },
+                    {
+                      "id": "custom.lineStyle",
+                      "value": {
+                        "dash": [
+                          10,
+                          10
+                        ],
+                        "fill": "dash"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "quota - limits"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "#FF9830",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.fillOpacity",
+                      "value": 0
+                    },
+                    {
+                      "id": "custom.lineWidth",
+                      "value": 2
+                    },
+                    {
+                      "id": "custom.stacking",
+                      "value": {
+                        "group": false,
+                        "mode": "normal"
+                      }
+                    },
+                    {
+                      "id": "custom.lineStyle",
+                      "value": {
+                        "dash": [
+                          10,
+                          10
+                        ],
+                        "fill": "dash"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "gridPos": {
+              "h": 7,
+              "w": 24,
+              "x": 0,
+              "y": 36
+            },
+            "id": 10,
+            "interval": "1m",
+            "links": [],
+            "options": {
+              "legend": {
+                "calcs": [],
+                "displayMode": "table",
+                "placement": "right",
+                "showLegend": true
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "pluginVersion": "9.2.0-beta1",
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${metricsource}"
+                },
+                "editorMode": "code",
+                "expr": "sum(container_memory_working_set_bytes{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", namespace=\"$namespace\", container!=\"\", image!=\"\"}) by (pod)",
+                "format": "time_series",
+                "intervalFactor": 2,
+                "legendFormat": "{{ `{{pod}}` }}",
+                "range": true,
+                "refId": "A",
+                "step": 10
+              }
+            ],
+            "title": "Memory Usage (w/o cache)",
+            "type": "timeseries"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${metricsource}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "custom": {
+                  "axisCenteredZero": false,
+                  "axisColorMode": "text",
+                  "axisLabel": "",
+                  "axisPlacement": "auto",
+                  "barAlignment": 0,
+                  "drawStyle": "line",
+                  "fillOpacity": 100,
+                  "gradientMode": "none",
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  },
+                  "lineInterpolation": "linear",
+                  "lineWidth": 0,
+                  "pointSize": 5,
+                  "scaleDistribution": {
+                    "type": "linear"
+                  },
+                  "showPoints": "never",
+                  "spanNulls": false,
+                  "stacking": {
+                    "group": "A",
+                    "mode": "normal"
+                  },
+                  "thresholdsStyle": {
+                    "mode": "off"
+                  }
+                },
+                "mappings": [],
+                "min": 0,
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                },
+                "unit": "short"
+              },
+              "overrides": [
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "quota - requests"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "#F2495C",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.fillOpacity",
+                      "value": 0
+                    },
+                    {
+                      "id": "custom.lineWidth",
+                      "value": 2
+                    },
+                    {
+                      "id": "custom.stacking",
+                      "value": {
+                        "group": false,
+                        "mode": "normal"
+                      }
+                    },
+                    {
+                      "id": "custom.lineStyle",
+                      "value": {
+                        "dash": [
+                          10,
+                          10
+                        ],
+                        "fill": "dash"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "quota - limits"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "#FF9830",
+                        "mode": "fixed"
+                      }
+                    },
+                    {
+                      "id": "custom.fillOpacity",
+                      "value": 0
+                    },
+                    {
+                      "id": "custom.lineWidth",
+                      "value": 2
+                    },
+                    {
+                      "id": "custom.stacking",
+                      "value": {
+                        "group": false,
+                        "mode": "normal"
+                      }
+                    },
+                    {
+                      "id": "custom.lineStyle",
+                      "value": {
+                        "dash": [
+                          10,
+                          10
+                        ],
+                        "fill": "dash"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "gridPos": {
+              "h": 7,
+              "w": 24,
+              "x": 0,
+              "y": 43
+            },
+            "id": 8,
+            "interval": "1m",
+            "links": [],
+            "options": {
+              "legend": {
+                "calcs": [],
+                "displayMode": "table",
+                "placement": "right",
+                "showLegend": true
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "pluginVersion": "9.2.0-beta1",
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${metricsource}"
+                },
+                "editorMode": "code",
+                "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{ namespace=\"$namespace\"}) by (pod)",
+                "format": "time_series",
+                "intervalFactor": 2,
+                "legendFormat": "{{`{{`}} pod {{`}}`}}",
+                "range": true,
+                "refId": "A",
+                "step": 10
+              }
+            ],
+            "title": "CPU Usage",
+            "type": "timeseries"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${metricsource}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "custom": {
+                  "axisCenteredZero": false,
+                  "axisColorMode": "text",
+                  "axisLabel": "",
+                  "axisPlacement": "auto",
+                  "barAlignment": 0,
+                  "drawStyle": "line",
+                  "fillOpacity": 20,
+                  "gradientMode": "none",
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  },
+                  "lineInterpolation": "linear",
+                  "lineWidth": 2,
+                  "pointSize": 5,
+                  "scaleDistribution": {
+                    "type": "linear"
+                  },
+                  "showPoints": "never",
+                  "spanNulls": true,
+                  "stacking": {
+                    "group": "A",
+                    "mode": "normal"
+                  },
+                  "thresholdsStyle": {
+                    "mode": "off"
+                  }
+                },
+                "mappings": [],
+                "min": 0,
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                },
+                "unit": "Bps"
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 9,
+              "w": 12,
+              "x": 0,
+              "y": 50
+            },
+            "id": 6,
+            "links": [],
+            "minSpan": 12,
+            "options": {
+              "legend": {
+                "calcs": [],
+                "displayMode": "list",
+                "placement": "right",
+                "showLegend": true
+              },
+              "tooltip": {
+                "mode": "multi",
+                "sort": "desc"
+              }
+            },
+            "pluginVersion": "9.2.0-beta1",
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${metricsource}"
+                },
+                "editorMode": "code",
+                "expr": "sum(irate(container_network_transmit_bytes_total{namespace=~\"$namespace\", pod=~\"$pod\"}[$interval:$resolution])) by (pod)",
+                "format": "time_series",
+                "intervalFactor": 1,
+                "legendFormat": "{{ `{{pod}}` }}",
+                "range": true,
+                "refId": "A",
+                "step": 10
+              }
+            ],
+            "title": "Transmit Bandwidth",
+            "type": "timeseries"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${metricsource}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "custom": {
+                  "axisCenteredZero": false,
+                  "axisColorMode": "text",
+                  "axisLabel": "",
+                  "axisPlacement": "auto",
+                  "barAlignment": 0,
+                  "drawStyle": "line",
+                  "fillOpacity": 20,
+                  "gradientMode": "none",
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  },
+                  "lineInterpolation": "linear",
+                  "lineWidth": 2,
+                  "pointSize": 5,
+                  "scaleDistribution": {
+                    "type": "linear"
+                  },
+                  "showPoints": "never",
+                  "spanNulls": true,
+                  "stacking": {
+                    "group": "A",
+                    "mode": "normal"
+                  },
+                  "thresholdsStyle": {
+                    "mode": "off"
+                  }
+                },
+                "mappings": [],
+                "min": 0,
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                },
+                "unit": "Bps"
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 9,
+              "w": 12,
+              "x": 12,
+              "y": 50
+            },
+            "id": 4,
+            "links": [],
+            "minSpan": 12,
+            "options": {
+              "legend": {
+                "calcs": [],
+                "displayMode": "list",
+                "placement": "right",
+                "showLegend": true
+              },
+              "tooltip": {
+                "mode": "multi",
+                "sort": "desc"
+              }
+            },
+            "pluginVersion": "9.2.0-beta1",
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${metricsource}"
+                },
+                "editorMode": "code",
+                "expr": "sum(irate(container_network_receive_bytes_total{namespace=~\"$namespace\", pod=~\"$pod\"}[$interval:$resolution])) by (pod)",
+                "format": "time_series",
+                "intervalFactor": 1,
+                "legendFormat": "{{ `{{pod}}` }}",
+                "range": true,
+                "refId": "A",
+                "step": 10
+              }
+            ],
+            "title": "Receive Bandwidth",
+            "type": "timeseries"
+          }
+        ],
+        "refresh": "",
+        "schemaVersion": 37,
+        "style": "dark",
+        "tags": [],
+        "templating": {
+          "list": [
+            {
+              "current": {
+                "selected": false,
+                "text": "Prometheus",
+                "value": "Prometheus"
+              },
+              "hide": 2,
+              "includeAll": false,
+              "label": "Metrics Source",
+              "multi": false,
+              "name": "metricsource",
+              "options": [],
+              "query": "prometheus",
+              "refresh": 1,
+              "regex": "",
+              "skipUrlSync": false,
+              "type": "datasource"
+            },
+            {
+              "current": {
+                "selected": true,
+                "text": "Loki",
+                "value": "Loki"
+              },
+              "hide": 2,
+              "includeAll": false,
+              "label": "Log Source",
+              "multi": false,
+              "name": "logsource",
+              "options": [],
+              "query": "loki",
+              "queryValue": "",
+              "refresh": 1,
+              "regex": "",
+              "skipUrlSync": false,
+              "type": "datasource"
+            },
+            {
+              "hide": 2,
+              "name": "namespace",
+              "query": "{{ $namespace }}",
+              "skipUrlSync": false,
+              "type": "constant"
+            },
+            {
+              "current": {},
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${metricsource}"
+              },
+              "definition": "label_values(kube_pod_info{namespace=~\"$namespace\"}, pod)",
+              "hide": 0,
+              "includeAll": true,
+              "multi": false,
+              "name": "pod",
+              "options": [],
+              "query": {
+                "query": "label_values(kube_pod_info{namespace=~\"$namespace\"}, pod)",
+                "refId": "StandardVariableQuery"
+              },
+              "refresh": 1,
+              "regex": "",
+              "skipUrlSync": false,
+              "sort": 0,
+              "type": "query"
+            },
+            {
+              "auto": false,
+              "auto_count": 30,
+              "auto_min": "10s",
+              "current": {
+                "selected": false,
+                "text": "1m",
+                "value": "1m"
+              },
+              "hide": 0,
+              "name": "resolution",
+              "options": [
+                {
+                  "selected": true,
+                  "text": "1m",
+                  "value": "1m"
+                },
+                {
+                  "selected": false,
+                  "text": "10m",
+                  "value": "10m"
+                },
+                {
+                  "selected": false,
+                  "text": "30m",
+                  "value": "30m"
+                },
+                {
+                  "selected": false,
+                  "text": "1h",
+                  "value": "1h"
+                },
+                {
+                  "selected": false,
+                  "text": "6h",
+                  "value": "6h"
+                },
+                {
+                  "selected": false,
+                  "text": "12h",
+                  "value": "12h"
+                },
+                {
+                  "selected": false,
+                  "text": "1d",
+                  "value": "1d"
+                },
+                {
+                  "selected": false,
+                  "text": "7d",
+                  "value": "7d"
+                },
+                {
+                  "selected": false,
+                  "text": "14d",
+                  "value": "14d"
+                },
+                {
+                  "selected": false,
+                  "text": "30d",
+                  "value": "30d"
+                }
+              ],
+              "query": "1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+              "refresh": 2,
+              "skipUrlSync": false,
+              "type": "interval"
+            },
+            {
+              "auto": false,
+              "auto_count": 30,
+              "auto_min": "10s",
+              "current": {
+                "selected": false,
+                "text": "1m",
+                "value": "1m"
+              },
+              "hide": 0,
+              "name": "interval",
+              "options": [
+                {
+                  "selected": true,
+                  "text": "1m",
+                  "value": "1m"
+                },
+                {
+                  "selected": false,
+                  "text": "10m",
+                  "value": "10m"
+                },
+                {
+                  "selected": false,
+                  "text": "30m",
+                  "value": "30m"
+                },
+                {
+                  "selected": false,
+                  "text": "1h",
+                  "value": "1h"
+                },
+                {
+                  "selected": false,
+                  "text": "6h",
+                  "value": "6h"
+                },
+                {
+                  "selected": false,
+                  "text": "12h",
+                  "value": "12h"
+                },
+                {
+                  "selected": false,
+                  "text": "1d",
+                  "value": "1d"
+                },
+                {
+                  "selected": false,
+                  "text": "7d",
+                  "value": "7d"
+                },
+                {
+                  "selected": false,
+                  "text": "14d",
+                  "value": "14d"
+                },
+                {
+                  "selected": false,
+                  "text": "30d",
+                  "value": "30d"
+                }
+              ],
+              "query": "1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+              "refresh": 2,
+              "skipUrlSync": false,
+              "type": "interval"
+            },
+            {
+              "current": {},
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${metricsource}"
+              },
+              "definition": "label_values(kube_pod_container_info{namespace=~\"$namespace\", pod=\"$pod\"},container)",
+              "hide": 0,
+              "includeAll": false,
+              "multi": false,
+              "name": "container",
+              "options": [],
+              "query": {
+                "query": "label_values(kube_pod_container_info{namespace=~\"$namespace\", pod=\"$pod\"},container)",
+                "refId": "StandardVariableQuery"
+              },
+              "refresh": 1,
+              "regex": "",
+              "skipUrlSync": false,
+              "sort": 0,
+              "type": "query"
+            }
+          ]
+        },
+        "time": {
+          "from": "2022-09-28T05:00:00.000Z",
+          "to": "2022-09-30T04:59:59.000Z"
+        },
+        "timepicker": {},
+        "timezone": "",
+        "title": "{{ default "Platform Tenant" .Values.title }}",
+        "uid": "{{ randAlphaNum 9 }}",
+        "version": 3,
+        "weekStart": ""
+      }
+{{- end -}}
