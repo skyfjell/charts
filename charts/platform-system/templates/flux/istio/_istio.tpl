@@ -11,9 +11,9 @@
 {{- end -}}
 
 {{- define "platform-system.components.istio.components.base.defaultValues" -}}
-{{- $istioValues := .Values.components.istio }}
+{{- $component := .Values.components.istio }}
 global:
-  istioNamespace: {{ $istioValues.namespace }}
+  istioNamespace: {{ $component.namespace }}
 {{- end -}}
 
 {{- define "platform-system.components.istio.components.base.values" }}
@@ -26,12 +26,12 @@ global:
 */}}
 
 {{- define "platform-system.components.istio.components.istiod.defaultValues" -}}
-{{- $istioValues := .Values.components.istio }}
+{{- $component := .Values.components.istio }}
 global:
-  istioNamespace: {{ $istioValues.namespace }}
-{{- $anno := ( include "platform-system.helper.annotations" ( list "istiod" $ ) ) }}
-{{- $tol := ( include "platform-system.helper.tolerations" ( list "istiod" $ ) ) }}
-{{- $sel := ( include "platform-system.helper.nodeSelector" ( list "istiod" $ ) ) }}
+  istioNamespace: {{ $component.namespace }}
+{{ $anno := list "istiod" $ | include "platform-system.helper.annotations" }}
+{{ $tol := list "istiod" $ | include "platform-system.helper.tolerations" }}
+{{ $sel := list "istiod" $ | include "platform-system.helper.nodeSelector" }}
 {{- if or (or $anno $tol) $sel }}
 pilot:
   {{- with $anno }}
@@ -46,6 +46,33 @@ pilot:
   tolerations:
     {{ . | indent 2 }}
   {{- end }}
+{{- end -}}
+meshConfig:
+  enablePrometheusMerge: true
+  enableTracing: true
+  defaultConfig:
+    proxyMetadata:
+      # Enable basic DNS proxying
+      ISTIO_META_DNS_CAPTURE: "true"
+      # Enable automatic address allocation
+      ISTIO_META_DNS_AUTO_ALLOCATE: "true"
+{{- $externalAuth := $component.components.istiod.components.externalAuth -}}
+{{- if $externalAuth.enabled }}
+  extensionProviders:
+    - name: {{ $externalAuth.name }}
+      envoyExtAuthzHttp:
+        service: {{ $externalAuth.service }}
+        port: {{ $externalAuth.port }}
+        headersToUpstreamOnAllow:
+          - authorization
+        headersToDownstreamOnDeny:
+          - set-cookie
+        includeRequestHeadersInCheck:
+          - cookie
+        includeAdditionalHeadersInCheck:
+          # Optional for oauth2-proxy to enforce https
+          # X-Auth-Request-Redirect: "https://%REQ(:authority)%%REQ(:path)%"
+          X-Forwarded-Host: "%REQ(:authority)%"
 {{- end -}}
 {{- end -}}
 

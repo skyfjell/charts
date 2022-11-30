@@ -4,7 +4,7 @@
   {{- if .Values.crdCheck }}
     {{- include "require.api.flux.helmRelease" . -}}
   {{- end }}
-{{ $name := list $parentComponent $component $ | include "platform-auth.format.name" }}
+{{ $name := list $parentComponent.name $component.name $ | include "platform-auth.format.name" }}
 {{ $repoName := list .Values.helmRepositories.bitnami.name $ | include "platform-auth.format.name" }}
 {{ $repoName := default $repoName $component.chart.sourceRef.name }}
 ---
@@ -15,7 +15,7 @@ metadata:
   namespace: {{ .Values.components.flux.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
-  targetNamespace: {{ .Values.components.keycloak.namespace }}
+  targetNamespace: {{ list $parentComponent.namespace . | include "platform-auth.format.name" }}
   chart:
     spec:
       chart: {{ $component.chart.name }}

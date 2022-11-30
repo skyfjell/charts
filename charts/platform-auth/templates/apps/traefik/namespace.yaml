@@ -1,4 +1,4 @@
-{{ $component := .Values.components.keycloak }}
+{{ $component := .Values.components.traefik }}
 
 {{- if $component.enabled -}}
 ---

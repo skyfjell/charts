@@ -145,6 +145,13 @@ components:
           source: {}
         # values override HelmRelease values
         values: {}
+        components:
+          externalAuth:
+            # Enable only after `platform-auth` installed and its traefik proxy is running
+            enabled: false
+            name: "platform-auth-proxy"
+            service: "platform-auth-proxy-traefik.platform-auth-proxy.svc.cluster.local"
+            port: 80
       # gateway istio chart release
       gateway:
         # create the base chart via HelmRelease. The base chart installs CRDs and RBAC

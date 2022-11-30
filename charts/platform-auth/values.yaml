@@ -94,7 +94,8 @@ components:
         selector: {}
   traefik:
     enabled: true
-    namespace: traefik
+    name: proxy
+    namespace: proxy
     chart:
       name: "traefik"
       version: 20.2.0

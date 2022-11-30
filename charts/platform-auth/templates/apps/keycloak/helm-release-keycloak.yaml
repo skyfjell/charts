@@ -15,7 +15,7 @@ metadata:
   namespace: {{ .Values.components.flux.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
-  targetNamespace: {{ $component.namespace }}
+  targetNamespace: {{ list $component.namespace . | include "platform-auth.format.name" }}
   {{- if $component.components.database.enabled }}
   dependsOn:
     - name: {{ $dbName }}

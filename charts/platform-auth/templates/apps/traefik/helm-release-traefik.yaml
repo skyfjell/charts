@@ -13,7 +13,7 @@ metadata:
   namespace: {{ .Values.components.flux.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
-  targetNamespace: {{ .Values.components.traefik.namespace }}
+  targetNamespace: {{ list .Values.components.traefik.namespace $ | include "platform-auth.format.name" }}
   chart:
     spec:
       chart: {{ .Values.components.traefik.chart.name }}
