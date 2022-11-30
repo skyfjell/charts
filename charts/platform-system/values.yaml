@@ -150,7 +150,7 @@ components:
             # Enable only after `platform-auth` installed and its traefik proxy is running
             enabled: false
             name: "platform-auth-proxy"
-            service: "platform-auth-proxy-traefik.platform-auth-proxy.svc.cluster.local"
+            service: "platform-auth-proxy.platform-auth-proxy.svc.cluster.local"
             port: 80
       # gateway istio chart release
       gateway:
