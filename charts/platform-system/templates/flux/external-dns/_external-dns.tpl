@@ -1,18 +1,28 @@
 {{- define "platform-system.components.external-dns.defaultValues" -}}
+{{- $ := . -}}
+{{- $global := $.global -}}
+{{- $component := $.Values.components.externalDns -}}
+
+{{- $anno := merge $global.annotations $component.annotations -}}
+{{- $nodeSel := merge $global.nodeSelector $component.nodeSelector -}}
+{{- $tol := default $global.tolerations $component.tolerations -}}
+
+fullnameOverride: {{ $component.name }}
+
 installCRDs: true
-{{- with ( include "platform-system.helper.annotations" (list "externalDns" $) ) }}
+{{- with $anno }}
 annotations:
   {{ . | indent 2}}
 {{- end }}
-{{- with ( include "platform-system.helper.tolerations" (list "externalDns" $) ) }}
+{{- with $tol }}
 tolerations:
   {{ . | indent 2}}
 {{- end }}
-{{- with ( include "platform-system.helper.nodeSelector" (list "externalDns" $) ) }}
+{{- with $nodeSel }}
 nodeSelector:
   {{ . | indent 2}}
 {{- end }}
-{{- with .Values.components.externalDns.serviceAccountAnnotations }}
+{{- with $component.serviceAccountAnnotations }}
 serviceAccount:
   annotations: {{- toYaml . | nindent 4 }}
 {{- end }}

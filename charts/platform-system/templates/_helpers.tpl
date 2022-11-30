@@ -6,7 +6,8 @@ Expand the name of the chart.
 {{- end }}
 
 {{- define "platform-system.format.name" -}}
-  {{- last . | include "platform-system.name" | prepend . | initial | include "skyfjell.common.format.name" -}}
+  {{- $ := last . -}}
+  {{- prepend . $.Values.prefix | initial | include "skyfjell.common.format.name" -}}
 {{- end }}
 
 {{/*
@@ -58,111 +59,15 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Create the name of the service account to use
 */}}
 {{- define "platform-system.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "platform-system.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{/* Set tolerations from global if available and if not set it from app values*/}}  
-{{/* ex: tolerations: {{ include "helper.tolerations" (dict "globalTolerations" .Values.global.tolerations "appTolerations" .Values.components.<app>.tolerations ) }} */}}
-{{- define "helper.tolerations" }}                                                   
-{{- if .appTolerations }}                                                            
-{{ toYaml .appTolerations }}                                              
-{{- else if .globalTolerations }}                                                    
-{{ toYaml .globalTolerations }}                                           
-{{- else }}                                                                          
-{{- "[]" }}                                                                          
-{{- end }}                                                                           
-{{- end }}                                                                           
-
-
-
-{{/*
-Sets annotations for app based on local and global annoations.
-Ex: {{ include "platform-system.helper.annotations" (list "kyverno" $)}}
-*/}}
-{{- define "platform-system.helper.annotations" }}
-{{- $path:= first .}}
-{{- $global := last . }}
-{{- $values := $global.Values }}
-{{- $appName :=  ((tpl (printf "{{ default dict ( $.Values.components.%s ).annotations | toYaml }}" $path) $global) | fromYaml) }}
-{{- with (default $values.global.annotations $appName ) }}
-{{ toYaml . }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Sets nodeSelector for app based on local and global nodeSelector.
-Ex: {{ include "platform-system.helper.nodeSelector" (list "kyverno" $)}}
-*/}}
-{{- define "platform-system.helper.nodeSelector" }}
-{{- $path := first .}}
-{{- $global := last . }}
-{{- $values := $global.Values }}
-{{- $appName :=  ((tpl (printf "{{ default dict ( $.Values.components.%s ).nodeSelector | toYaml }}" $path) $global) | fromYaml) }}
-{{- with (default $values.global.nodeSelector $appName ) }}
-{{ toYaml . }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Sets tolerations for app based on local and global tolerations.
-Because tolerations is an array object, we need to keep it as string.
-
-Ex: {{ include "platform-system.helper.tolerations" (list "kyverno" $)}}
-*/}}
-{{- define "platform-system.helper.tolerations" }}
-{{- $path:= first .}}
-{{- $global := last . }}
-{{- $values := $global.Values }}
-{{- $appName :=  ((tpl (printf "{{ default dict $.Values.components.%s | toYaml }}" $path) $global) | fromYaml) }}
-{{- with ( default $values.global.tolerations $appName.tolerations ) }}
-{{ toYaml . }}
-{{- end -}}
-{{- end -}}
-
-
-{{/* Set nodeSelector from global if available and if not set it from app values*/}} 
-{{/* ex: nodeSelector: {{ include "helper.nodeSelector" (dict "globalNodeSelector" .Values.global.nodeSelector "appNodeSelector" .Values.components.<app>.nodeSelector) }} */}}
-{{- define "helper.nodeSelector" }}                                                  
-{{- if .appNodeSelector }}                                                           
-{{ toYaml .appNodeSelector }}                                             
-{{- else if .globalNodeSelector }}                                                   
-{{ toYaml .globalNodeSelector }}                                          
-{{- else }}                                                                          
-{{- "{}" }}                                                                          
-{{- end }}                                                                           
-{{- end }}                                                                           
-
-{{/* Set annotations in subcharts from main chart */}}
-{{/* ex: annotations: {{ include "helper.appAnnotations" ("appAnnotations" .Values.components.<app>.appAnnotations) }} */}}
-{{- define "helper.appAnnotations" }}
-{{- if .appAnnotations }}
-{{ toYaml .appAnnotations }}
-{{- else }}
-{{- "{}" }}
-{{- end }}
+  {{- if .Values.serviceAccount.create }}
+  {{- default (include "platform-system.fullname" .) .Values.serviceAccount.name }}
+  {{- else }}
+  {{- default "default" .Values.serviceAccount.name }}
+  {{- end }}
 {{- end }}
 
-{{/* Set annotations in subcharts from main chart */}}
-{{/* ex: annotations: {{ include "helper.saAnnotations" ("saAnnotations" .Values.components.<app>.serviceAccountAnnotations) }} */}}
-{{- define "helper.saAnnotations" }}
-{{- if .saAnnotations }}
-{{ toYaml .saAnnotations }}
-{{- else }}
-{{- "{}" }}
+{{- define "platform-system.require.dependencies" -}}
+  {{- $ := . -}}
+  {{- $kyverno := $.Values.components.kyverno -}}
+- name: {{ list $kyverno.name $kyverno.components.policies.name $ | include "platform-system.format.name" }}
 {{- end }}
-{{- end }}
-
-{{/* Pass the storage class name through from main chart */}}
-{{/* ex: key: {{ include "helper.storageClassName" ("scname" .Values.components.<app>.storageClassName) }} */}}
-{{- define "helper.storageClassName" }}
-{{- if .scname }}
-{{- toYaml .scname -}}
-{{- else }}
-{{- "default" }}
-{{- end }}
-{{- end }}
-

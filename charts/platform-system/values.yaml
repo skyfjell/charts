@@ -1,4 +1,5 @@
-name: platform-system
+# Prefix Global/Shared Resources
+prefix: "system"
 # Supported Values: `flux`
 # TODO: Support `argo`
 solution:
@@ -6,312 +7,355 @@ solution:
   interval: 10m
   namespace: flux-system
 
-# Prefix for global resources. Defaults to `namespace` if unset.
-prefix: ""
-
 components:
   config:
+    # Toggle Component
     enabled: true
-    # Component release name. Will be prefixed by parent component(s)
+    # Component Release Name - Prefixed by parent component(s)
     name: config
     chart:
-      version: "0.0.3"
+      version: "0.0.1"
+      source:
+        kind: HelmRepository
+        name: ""
   certManager:
-    # enable this component
+    # Toggle Component
     enabled: true
-    # Component release name. Will be prefixed by parent component(s)
+    # Component Release Name - Prefixed by parent component(s)
     name: cert-manager
-    # istioEnabled for istio integrations
+    # Enable Istio CRDs/Injection
     istioEnabled: true
-    # namespace to be launched in
-    namespace: cert-manager
-    # version of the chart
-    version: "1.8.2"
+    # Namespace to Create/Install - Resolves to: `[prefix]-[namespace|name]`
+    namespace: ""
+    chart:
+      # version of the chart
+      version: "1.8.2"
+      source:
+        kind: HelmRepository
+        name: ""
     # webhook component securePort
     webhookSecurePort: 10260
-    # annotations on all components
-    annotations: {}
-    # annotations on service account
-    serviceAccountAnnotations: {}
-    # nodeSelector on all components
-    nodeSelector: {}
-    # tolerations on all components
-    tolerations: []
-    # affinity on all components
+    # Affinity - Deeper component values take precedence.
     affinity: {}
-    # values level overrides for helm chart
+    # Annotations - Deeper component values are merged.
+    annotations: {}
+    # Node Selector - Deeper component values take precedence.
+    nodeSelector: {}
+    # Tolerations - Deeper component values take precedence.
+    tolerations: []
+    serviceAccountAnnotations: {}
+    # Override Chart Values
     values: {}
   externalDns:
-    # enable this component
+    # Toggle Component
     enabled: true
     # Component release name. Will be prefixed by parent component(s)
     name: external-dns
-    # istioEnabled for istio integrations
+    # Enable Istio CRDs/Injection
     istioEnabled: true
-    # namespace to be launched in
+    # Namespace to Create/Install - Resolves to: `[prefix]-[namespace|name]`
     namespace: external-dns
-    # chart config for HelmReleases
+    # Chart/Source Configuration
     chart:
       # version of the chart
       version: "6.7.2"
       # source of the chart
       source:
         kind: HelmRepository
-        repository: platform-system-bitnami
-    # annotations on all components
-    annotations: {}
-    # annotations on service account
-    serviceAccountAnnotations: {}
-    # nodeSelector on all components
-    nodeSelector: {}
-    # tolerations on all components
-    tolerations: []
-    # affinity on all components
+        name: ""
+    # Affinity - Deeper component values take precedence.
     affinity: {}
-    # values level overrides for helm chart
+    # Annotations - Deeper component values are merged.
+    annotations: {}
+    # Node Selector - Deeper component values take precedence.
+    nodeSelector: {}
+    # Tolerations - Deeper component values take precedence.
+    tolerations: []
+    serviceAccountAnnotations: {}
+    # Override Chart Values
     values: {}
   istio:
-    # enable this component
+    # Toggle Component
     enabled: true
-    # Component release name. Will be prefixed by parent component(s)
+    # Component Release Name - Prefixed by parent component(s)
     name: istio
-    # namespace to target for all HelmReleases
-    namespace: istio-system
+    # Namespace to Create/Install - Resolves to: `[prefix]-[namespace|name]`
+    namespace: ""
     # mTLSMode options here are UNSET, DISABLE, PERMISSIVE, and STRICT
     mTLSMode: "STRICT"
-    # annotations for istio components
-    annotations: {}
-    # serviceAccountAnnotations for istio components
-    serviceAccountAnnotations: {}
-    # nodeSelector for istio components
-    nodeSelector: {}
-    # tolerations for istio components
-    tolerations: []
-    # affinity for istio components
+    # Affinity - Deeper component values take precedence.
     affinity: {}
-    # source of helm release
-    source:
-      enabled: true
-      # type: HelmRepository
-      # url: https://istio-release.storage.googleapis.com/charts
-    # chart config for HelmReleases
+    # Annotations - Deeper component values are merged.
+    annotations: {}
+    # Node Selector - Deeper component values take precedence.
+    nodeSelector: {}
+    # Tolerations - Deeper component values take precedence.
+    # Namespace to Create/Install    serviceAccountAnnotations: {}
+    # Chart/Source Configuration
     chart:
       # version for istio components. Istio keeps components in sync
-      version: "1.15.1"
+      version: "1.16.0"
       source:
         kind: HelmRepository
-        repository: platform-system-istio
+        name: ""
     # component of full istio install
     components:
-      # base istio chart release
+      # Istio Base
       base:
-        # create the base chart via HelmRelease. The base chart installs CRDs and RBAC
+        # Toggle Component
         enabled: true
-        # Component release name. Will be prefixed by parent component(s)
+        # Namespace to Create/Installfixed by parent component(s)
         name: base
-        # chart spec
+        # Chart/Source Configuration
         chart:
-          # name of chart
           name: base
-          # version of base, defaults to .Values.components.istio.chart.version
           version: ""
-          # source of helm release, defaults to .Values.components.istio.chart.source
-          # source:
-          #   kind: ""
-          #   repository: ""
           source: {}
-        # crds policies
+        # CRD Policy
         crds:
           install: Create
           update: CreateReplace
         # values override HelmRelease values
         values: {}
-      # istiod istio chart release
+      # Istio Discovery
       istiod:
-        # create the base chart via HelmRelease. The base chart installs CRDs and RBAC
+        # Toggle Component
         enabled: true
-        # Component release name. Will be prefixed by parent component(s)
+        # Component Release Name. Prefixed by parent component(s)
         name: istiod
-        # chart spec
+        components:
+          # TODO: Keep as a "component"?
+          externalAuth:
+            # Enable only after `platform-auth` installed and its traefik proxy is running
+            enabled: false
+            name: "platform-auth-proxy"
+            # TODO: Verify as output in `NOTES.txt` of `platform-auth` chart
+            service: "auth-proxy.traefik-proxy.svc.cluster.local"
+            port: 80
+        # Chart/Source Configuration
         chart:
-          # name of chart
           name: istiod
-          # version of base, defaults to .Values.components.istio.chart.version
+          # Defaults to Parent `version`
           version: ""
-          # source of helm release, defaults to .Values.components.istio.chart.source
+          # Defaults to Parent `source`
           # source:
           #   kind: ""
           #   repository: ""
           source: {}
-        # values override HelmRelease values
+        # Affinity - Deeper component values take precedence.
+        affinity: {}
+        # Annotations - Deeper component values are merged.
+        annotations: {}
+        # Node Selector - Deeper component values take precedence.
+        nodeSelector: {}
+        # Tolerations - Deeper component values take precedence.
+        tolerations: []
+        serviceAccountAnnotations: {}
+        # Override Chart Values
         values: {}
-      # gateway istio chart release
+      # Istio Gateway
       gateway:
-        # create the base chart via HelmRelease. The base chart installs CRDs and RBAC
-        enabled: true
-        # Component release name. Will be prefixed by parent component(s)
+        # Toggle Component
+        # WARNING: This is intentionally disabled. Override in values to create a gateway.
+        enabled: false
+        # Component Release Name. Prefixed by parent component(s)
         name: ingress
-        # chart spec
+        # Namespace to Create/Install - Resolves to: `[prefix]-[namespace|name]`
+        namespace: istio-gateway
+        # Chart/Source Configuration
         chart:
-          # name of chart
           name: gateway
-          # version of base, defaults to .Values.components.istio.chart.version
+          # Defaults to Parent `version`
           version: ""
-          # source of helm release, defaults to .Values.components.istio.chart.source
+          # Defaults to Parent `source`
           # source:
           #   kind: ""
           #   repository: ""
           source: {}
-        # values override HelmRelease values
+        # Affinity - Deeper component values take precedence.
+        affinity: {}
+        # Annotations - Deeper component values are merged.
+        annotations: {}
+        # Node Selector - Deeper component values take precedence.
+        nodeSelector: {}
+        # Tolerations - Deeper component values take precedence.
+        tolerations: []
+        serviceAccountAnnotations: {}
+        # Override Chart Values
         values: {}
   kyverno:
-    # enable this component
+    # Toggle Component
     enabled: true
-    # Component release name. Will be prefixed by parent component(s)
+    # Component Release Name. Prefixed by parent component(s)
     name: kyverno
-    # istioEnabled for istio integrations
+    # Enable Istio CRDs/Injection
     istioEnabled: true
-    # namespace to be launched in
-    namespace: kyverno
-    # chart config for HelmReleases
+    # Namespace to Create/Install - Resolves to: `[prefix]-[namespace|name]`
+    namespace: ""
+    # Chart/Source Configuration
     chart:
-      # version of the chart
       version: "2.5.1"
-      # source of the chart
       source:
         kind: HelmRepository
-        repository: platform-system-kyverno
-    # annotations on all components
-    annotations: {}
-    # serviceAccountAnnotations: annotations on service account
-    serviceAccountAnnotations: {}
-    # nodeSelector on all components
-    nodeSelector: {}
-    # tolerations on all components
-    tolerations: []
-    # affinity on all components
+        name: ""
+    # Affinity - Deeper component values take precedence.
     affinity: {}
-    # values level overrides for helm chart
-    values: {}
-  kyvernoPolicies:
-    # enable this component
-    enabled: true
-    # Component release name. Will be prefixed by parent component(s)
-    name: kyverno-policies
-    # istioEnabled for istio integrations
-    istioEnabled: true
-    # namespace to be launched in
-    namespace: kyverno
-    # chart config for HelmReleases
-    chart:
-      # version of the chart
-      version: "2.5.1"
-      # source of the chart
-      source:
-        kind: HelmRepository
-        repository: platform-system-kyverno
-    # podSecurityStandard for kyverno
-    podSecurityStandard: "baseline"
-    # values level overrides for helm chart
-    values: {}
-  minioOperator:
-    # enable this component
-    enabled: true
-    # Component release name. Will be prefixed by parent component(s)
-    name: minio-operator
-    # istioEnabled for istio integrations
-    istioEnabled: true
-    # namespace to be launched in
-    namespace: minio-operator
-    # chart config for HelmReleases
-    chart:
-      # version of the chart
-      version: "4.4.27"
-      # source of the chart
-      source:
-        kind: HelmRepository
-        repository: platform-system-minio
-    # annotations on all components
+    # Annotations - Deeper component values are merged.
     annotations: {}
-    # serviceAccountAnnotations: annotations on service account
-    serviceAccountAnnotations: {}
-    # nodeSelector on all components
+    # Node Selector - Deeper component values take precedence.
     nodeSelector: {}
-    # tolerations on all components
+    # Tolerations - Deeper component values take precedence.
     tolerations: []
-    # affinity on all components
-    affinity: {}
-    # values level overrides for helm chart
+    serviceAccountAnnotations: {}
+    # Override Chart Values
     values: {}
-  minioTenant:
-    # enable this component
+    components:
+      policies:
+        # Toggle Component
+        enabled: true
+        # Component release name. Will be prefixed by parent component(s)
+        name: policies
+        # Enable Istio CRDs/Injection
+        istioEnabled: true
+        # Chart/Source Configuration
+        chart:
+          version: "2.5.1"
+          source: {}
+        # Kyverno podSecurityStandard
+        podSecurityStandard: "baseline"
+        # Override Chart Values
+        values: {}
+  minio:
+    # Toggle Component
     enabled: true
-    # Component release name. Will be prefixed by parent component(s)
-    name: minio-tenant
-    # istioEnabled for istio integrations
+    # Component Release Name - Prefixed by parent component(s)
+    name: minio
+    # Enable Istio CRDs/Injection
     istioEnabled: true
-    # namespace to be launched in
-    namespace: minio-tenant
-    # chart config for HelmReleases
-    chart:
-      # version of the chart
-      version: "4.4.27"
-      # source of the chart
-      source:
-        kind: HelmRepository
-        repository: platform-system-minio
-    # storageClassName for minio instance
-    storageClassName: default
-    # annotations on all components
-    annotations: {}
-    # serviceAccountAnnotations: annotations on service account
-    serviceAccountAnnotations: {}
-    # nodeSelector on all components
-    nodeSelector: {}
-    # tolerations on all components
-    tolerations: []
-    # affinity on all components
-    affinity: {}
-    # values level overrides for helm chart
-    values: {}
-  vaultOperator:
-    # enable this component
+    # Namespace to Create/Install - Resolves to: `[prefix]-[namespace|name]`
+    namespace: ""
+    components:
+      operator:
+        # Toggle Component
+        enabled: true
+        # Component Release Name - Prefixed by parent component(s)
+        name: minio
+        # Chart/Source Configuration
+        chart:
+          version: "4.4.27"
+          source:
+            kind: HelmRepository
+            name: platform-system-minio
+        # Affinity - Deeper component values take precedence.
+        affinity: {}
+        # Annotations - Deeper component values are merged.
+        annotations: {}
+        # Node Selector - Deeper component values take precedence.
+        nodeSelector: {}
+        # Tolerations - Deeper component values take precedence.
+        tolerations: []
+        serviceAccountAnnotations: {}
+        # Override Chart Values
+        values: {}
+      tenant:
+        # Toggle Component
+        enabled: true
+        # Component Release Name - Prefixed by parent component(s)
+        name: minio-default
+        # Enable Istio CRDs/Injection
+        istioEnabled: true
+        # Namespace to Create/Install - Resolves to: `[prefix]-[namespace|name]`
+        namespace: ""
+        # Chart/Source Configuration
+        chart:
+          version: "4.4.27"
+          # source of the chart
+          source:
+            kind: HelmRepository
+            name: ""
+        # storageClassName for minio instance
+        storageClassName: default
+        # Affinity - Deeper component values take precedence.
+        affinity: {}
+        # Annotations - Deeper component values are merged.
+        annotations: {}
+        # Node Selector - Deeper component values take precedence.
+        nodeSelector: {}
+        # Tolerations - Deeper component values take precedence.
+        tolerations: []
+        serviceAccountAnnotations: {}
+        # Override Chart Values
+        values: {}
+  vault:
+    # Toggle Component
     enabled: true
-    # Component release name. Will be prefixed by parent component(s)
-    name: vault-operator
-    # istioEnabled for istio integrations
+    # Component Release Name - Prefixed by parent component(s)
+    name: vault
+    # Enable Istio CRDs/Injection
     istioEnabled: true
-    # namespace to be launched in
-    namespace: vault-operator
-    # chart config for HelmReleases
-    chart:
-      # version of the chart
-      version: "1.16.1"
-      # source of the chart
-      source:
-        kind: HelmRepository
-        repository: platform-system-banzaicloud
-    # annotations on all components
-    annotations: {}
-    # serviceAccountAnnotations: annotations on service account
-    serviceAccountAnnotations: {}
-    # nodeSelector on all components
-    nodeSelector: {}
-    # tolerations on all components
-    tolerations: []
-    # affinity on all components
-    affinity: {}
-    # values level overrides for helm chart
-    values: {}
+    # Namespace to Create/Install - Resolves to: `[prefix]-[namespace|name]`
+    namespace: ""
+    components:
+      operator:
+        # Toggle Component
+        enabled: true
+        name: operator
+        # Chart/Source Configuration
+        chart:
+          # version of the chart
+          version: "1.16.1"
+          # source of the chart
+          source:
+            kind: HelmRepository
+            name: ""
+        # Affinity - Deeper component values take precedence.
+        affinity: {}
+        # Annotations - Deeper component values are merged.
+        annotations: {}
+        # Node Selector - Deeper component values take precedence.
+        nodeSelector: {}
+        # Tolerations - Deeper component values take precedence.
+        tolerations: []
+        serviceAccountAnnotations: {}
+        # Override Chart Values
+        values: {}
 
-# Global Pod Assignment
+  helmRepositories:
+    components:
+      banzaicloud:
+        name: banzaicloud
+        url: https://kubernetes-charts.banzaicloud.com
+        enabled: true
+      bitnami:
+        name: bitnami
+        url: https://charts.bitnami.com/bitnami
+        enabled: true
+      istio:
+        name: istio
+        url: https://istio-release.storage.googleapis.com/charts
+        enabled: true
+      jetstack:
+        name: jetstack
+        url: https://charts.jetstack.io
+        enabled: true
+      kyverno:
+        name: kyverno
+        url: https://kyverno.github.io/kyverno
+        enabled: true
+      minio:
+        name: minio
+        url: https://operator.min.io
+        enabled: true
+      skyfjell:
+        name: skyfjell
+        url: https://charts.skyfjell.io
+        enabled: true
+
+# Global Values
 global:
   affinity: {}
+  annotations: {}
+  labels: {}
   istioEnabled: true
   nodeSelector: {}
   tolerations: []
-
-# Skyfjell Flux HelmRepository Reference
-helmRepository:
-  name: skyfjell
-  namespace: flux-system

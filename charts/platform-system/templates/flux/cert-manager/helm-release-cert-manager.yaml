@@ -1,26 +1,37 @@
-{{ if and .Values.components.certManager.enabled (eq .Values.solution.name "flux") }}
+{{- $component := .Values.components.certManager -}}
+{{- $solution := .Values.solution -}}
+
+{{- $istio := .Values.components.istio -}}
+
+{{- $repo := .Values.components.helmRepositories.components.jetstack -}}
+{{- $sourceName := list $repo.name $ | include "platform-system.format.name" -}}
+{{- $sourceName := default $sourceName $component.chart.source.name -}}
+
+{{- if and $component.enabled (eq $solution.name "flux") -}}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: cert-manager
-  namespace: {{ .Values.solution.namespace | quote }}
+  name: {{ list $component.name $ | include "platform-system.format.name" }}
+  namespace: {{ $solution.namespace | quote }}
 spec:
-  releaseName: cert-manager
+  releaseName: {{ list $component.name $ | include "platform-system.format.name" }}
   {{- if .Values.components.istio.enabled }}
   dependsOn:
-    - name: istio-base
+    {{- include "platform-system.require.dependencies" $ | nindent 4 }}
+    - name: {{ list $istio.name $istio.components.base.name $ | include "platform-system.format.name" }}
+      namespace: {{ $solution.namespace }}
   {{- end }}
-  targetNamespace: {{ .Values.components.certManager.namespace }}
+  targetNamespace: {{ list $component . | include "skyfjell.common.format.component.namespace" }}
   chart:
     spec:
       chart: cert-manager
-      version: {{ .Values.components.certManager.version }}
+      version: {{ $component.version }}
       sourceRef:
-        kind: HelmRepository
-        name: jetstack
-        namespace: {{ .Values.solution.namespace | quote }}
-  interval: {{ .Values.solution.interval }}
+        kind: {{ $component.chart.source.kind }}
+        name: {{ $sourceName }}
+        namespace: {{ $solution.namespace | quote }}
+  interval: {{ $solution.interval }}
   values:
-{{- $defaultValues := ( include "platform-system.components.cert-manager.defaultValues" $ | fromYaml ) }}
-{{ ( mergeOverwrite $defaultValues .Values.components.certManager.values ) | toYaml | indent 4 }}
-{{ end }}
+{{- $defaultValues := include "platform-system.components.cert-manager.defaultValues" $ | fromYaml -}}
+{{- mergeOverwrite $defaultValues $component.values | toYaml | nindent 4 -}}
+{{- end }}
