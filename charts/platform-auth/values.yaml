@@ -1,12 +1,8 @@
-# Default values for platform-auth.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+# Prefix Global/Shared Resources
+prefix: "auth"
 
-# crdCheck for installed CRDS
-crdCheck: true
-
-commonAnnotations: {}
-commonLabels: {}
+annotations: {}
+labels: {}
 nodeSelector: {}
 tolerations: []
 
@@ -22,12 +18,14 @@ components:
     # Enable Istio Resources
     enabled: true
     # Istio Namespace
-    namespace: "istio-system"
+    namespace: "system-istio"
     components:
       gateway:
-        # Existing gateway `app` label
-        name: platform-system-ingress
-        # selector for istio gateway
+        # Istio Ingress Gateway Namespace for Apps
+        namespace: system-istio-gateway
+        # For `app` label selector
+        name: ingress
+        # Selector - Defaults to `{ app: [name] }`
         selector: {}
 
   # cert-manager Configuration
@@ -37,12 +35,12 @@ components:
     # Certificate `issuerRef``
     issuerRef: {}
   keycloak:
-    # Enable/Install Keycloak
+    # Toggle Component
     enabled: true
     # Component release name. Will be prefixed by parent component(s)
     name: keycloak
     # Keycloak Namespace
-    namespace: keycloak
+    namespace: ""
     # Public hostname
     host: ""
     admin:
@@ -66,15 +64,14 @@ components:
     valuesOverride: {}
     components:
       database:
-        # enabled will launch a storage option managed by this chart. If you want to manage your own, set to false but
-        # still pass in auth params to set on the keycloak chart.
+        # Toggle Component
+        # Defaults to postgres instance. Set false and pass auth to keycloak if needed
         enabled: true
-        # Component release name. Will be prefixed by parent component(s)
+        # Component Release Name - Prefixed by parent component(s)
         name: db
-        # chart source of storage. Currently only bitnami postgresql or bitnami postgresql-ha are supported for easy config.
+        # Chart/Source Configuration
         chart:
           name: postgresql
-          # version can be set to null
           version: "12.1.2"
           sourceRef:
             # Defaults to `bitnami` repo if not set.
@@ -92,9 +89,12 @@ components:
       gateway:
         # selector for istio gateway
         selector: {}
-  traefik:
+  proxy:
+    # Toggle Component
     enabled: true
-    namespace: traefik
+    # Component release name. Will be prefixed by parent component(s)
+    name: proxy
+    namespace: ""
     chart:
       name: "traefik"
       version: 20.2.0
@@ -104,16 +104,20 @@ components:
         kind: HelmRepository
     valuesOverride: {}
 
-helmRepositories:
-  traefik:
-    name: traefik
-    url: https://traefik.github.io/charts
-    enabled: true
-  codecentric:
-    name: codecentric
-    url: https://codecentric.github.io/helm-charts
-    enabled: true
-  bitnami:
-    name: bitnami
-    url: https://charts.bitnami.com/bitnami
-    enabled: true
+  helmRepositories:
+    components:
+      traefik:
+        name: traefik
+        url: https://traefik.github.io/charts
+        enabled: true
+      codecentric:
+        name: codecentric
+        url: https://codecentric.github.io/helm-charts
+        enabled: true
+      bitnami:
+        name: bitnami
+        url: https://charts.bitnami.com/bitnami
+        enabled: true
+
+# Dev Configuration
+crdCheck: true

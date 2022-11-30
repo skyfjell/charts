@@ -1,10 +1,13 @@
-{{ $component := .Values.components.keycloak.components.database }}
-{{ $parentComponent := .Values.components.keycloak }}
-{{- if and $component.enabled $parentComponent.enabled }}
+{{- $parent := .Values.components.keycloak -}}
+{{- $component := $parent.components.database -}}
+
+{{- if and $component.enabled $parent.enabled -}}
 {{- include "require.api.flux.helmRelease" . -}}
-{{ $name := list $parentComponent $component $ | include "platform-auth.format.name" }}
-{{ $repoName := list .Values.helmRepositories.bitnami.name $ | include "platform-auth.format.name" }}
-{{ $repoName := default $repoName $component.chart.sourceRef.name }}
+
+{{- $name := list $parent.name $component.name $ | include "platform-auth.format.name" -}}
+
+{{- $repoName := list .Values.components.helmRepositories.components.bitnami.name $ | include "platform-auth.format.name" -}}
+{{- $repoName := default $repoName $component.chart.sourceRef.name -}}
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
@@ -13,7 +16,8 @@ metadata:
   namespace: {{ .Values.components.flux.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
-  targetNamespace: {{ .Values.components.keycloak.namespace }}
+  releaseName: {{ $name }}
+  targetNamespace: {{ list $parent $ | include "skyfjell.common.format.component.namespace" }}
   chart:
     spec:
       chart: {{ $component.chart.name }}

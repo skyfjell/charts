@@ -1,0 +1,39 @@
+{{- $component := .Values.components.keycloak -}}
+{{- $istio := .Values.components.istio -}}
+{{- $gateway := $istio.components.gateway -}}
+
+{{- if and $component.host $istio.enabled -}}
+  {{- if .Values.crdCheck -}}
+    {{- include "require.api.istio.authorization-policy" $ -}}
+  {{- end -}}
+
+{{ $namespace := list $component $ | include "skyfjell.common.format.component.namespace" }}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ list $gateway.namespace $gateway.name $namespace $component.name | include "skyfjell.common.format.name" }}
+  namespace: {{ $namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+    skyfjell.io/from-ns: {{ $gateway.namespace }}
+    skyfjell.io/from: {{ $gateway.name }}
+    skyfjell.io/to-ns: {{ $namespace }}
+    skyfjell.io/to: {{ $component.name }}
+spec:
+  action: ALLOW
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ $component.name }}
+      app: keycloakx
+  rules:
+    - from:
+        - source:
+            namespaces:
+              - {{ $gateway.namespace }}
+            principals:
+              - {{ printf "cluster.local/ns/%s/sa/%s" $gateway.namespace $gateway.name }}
+      to:
+        - operation:
+            hosts:
+              - {{ $component.host }}
+{{- end -}}
