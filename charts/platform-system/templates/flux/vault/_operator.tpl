@@ -1,7 +1,7 @@
-{{- define "platform-system.components.kyverno.defaultValues" -}}
+{{- define "platform-system.components.vault-operator.defaultValues" -}}
 {{- $ := . -}}
 {{- $global := $.global -}}
-{{- $component := $.Values.components.kyverno -}}
+{{- $component := $.Values.components.vault.components.operator -}}
 
 {{- $anno := merge $global.annotations $component.annotations -}}
 {{- $nodeSel := merge $global.nodeSelector $component.nodeSelector -}}
@@ -9,26 +9,20 @@
 
 fullnameOverride: {{ $component.name }}
 
-installCRDs: true
-
 {{- with $anno }}
-annotations:
-  {{ . | indent 2}}
+podAnnotations:
+  {{ . | indent 6}}
 {{- end }}
-
-{{- with $tol }}
-tolerations:
-  {{ . | indent 2}}
-{{- end }}
-
 {{- with $nodeSel }}
 nodeSelector:
-  {{ . | indent 2}}
+  {{ . | indent 6}}
 {{- end }}
-
+{{- with $tol }}
+tolerations:
+  {{ . | indent 6}}
+{{- end }}
 {{- with $component.serviceAccountAnnotations }}
 serviceAccount:
-  annotations: {{- toYaml . | nindent 4 }}
+  annotations: {{- toYaml . | nindent 8 }}
 {{- end }}
-
 {{- end -}}

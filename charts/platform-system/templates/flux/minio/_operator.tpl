@@ -1,14 +1,19 @@
 {{- define "platform-system.components.minio-operator.defaultValues" -}}
-{{- $anno := ( include "platform-system.helper.annotations" (list "minioOperator" $) ) }}
-{{- $sel := ( include "platform-system.helper.nodeSelector" (list "minioOperator" $) ) }}
-{{- $tol := ( include "platform-system.helper.tolerations" (list "minioOperator" $) ) }}
-{{- if or ( or $tol $sel ) $anno }}
+{{- $ := . -}}
+{{- $global := $.global -}}
+{{- $component := $.Values.components.minioOperator -}}
+
+{{- $anno := merge $global.annotations $component.annotations -}}
+{{- $nodeSel := merge $global.nodeSelector $component.nodeSelector -}}
+{{- $tol := default $global.tolerations $component.tolerations -}}
+
+{{- if or $tol $nodeSel $anno }}
 operator:
   {{- with $anno }}
   annotations:
     {{ . | indent 6}}
   {{- end }}
-  {{- with $sel }}
+  {{- with $nodeSel }}
   nodeSelector:
     {{ . | indent 6}}
   {{- end }}
@@ -21,7 +26,7 @@ console:
   annotations:
     {{ . | indent 6}}
   {{- end }}
-  {{- with $sel }}
+  {{- with $nodeSel }}
   nodeSelector:
     {{ . | indent 6}}
   {{- end }}

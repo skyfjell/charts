@@ -11,14 +11,14 @@
 {{- end -}}
 
 {{- define "platform-system.components.istio.components.base.defaultValues" -}}
-{{- $istioValues := .Values.components.istio }}
+{{- $parent := .Values.components.istio }}
 global:
-  istioNamespace: {{ $istioValues.namespace }}
+  istioNamespace: {{ list $parent $ | include "skyfjell.common.format.component.namespace" }}
 {{- end -}}
 
 {{- define "platform-system.components.istio.components.base.values" }}
 {{- $defaultValues := (include "platform-system.components.istio.components.base.defaultValues" $ | fromYaml ) }}
-{{- ( mergeOverwrite $defaultValues .Values.components.istio.components.base.values ) | toYaml }}
+{{- mergeOverwrite $defaultValues .Values.components.istio.components.base.values | toYaml }}
 {{- end -}}
 
 {{/*
@@ -26,26 +26,58 @@ global:
 */}}
 
 {{- define "platform-system.components.istio.components.istiod.defaultValues" -}}
-{{- $istioValues := .Values.components.istio }}
+{{- $ := . -}}
+{{- $global := $.global -}}
+{{- $parent := $.Values.components.istio -}}
+{{- $component := $parent.components.istiod -}}
+
+{{- $anno := merge $global.annotations $parent.annotations $component.annotations -}}
+{{- $nodeSel := default $global.nodeSelector $parent.nodeSelector $component.nodeSelector -}}
+{{- $tol := default $global.tolerations $parent.tolerations $component.tolerations -}}
+
 global:
-  istioNamespace: {{ $istioValues.namespace }}
-{{- $anno := ( include "platform-system.helper.annotations" ( list "istiod" $ ) ) }}
-{{- $tol := ( include "platform-system.helper.tolerations" ( list "istiod" $ ) ) }}
-{{- $sel := ( include "platform-system.helper.nodeSelector" ( list "istiod" $ ) ) }}
-{{- if or (or $anno $tol) $sel }}
+  istioNamespace: {{ list $parent $ | include "skyfjell.common.format.component.namespace" }}
+{{- if or $anno $nodeSel $tol }}
 pilot:
   {{- with $anno }}
   podAnnotations:
     {{ . | indent 4 }}
   {{- end }}
-  {{- with $sel }}
+  {{- with $nodeSel }}
   nodeSelector:
     {{ . | indent 4 }}
   {{- end }}
   {{- with $tol }}
   tolerations:
-    {{ . | indent 2 }}
+    {{ . | indent 4 }}
   {{- end }}
+{{- end }}
+meshConfig:
+  enablePrometheusMerge: true
+  enableTracing: true
+  defaultConfig:
+    proxyMetadata:
+      # Enable basic DNS proxying
+      ISTIO_META_DNS_CAPTURE: "true"
+      # Enable automatic address allocation
+      ISTIO_META_DNS_AUTO_ALLOCATE: "true"
+{{- $externalAuth := $component.components.externalAuth -}}
+{{- if $externalAuth.enabled }}
+  extensionProviders:
+    - name: {{ $externalAuth.name }}
+      envoyExtAuthzHttp:
+        service: {{ $externalAuth.service }}
+        port: {{ $externalAuth.port }}
+        headersToUpstreamOnAllow:
+          - authorization
+        headersToDownstreamOnDeny:
+          - set-cookie
+        includeRequestHeadersInCheck:
+          - cookie
+        includeAdditionalHeadersInCheck:
+          # Optional for oauth2-proxy to enforce https
+          # X-Auth-Request-Redirect: "https://%REQ(:authority)%%REQ(:path)%"
+          X-Forwarded-Host: "%REQ(:authority)%"
 {{- end -}}
 {{- end -}}
 
@@ -55,7 +87,7 @@ pilot:
 
 {{- define "platform-system.components.istio.components.istiod.values" }}
 {{- $defaultValues := (include "platform-system.components.istio.components.istiod.defaultValues" $ | fromYaml ) }}
-{{- ( mergeOverwrite $defaultValues .Values.components.istio.components.istiod.values ) | toYaml }}
+{{- mergeOverwrite $defaultValues .Values.components.istio.components.istiod.values | toYaml }}
 {{- end -}}
 
 {{/*
@@ -67,13 +99,18 @@ pilot:
 {{- end -}}
 
 {{- define "platform-system.components.istio.components.gateway.defaultValues" -}}
-{{ $parent := .Values.components.istio }}
-{{ $component := $parent.components.gateway }}
-name: {{ list $component.name $ | include "platform-system.format.name" }}
+{{- $ := . -}}
+{{- $global := $.global -}}
+{{- $parent := $.Values.components.istio -}}
+{{- $component := $parent.components.gateway -}}
 
-{{- $tol := ( include "platform-system.helper.tolerations" ( list "istioGateway" $ ) ) }}
-{{- $sel := ( include "platform-system.helper.nodeSelector" ( list "istioGateway" $ ) ) }}
-{{- with $sel }}
+{{- $anno := merge $global.annotations $parent.annotations $component.annotations -}}
+{{- $nodeSel := merge $global.nodeSelector $parent.nodeSelector $component.nodeSelector -}}
+{{- $tol := default $global.tolerations $parent.tolerations $component.tolerations -}}
+
+name: {{ $component.name }}
+
+{{- with $nodeSel }}
 nodeSelector:
   {{ . | indent 2 }}
 {{- end }}
@@ -86,5 +123,5 @@ tolerations:
 
 {{- define "platform-system.components.istio.components.gateway.values" }}
 {{- $defaultValues := (include "platform-system.components.istio.components.gateway.defaultValues" $ | fromYaml ) }}
-{{- ( mergeOverwrite $defaultValues .Values.components.istio.components.gateway.values ) | toYaml }}
+{{- mergeOverwrite $defaultValues .Values.components.istio.components.gateway.values | toYaml }}
 {{- end -}}

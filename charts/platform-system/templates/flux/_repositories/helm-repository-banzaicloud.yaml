@@ -1,10 +1,12 @@
-{{ if and .Values.components.vaultOperator.enabled (eq .Values.solution.name "flux") }}
+{{- $component := .Values.components.helmRepositories.components.banzaicloud -}}
+
+{{- if and $component.enabled .Values.components.vault.components.operator.enabled (eq .Values.solution.name "flux") -}}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: platform-system-banzaicloud
+  name: {{ list $component.name $ | include "platform-system.format.name" }}
   namespace: {{ .Values.solution.namespace | quote }}
 spec:
-  url: https://kubernetes-charts.banzaicloud.com
-  interval: 10m
-{{ end }}
+  url: {{ $component.url }}
+  interval: {{ default .Values.solution.interval $component.interval }}
+{{- end }}

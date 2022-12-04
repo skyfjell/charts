@@ -1,6 +1,6 @@
-{{- $component := .Values.components.helmRepositories.components.minio -}}
+{{- $component := .Values.components.helmRepositories.components.skyfjell -}}
 
-{{- if and $component.enabled .Values.components.minio.components.operator.enabled (eq .Values.solution.name "flux") -}}
+{{- if and $component.enabled (eq .Values.solution.name "flux") -}}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:

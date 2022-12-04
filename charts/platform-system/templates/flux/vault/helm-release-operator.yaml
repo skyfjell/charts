@@ -1,7 +1,8 @@
-{{ $component := .Values.components.externalDns }}
+{{ $parent := .Values.components.vault }}
+{{ $component := $parent.components.operator }}
 {{ $solution := .Values.solution }}
 
-{{- $repo := .Values.components.helmRepositories.components.bitnami -}}
+{{- $repo := .Values.components.helmRepositories.components.banzaicloud -}}
 {{- $sourceName := list $repo.name $ | include "platform-system.format.name" -}}
 {{- $sourceName := default $sourceName $component.chart.source.name -}}
 
@@ -12,13 +13,13 @@ metadata:
   name: {{ list $component.name $ | include "platform-system.format.name" }}
   namespace: {{ $solution.namespace | quote }}
 spec:
-  releaseName: {{ list $component.name $ | include "platform-system.format.name" }}
-  targetNamespace: {{ list $component . | include "skyfjell.common.format.component.namespace" }}
+  releaseName: {{ $component.name }}
+  targetNamespace: {{ list $parent . | include "skyfjell.common.format.component.namespace" }}
   dependsOn:
     {{- include "platform-system.require.dependencies" $ | nindent 4 }}
   chart:
     spec:
-      chart: external-dns
+      chart: vault-operator
       version: {{ $component.chart.version }}
       sourceRef:
         kind: {{ $component.chart.source.kind }}
@@ -26,8 +27,6 @@ spec:
         namespace: {{ $solution.namespace | quote }}
   interval: {{ $solution.interval }}
   values:
-{{- $defaultValues := ( include "platform-system.components.external-dns.defaultValues" $ | fromYaml ) }}
+{{- $defaultValues := include "platform-system.components.vault-operator.defaultValues" $ | fromYaml }}
 {{ mergeOverwrite $defaultValues $component.values | toYaml | indent 4 }}
 {{ end }}
-
-

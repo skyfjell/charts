@@ -1,26 +1,32 @@
 {{- define "platform-system.components.minio-tenant.defaultValues" -}}
-{{- $anno := ( include "platform-system.helper.annotations" (list "minioTenant" $) ) }}
-{{- $sel := ( include "platform-system.helper.nodeSelector" (list "minioTenant" $) ) }}
-{{- $tol := ( include "platform-system.helper.tolerations" (list "minioTenant" $) ) }}
+{{- $ := . -}}
+{{- $global := $.global -}}
+{{- $parent := $.Values.components.minioOperator -}}
+{{- $component := $parent.components.tenant -}}
+
+{{- $anno := merge $global.annotations $component.annotations -}}
+{{- $nodeSel := merge $global.nodeSelector $component.nodeSelector -}}
+{{- $tol := default $global.tolerations $component.tolerations -}}
+
 tenant:
   pools:
-    - storageClassName: {{ default "default" .Values.components.minioTenant.storageClassName }}
+    - storageClassName: {{ default "default" $component.storageClassName }}
       {{- with $anno }}
       annotations: {{- . | nindent 10 }}
       {{- end }}
-      {{- with $sel }}
+      {{- with $nodeSel }}
       nodeSelector: {{- . | nindent 10}}
       {{- end }}
       {{- with $tol }}
       tolerations: {{- . | nindent 10}}
       {{- end }}
   prometheus:
-    storageClassName: {{ default "default" .Values.components.minioTenant.storageClassName }}
+    storageClassName: {{ default "default" $component.storageClassName }}
     {{- with $anno }}
     annotations:
       {{ . | indent 8}}
     {{- end }}
-    {{- with $sel }}
+    {{- with $nodeSel }}
     nodeSelector:
       {{ . | indent 6}}
     {{- end }}
@@ -32,7 +38,7 @@ tenant:
     annotations:
       {{ . | indent 8}}
     {{- end }}
-    {{- with $sel }}
+    {{- with $nodeSel }}
     nodeSelector:
       {{ . | indent 8}}
     {{- end }}
@@ -40,12 +46,12 @@ tenant:
     tolerations: {{- . | nindent 8 }}
     {{- end }}
     db:
-      storageClassName: {{ default "default" .Values.components.minioTenant.storageClassName }}
+      storageClassName: {{ default "default" $component.storageClassName }}
       {{- with $anno }}
       annotations:
         {{ . | indent 10}}
       {{- end }}
-      {{- with $sel }}
+      {{- with $nodeSel }}
       nodeSelector:
         {{ . | indent 10}}
       {{- end }}

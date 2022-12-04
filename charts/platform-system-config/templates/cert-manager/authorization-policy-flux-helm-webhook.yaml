@@ -1,15 +1,16 @@
-{{ if and .Values.components.istio.enabled .Values.components.certManager.enabled (eq .Values.solution.name "flux") -}}
+{{- $component := .Values.components.certManager -}}
+{{ if and .Values.components.istio.enabled $component.enabled (eq .Values.solution.name "flux") -}}
 {{ include "require.api.istio.authorization-policy" . }}
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: platform-system-flux-helm-webhook
-  namespace: {{ .Values.components.certManager.namespace }}
+  namespace: {{ list $component $ | include "skyfjell.common.format.component.namespace" }}
 spec:
   action: ALLOW
   selector:
     matchLabels:
-      app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/instance: {{ list .Values.prefix $component.name | include "skyfjell.common.format.name" }}
       app.kubernetes.io/component: webhook
   rules:
     - to:
