@@ -193,6 +193,19 @@ entries:
     version: 0.0.1
   platform-system-config:
   - apiVersion: v2
+    created: "2022-12-04T02:32:15.332770707Z"
+    dependencies:
+    - name: common
+      repository: '@skyfjell'
+      version: 0.0.x
+    description: Platform System Configuration Chart
+    digest: 7603da8c4a0b89bd5c0433a53634a586333c499ea3d457762fbadb212124662e
+    name: platform-system-config
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-system-config-0.0.2/platform-system-config-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
     created: "2022-11-16T00:32:59.714071882Z"
     dependencies:
     - name: common
@@ -316,4 +329,4 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/skyfjell-common-0.0.1/skyfjell-common-0.0.1.tgz
     version: 0.0.1
-generated: "2022-12-04T02:29:04.430250571Z"
+generated: "2022-12-04T02:32:15.332826308Z"
