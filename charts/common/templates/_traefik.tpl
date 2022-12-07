@@ -4,9 +4,7 @@
 
 {{/* Error message */}}
 {{ define "errorMessage.traefik" }}
-  {{ if .Values.crdCheck }}
     {{ fail ( printf "Chart require %s to be present. See https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart for more info." . ) }}
-  {{ end }}
 {{ end }}
 {{/*
   Checks generally if API version for traefik is installed. Currently only checking require CRDs.

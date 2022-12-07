@@ -16,7 +16,9 @@
       {{- $_ := set $flag "flag" "true" }}
     {{- end }}
   {{- end }}
+  {{- if or (not (hasKey $global.Values "crdCheck")) (get $global.Values "crdCheck") -}}
   {{- if not ( eq ( get $flag "flag" ) "true" ) }}
    {{- include $tpl (printf "kind of '%s' from '%s'" $kind $api ) -}}
+  {{- end }}
   {{- end }}
 {{- end -}}
