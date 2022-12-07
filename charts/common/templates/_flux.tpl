@@ -4,24 +4,26 @@
 
 {{/* Error message */}}
 {{ define "errorMessage.flux" }}
-{{ fail ( printf "Chart require %s to be present. See https://fluxcd.io/flux/installation for more info." . ) }}
-{{end}}
+  {{ if .Values.crdCheck }}
+    {{ fail ( printf "Chart require %s to be present. See https://fluxcd.io/flux/installation for more info." . ) }}
+  {{ end }}
+{{ end }}
 
 {{/*
   Checks generally if API version for flux is installed. Currently only checking require CRDs.
 */}}
 {{ define "require.api.flux.helmRelease" }}
   {{ include "require.api.flux.base" ( list "helm.toolkit.fluxcd.io" "HelmRelease" $ ) }}
-{{end}}
+{{ end }}
 
 {{ define "require.api.flux.kustomize" }}
   {{ include "require.api.flux.base" ( list "kustomize.toolkit.fluxcd.io" "Kustomization" $ ) }}
-{{end}}
+{{ end }}
 
 {{ define "require.api.flux.source" }}
   {{ include "require.api.flux.base" ( list "source.toolkit.fluxcd.io" "HelmRepository" $ ) }}
   {{ include "require.api.flux.base" ( list "source.toolkit.fluxcd.io" "GitRepository" $ ) }}
-{{end}}
+{{ end }}
 
 {{ define "require.api.flux.all" }}
   {{ include "require.api.flux.helmRelease" . }}

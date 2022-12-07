@@ -4,7 +4,9 @@
 
 {{/* Error message */}}
 {{ define "errorMessage.istio" }}
-{{ fail ( printf "Chart require %s to be present. See https://istio.io/latest/docs/setup/install for more info." . ) }}
+  {{ if .Values.crdCheck}}
+    {{ fail ( printf "Chart require %s to be present. See https://istio.io/latest/docs/setup/install for more info." . ) }} 
+  {{ end }}
 {{ end }}
 
 {{/*

@@ -4,15 +4,16 @@
 
 {{/* Error message */}}
 {{ define "errorMessage.traefik" }}
-{{ fail ( printf "Chart require %s to be present. See https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart for more info." . ) }}
-{{end}}
-
+  {{ if .Values.crdCheck }}
+    {{ fail ( printf "Chart require %s to be present. See https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart for more info." . ) }}
+  {{ end }}
+{{ end }}
 {{/*
   Checks generally if API version for traefik is installed. Currently only checking require CRDs.
 */}}
 {{ define "require.api.traefik.ingressRoute" }}
   {{ include "require.api.traefik.base" ( list "traefik.containo.us" "IngressRoute" $ ) }}
-{{end}}
+{{ end }}
 
 
 {{ define "require.api.traefik.all" }}

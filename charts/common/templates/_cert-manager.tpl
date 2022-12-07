@@ -4,7 +4,9 @@
 
 {{/* Error message */}}
 {{ define "errorMessage.certManager" }}
-{{ fail ( printf "Chart require %s to be present. See https://cert-manager.io/docs/installation for more info." . ) }}
+  {{ if .Values.crdCheck }}
+    {{ fail ( printf "Chart require %s to be present. See https://cert-manager.io/docs/installation for more info." . ) }}
+  {{ end }}
 {{ end }}
 
 {{/*
