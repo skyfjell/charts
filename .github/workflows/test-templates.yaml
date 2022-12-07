@@ -19,7 +19,7 @@ jobs:
       - name: Iterate over Charts
         env:
           # csv
-          IGNORE_FOLDERS: "null,common,platform-system-config,platform-factory"
+          IGNORE_FOLDERS: "common,platform-system-config"
         run: |
           set -f
           ignores=(${IGNORE_FOLDERS//,/ })
