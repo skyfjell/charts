@@ -4,9 +4,7 @@
 
 {{/* Error message */}}
 {{ define "errorMessage.flux" }}
-  {{ if .Values.crdCheck }}
-    {{ fail ( printf "Chart require %s to be present. See https://fluxcd.io/flux/installation for more info." . ) }}
-  {{ end }}
+  {{ fail ( printf "Chart require %s to be present. See https://fluxcd.io/flux/installation for more info." . ) }}
 {{ end }}
 
 {{/*

@@ -1,0 +1,14 @@
+global:
+  tolerations:
+    - key: values
+  nodeSelector:
+    "skyfjell.io/node-selector": "platform-system"
+components:
+  istio:
+    components:
+      istiod:
+        components:
+          externalAuth:
+            enabled: true
+      gateway:
+        enabled: true

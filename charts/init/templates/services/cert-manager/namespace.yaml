@@ -1,7 +1,0 @@
-{{- if .Values.services.certManager.enabled }}
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: cert-manager
-  labels: {{- include "chart.labels" . | nindent 4}}
-{{- end }}
