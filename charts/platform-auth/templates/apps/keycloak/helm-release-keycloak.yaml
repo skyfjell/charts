@@ -1,8 +1,6 @@
 {{ $component := .Values.components.keycloak }}
 {{- if and $component.enabled  }}
-{{- if .Values.crdCheck }}
-  {{- include "require.api.flux.helmRelease" . -}}
-{{- end -}}
+{{- include "require.api.flux.helmRelease" . -}}
 {{ $name := list $component.name $ | include "platform-auth.format.name" }}
 {{ $dbName := list $component.name $component.components.database.name $ | include "platform-auth.format.name" }}
 {{ $repoName := list .Values.helmRepositories.codecentric.name $ | include "platform-auth.format.name" }}

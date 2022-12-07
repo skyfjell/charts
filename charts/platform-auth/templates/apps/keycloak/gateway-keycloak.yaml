@@ -2,9 +2,7 @@
 {{ $istio := .Values.components.istio }}
 
 {{- if and $component.host $istio.enabled -}}
-  {{- if .Values.crdCheck }}
-    {{- include "require.api.istio.gateway" $ -}}
-  {{- end }}
+{{- include "require.api.istio.gateway" $ -}}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway

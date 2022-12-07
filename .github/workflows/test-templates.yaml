@@ -29,11 +29,7 @@ jobs:
         run: |
           helm repo add skyfjell https://charts.skyfjell.io
           helm dependency update
-      - name: Test ${{ matrix.chartName }} Defaults
-        working-directory: ${{ matrix.workingDirectory }}
-        run: |
-          helm template --dry-run --debug test-auth . --set crdCheck=false
       - name: Test ${{ matrix.chartName }} Examples
         working-directory: ${{ matrix.workingDirectory }}
         run: |
-          helm template --dry-run --debug test-auth . --set crdCheck=false -f examples/values.yaml
+          helm template --dry-run --debug test . --set common.crdCheck=false -f examples/values.test.yaml

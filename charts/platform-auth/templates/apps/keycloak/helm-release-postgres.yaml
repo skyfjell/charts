@@ -1,9 +1,7 @@
 {{ $component := .Values.components.keycloak.components.database }}
 {{ $parentComponent := .Values.components.keycloak }}
 {{- if and $component.enabled $parentComponent.enabled }}
-  {{- if .Values.crdCheck }}
-    {{- include "require.api.flux.helmRelease" . -}}
-  {{- end }}
+{{- include "require.api.flux.helmRelease" . -}}
 {{ $name := list $parentComponent $component $ | include "platform-auth.format.name" }}
 {{ $repoName := list .Values.helmRepositories.bitnami.name $ | include "platform-auth.format.name" }}
 {{ $repoName := default $repoName $component.chart.sourceRef.name }}

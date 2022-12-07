@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # crdCheck for installed CRDS
-crdCheck: true
+crdCheck: false
 
 commonAnnotations: {}
 commonLabels: {}
