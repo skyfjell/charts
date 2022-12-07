@@ -1,0 +1,18 @@
+components:
+  # istioProxyQuit handles the kyverno policies for attaching an additional container
+  # on job pods to kill the istio side car.
+  # see https://github.com/skyfjell/istio-proxy-quit
+  istioProxyQuit:
+    # enabled flag for installing this component
+    enabled: true
+    name: istio-proxy-quit
+    image:
+      registry: ghcr.io/skyfjell
+      repository: istio-proxy-quit
+      tag: 0.0.1
+      pullPolicy: IfNotPresent
+    sleepInterval: "5s"
+    env: []
+  kyverno:
+    namespace: kyverno
+    serviceAccountName: ""
