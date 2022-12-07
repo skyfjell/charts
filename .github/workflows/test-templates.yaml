@@ -5,8 +5,29 @@ on:
     branches: [main]
 
 jobs:
-  test-charts:
+  list-manifests:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - id: set-matrix
+        env:
+          # csv
+          IGNORE_FOLDERS: |
+            common
+            platform-system-config
+        run: |
+          array1=$(echo $IGNORE_FOLDERS | jq -R -s 'split("\n") -[""]')
+          array2=$(ls | jq -R -s 'split("\n") -[""]')
+          array_diff=$(jq -n --argjson array1 "$array1" --argjson array2 "$array2" 
+          '{"all": $array2,"some":$array1} | .all-.some' )
+          echo "CHARTS=$array_diff" >> $GITHUB_OUTPUT
+  test-charts:
+    needs: list-manifests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        manifest: ${{ fromJson(needs.list-manifests.outputs.CHARTS) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -16,25 +37,12 @@ jobs:
         uses: azure/setup-helm@v3
         with:
           version: v3.8.1
-      - name: Iterate over Charts
-        env:
-          # csv
-          IGNORE_FOLDERS: "common,platform-system-config"
+      - name: Setup Deps
+        working-directory: ${{ matrix.manifest }}
         run: |
-          set -f
-          ignores=(${IGNORE_FOLDERS//,/ })
-
-          for i in $(ls charts);
-          do
-            if [[ " ${ignores[*]} " =~ " ${i} " ]];
-            then
-              echo "::notice title=Ignore:: Skipping $i chart"
-            else
-                cd charts/$i
-                helm repo add skyfjell https://charts.skyfjell.io
-                helm dependency update
-                echo "Testing $i chart"
-                helm template --dry-run --debug test . --set crdCheck=false -f examples/values.test.yaml
-                cd ../..
-            fi
-          done
+          helm repo add skyfjell https://charts.skyfjell.io
+          helm dependency update
+      - name: Test ${{ matrix.manifest }} Examples
+        working-directory: ${{ matrix.manifest }}
+        run: |
+          helm template --dry-run --debug test-auth . --set crdCheck=false -f examples/values.yaml
