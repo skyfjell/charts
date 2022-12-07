@@ -16,7 +16,7 @@ jobs:
             common
             platform-system-config
         run: |
-          array1=$(echo $IGNORE_FOLDERS | jq -R -s 'split("\n") -[""]')
+          array1=$(echo $IGNORE_FOLDERS | jq -R -s 'split(" ") -[""]')
           array2=$(ls | jq -R -s 'split("\n") -[""]')
           array_diff=$(jq -n --argjson array1 "$array1" --argjson array2 "$array2" '{"all": $array2,"some":$array1} | .all-.some' )
           echo "CHARTS=$array_diff" >> $GITHUB_OUTPUT
