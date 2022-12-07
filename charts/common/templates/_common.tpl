@@ -4,6 +4,4 @@ skyfjell.io/version: {{ .Chart.Version }}
 {{- end -}}
 
 
-{{- define "skyfjell.common.literal" -}}
-{{ "{{ " }}{{ . }}{{ " }}" }}
-{{- end -}}
+
