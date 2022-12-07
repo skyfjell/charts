@@ -4,9 +4,7 @@
 
 {{/* Error message */}}
 {{ define "errorMessage.kyverno" }}
-  {{ if .Values.crdCheck }}
     {{ fail ( printf "Chart require %s to be present. See https://kyverno.io/docs/installation for more info." . ) }}
-  {{ end }}
 {{ end }}
 
 {{/*
