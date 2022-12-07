@@ -7,14 +7,6 @@ on:
 jobs:
   test-charts:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        include:
-          - workingDirectory: charts/platform-auth
-            chartName: Platform-Auth
-          - workingDirectory: charts/platform-system
-            chartName: Platform-System
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -24,12 +16,25 @@ jobs:
         uses: azure/setup-helm@v3
         with:
           version: v3.8.1
-      - name: Setup Deps
-        working-directory: ${{ matrix.workingDirectory }}
+      - name: Iterate over Charts
+        env:
+          # csv
+          IGNORE_FOLDERS: "null,common,platform-system-config,platform-factory"
         run: |
-          helm repo add skyfjell https://charts.skyfjell.io
-          helm dependency update
-      - name: Test ${{ matrix.chartName }} Examples
-        working-directory: ${{ matrix.workingDirectory }}
-        run: |
-          helm template --dry-run --debug test . --set common.crdCheck=false -f examples/values.test.yaml
+          set -f
+          ignores=(${IGNORE_FOLDERS//,/ })
+
+          for i in $(ls charts);
+          do
+            if [[ " ${ignores[*]} " =~ " ${i} " ]];
+            then
+              echo "::notice title=Ignore:: Skipping $i chart"
+            else
+                cd charts/$i
+                helm repo add skyfjell https://charts.skyfjell.io
+                helm dependency update
+                echo "Testing $i chart"
+                helm template --dry-run --debug test . --set crdCheck=false -f examples/values.test.yaml
+                cd ../..
+            fi
+          done
