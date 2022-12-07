@@ -7,3 +7,7 @@
   {{- $component := first . -}}
   {{- default $component.name $component.namespace | list $.Values.prefix | include "skyfjell.common.format.name" -}}
 {{- end -}}
+
+{{- define "skyfjell.common.format.literal" -}}
+{{ "{{ " }}{{ . }}{{ " }}" }}
+{{- end -}}
