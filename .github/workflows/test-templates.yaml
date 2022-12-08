@@ -45,4 +45,4 @@ jobs:
       - name: Test ${{ matrix.manifest }} Examples
         working-directory: charts/${{ matrix.manifest }}
         run: |
-          helm template --dry-run --debug test-auth . --set crdCheck=false -f examples/values.yaml
+          helm template --dry-run --debug test . --set crdCheck=false -f examples/values.test.yaml
