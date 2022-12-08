@@ -1,8 +1,6 @@
 {{- if and .Values.components.keycloak.host .Values.components.istio.enabled -}}
 {{ $component := .Values.components.keycloak }}
-  {{- if .Values.crdCheck }}
-    {{- include "require.api.istio.vs" $ -}}
-  {{- end }}
+{{- include "require.api.istio.vs" $ -}}
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
