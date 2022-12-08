@@ -1,4 +1,3 @@
-crdCheck: false
 components:
   certManager:
     issuerRef:

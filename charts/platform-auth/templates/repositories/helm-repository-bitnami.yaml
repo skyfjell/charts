@@ -9,9 +9,7 @@
 }}
 
 {{- if $enabled -}}
-  {{- if .Values.crdCheck }}
-    {{- include "require.api.flux.source" . -}}
-  {{- end -}}
+{{- include "require.api.flux.source" . -}}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:

@@ -1,8 +1,6 @@
 {{- if and .Values.components.keycloak.url .Values.components.certManager.enabled -}}
 {{ $component := .Values.components.keycloak }}
-  {{- if .Values.crdCheck }}
-    {{- include "require.api.certManager.certificate" $ -}}
-  {{- end }}
+{{- include "require.api.certManager.certificate" $ -}}
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate

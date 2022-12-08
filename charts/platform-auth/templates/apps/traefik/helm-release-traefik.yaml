@@ -1,8 +1,6 @@
 {{ $component := .Values.components.traefik }}
 {{- if $component.enabled }}
-  {{- if .Values.crdCheck }}
-    {{- include "require.api.flux.helmRelease" . -}}
-  {{- end }}
+{{- include "require.api.flux.helmRelease" $ -}}
 {{ $repoName := list .Values.helmRepositories.traefik.name $ | include "platform-auth.format.name" }}
 {{ $repoName := default $repoName $component.chart.sourceRef.name }}
 ---

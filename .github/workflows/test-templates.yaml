@@ -1,0 +1,48 @@
+name: Test Charts
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  list-manifests:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.CHARTS }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: set-matrix
+        env:
+          IGNORE_FOLDERS: |
+            common
+            platform-system-config
+        run: |
+          ignores=$(echo $IGNORE_FOLDERS | tr -d '\n' | jq -c  -R -s 'split(" ") -[""]')
+          charts=$(ls charts | jq -c -e -R -s 'split("\n") -[""]')
+          array_diff=$(jq -c -n --argjson array1 "$ignores" --argjson array2 "$charts" '{"all": $array2,"some":$array1} | .all-.some' )
+          echo "CHARTS=$array_diff" >> $GITHUB_OUTPUT
+  test-charts:
+    needs: list-manifests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        manifest: ${{ fromJson(needs.list-manifests.outputs.matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.8.1
+      - name: Setup Deps ${{ matrix.manifest }}
+        working-directory: charts/${{ matrix.manifest }}
+        run: |
+          helm repo add skyfjell https://charts.skyfjell.io
+          helm dependency update
+      - name: Test ${{ matrix.manifest }} Examples
+        working-directory: charts/${{ matrix.manifest }}
+        run: |
+          helm template --dry-run --debug test . --set crdCheck=false -f examples/values.test.yaml
