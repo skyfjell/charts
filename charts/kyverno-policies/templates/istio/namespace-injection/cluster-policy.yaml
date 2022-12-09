@@ -1,0 +1,43 @@
+{{- $parent := .Values.components.istio -}}
+{{- $component := $parent.components.namespaceInjection -}}
+{{- $name := list $parent.name $component.name $ | include "kyverno-policies.format.name" -}}
+{{- if $component.enabled -}}
+{{- include "require.api.kyverno.clusterPolicy" $ -}}
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: {{ $name }}
+  annotations:
+    policies.kyverno.io/title: Add Istio Sidecar Injection
+    policies.kyverno.io/category: Istio
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/minversion: 1.6.0
+    policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/description: >-
+      Enforce `istio-injection: enabled` on all namespaces.
+      {{- if $component.allowDisable }}
+      Optionally allowing explicit disable.
+      {{- end }}
+spec:
+  rules:
+  - name: add-istio-injection-enabled
+    match:
+      any:
+      - resources:
+          kinds:
+          - Namespace
+    {{- if $component.allowDisable }}
+    exclude:
+      any:
+      - resources:
+          selector:
+            matchLabels:
+              istio-injection: disabled
+    {{- end }}
+    mutate:
+      patchStrategicMerge:
+        metadata:
+          labels:
+            istio-injection: enabled
+{{- end -}}

@@ -1,0 +1,5 @@
+components:
+  istio:
+    components:
+      namespaceInjection:
+        allowDisable: true
