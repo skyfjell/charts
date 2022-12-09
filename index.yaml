@@ -75,6 +75,20 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/istio-install-0.0.16/istio-install-0.0.16.tgz
     version: 0.0.16
+  kyverno-policies:
+  - apiVersion: v2
+    created: "2022-12-09T19:14:03.034260432Z"
+    dependencies:
+    - name: common
+      repository: '@skyfjell'
+      version: 0.0.x
+    description: A Helm chart for Kyverno policies
+    digest: 7fe0217c132b9b3ce22fe257aa0e0920b95e69f1f1854b16d98cfb243777e856
+    name: kyverno-policies
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/kyverno-policies-0.0.1/kyverno-policies-0.0.1.tgz
+    version: 0.0.1
   "null":
   - apiVersion: v2
     appVersion: 0.0.1
@@ -347,4 +361,4 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/skyfjell-common-0.0.1/skyfjell-common-0.0.1.tgz
     version: 0.0.1
-generated: "2022-12-07T22:38:01.317064284Z"
+generated: "2022-12-09T19:14:03.754747809Z"
