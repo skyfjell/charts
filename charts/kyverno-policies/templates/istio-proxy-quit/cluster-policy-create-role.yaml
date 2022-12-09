@@ -1,0 +1,133 @@
+{{- $component := .Values.components.istioProxyQuit }}
+{{- $name := list $component.name $ | include "kyverno-policies.format.name" }}
+{{- if $component.enabled }}
+{{- include "require.api.kyverno.clusterPolicy" $ -}}
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: {{ $name }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+  {{- include "kyverno-policies.labels" $ | nindent 4 }}
+  annotations:
+    policies.kyverno.io/title: Istio Proxy Quit Cluster Policy
+    policies.kyverno.io/category: Istio
+    policies.kyverno.io/subject: Role
+    policies.kyverno.io/description: >-
+      In order for jobs within an istio service mesh to successfully complete
+      there needs to be a way to quit the istio-proxy sidecar. This policy
+      watches all namespaces and watches for job based pods admissions. 
+      From there a narrow scoped RBAC role and rb that are attached to the pod's 
+      service account to allow for "get", "list", "watch" on all containers on said pod.
+      Additionally the "istio-proxy-quit" container is added to run and initiate 
+      the `/quitquitquit` endpoint on the proxy container.
+spec:
+  background: false
+  validationFailureAction: Enforce
+  rules:
+    - name: istio-proxy-quit-create-role
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      preconditions:
+        any:
+          - key: {{ "(request.object.metadata.ownerReferences || `[]`)[?kind=='Job'] | length(@)" | include "skyfjell.common.format.literal" | quote }}
+            operator: GreaterThan
+            value: 0
+      generate:
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: Role
+        name: {{ "request.object.metadata.name" | include "skyfjell.common.format.literal" | quote }}
+        namespace:  {{ "request.object.metadata.namespace" | include "skyfjell.common.format.literal" | quote }}
+        synchronize: true
+        data:
+          metadata:
+            name: {{ "request.object.metadata.name" | include "skyfjell.common.format.literal" | quote }}
+            labels: {{- include "skyfjell.common.chartLabels" $ | nindent 14 }}
+            {{- include "kyverno-policies.labels" $ | nindent 14 }}
+              skyfjell.io/istio-proxy-quit: {{ "request.object.spec.serviceAccountName" | include "skyfjell.common.format.literal" | quote }}
+            ownerReferences:
+              - apiVersion: v1
+                kind: Pod
+                name: {{ "request.object.metadata.name" | include "skyfjell.common.format.literal" | quote }}
+                uid: {{ "request.object.metadata.uid" | include "skyfjell.common.format.literal" | quote }}
+                controller: true
+                blockOwnerDeletion: true
+          rules:
+            - apiGroups: [""]
+              resources: ["pods"]
+              verbs: ["get"]
+              resourceNames:
+                - {{ "request.object.metadata.name" | include "skyfjell.common.format.literal" | quote }}
+    - name: istio-proxy-quit-mutate-container
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      preconditions:
+        any:
+          - key: {{ "(request.object.metadata.ownerReferences || `[]`)[?kind=='Job'] | length(@)" | include "skyfjell.common.format.literal" | quote }}
+            operator: GreaterThan
+            value: 0
+      mutate:
+        patchStrategicMerge:
+          spec:
+            containers:
+              - name: {{ $component.name }}
+                image: {{ printf "%s/%s:%s" $component.image.registry $component.image.repository $component.image.tag }}
+                imagePullPolicy: {{ .Values.components.istioProxyQuit.image.pullPolicy}}
+                env:
+                  - name: K8S_NAMESPACE
+                    valueFrom:
+                      fieldRef:
+                        fieldPath: metadata.namespace
+                  - name: K8S_POD_NAME
+                    valueFrom:
+                      fieldRef:
+                        fieldPath: metadata.name
+                  - name: K8S_SELF_NAME
+                    value: {{ $component.name }}
+                  {{- range $component.env }}
+                  - name: {{ .name }}
+                    {{- toYaml ( omit . "name") | nindent 22 }}
+                  {{- end }}
+    - name: istio-proxy-quit-create-rolebinding
+      match:
+        any:
+          - resources:
+              kinds:
+                - Role
+      preconditions:
+        all:
+          - key: {{ "(request.object.metadata.ownerReferences || `[]`)[?kind=='Pod'] | length(@)" | include "skyfjell.common.format.literal" | quote }}
+            operator: GreaterThan
+            value: 0
+      generate:
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: RoleBinding
+        name: {{ "request.object.metadata.name" | include "skyfjell.common.format.literal" | quote }}
+        namespace:  {{ "request.object.metadata.namespace" | include "skyfjell.common.format.literal" | quote }}
+        synchronize: true
+        data:
+          metadata:
+            name: {{ "request.object.metadata.name" | include "skyfjell.common.format.literal" | quote }}
+            labels: {{- include "skyfjell.common.chartLabels" $ | nindent 16 }}
+            {{- include "kyverno-policies.labels" $ | nindent 16 }}
+            ownerReferences:
+              - apiVersion: rbac.authorization.k8s.io/v1
+                kind: Role
+                name: {{ "request.object.metadata.name" | include "skyfjell.common.format.literal" | quote }}
+                uid: {{ "request.object.metadata.uid" | include "skyfjell.common.format.literal" | quote }}
+                controller: true
+                blockOwnerDeletion: true
+          subjects:
+            - kind: ServiceAccount
+              name: {{ "request.object.metadata.labels.\"skyfjell.io/istio-proxy-quit\"" | include "skyfjell.common.format.literal" | quote }}
+              namespace: {{ "request.object.metadata.namespace" | include "skyfjell.common.format.literal" | quote }}
+          roleRef:
+            kind: Role
+            name: {{ "request.object.metadata.name" | include "skyfjell.common.format.literal" | quote }}
+            apiGroup: rbac.authorization.k8s.io
+{{- end -}}

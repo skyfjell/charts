@@ -4,19 +4,19 @@
 
 {{/* Error message */}}
 {{ define "errorMessage.kyverno" }}
-    {{ fail ( printf "Chart require %s to be present. See https://kyverno.io/docs/installation for more info." . ) }}
-{{ end }}
+{{ fail ( printf "Chart require %s to be present. See https://kyverno.io/docs/installation for more info." . ) }}
+{{end}}
 
 {{/*
   Checks generally if API version for kyverno is installed. Currently only checking require CRDs.
 */}}
 {{ define "require.api.kyverno.clusterPolicy" }}
   {{ include "require.api.kyverno.base" ( list "kyverno.io" "ClusterPolicy" $ ) }}
-{{ end }}
+{{end}}
 
 {{ define "require.api.kyverno.policy" }}
   {{ include "require.api.kyverno.base" ( list "kyverno.io" "Policy" $ ) }}
-{{ end }}
+{{end}}
 
 
 {{ define "require.api.kyverno.all" }}
