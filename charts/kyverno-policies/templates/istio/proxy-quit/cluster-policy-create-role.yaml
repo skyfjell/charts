@@ -1,5 +1,6 @@
-{{- $component := .Values.components.istioProxyQuit }}
-{{- $name := list $component.name $ | include "kyverno-policies.format.name" }}
+{{- $parent := .Values.components.istio }}
+{{- $component := $parent.components.proxyQuit }}
+{{- $name := list $parent.name $component.name $ | include "kyverno-policies.format.name" }}
 {{- if $component.enabled }}
 {{- include "require.api.kyverno.clusterPolicy" $ -}}
 apiVersion: kyverno.io/v1
@@ -15,10 +16,10 @@ metadata:
     policies.kyverno.io/description: >-
       In order for jobs within an istio service mesh to successfully complete
       there needs to be a way to quit the istio-proxy sidecar. This policy
-      watches all namespaces and watches for job based pods admissions. 
-      From there a narrow scoped RBAC role and rb that are attached to the pod's 
+      watches all namespaces and watches for job based pods admissions.
+      From there a narrow scoped RBAC role and rb that are attached to the pod's
       service account to allow for "get", "list", "watch" on all containers on said pod.
-      Additionally the "istio-proxy-quit" container is added to run and initiate 
+      Additionally the "istio-proxy-quit" container is added to run and initiate
       the `/quitquitquit` endpoint on the proxy container.
 spec:
   background: false
