@@ -15,4 +15,3 @@ components:
     env: []
   kyverno:
     namespace: kyverno
-    serviceAccountName: ""
