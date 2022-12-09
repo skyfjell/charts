@@ -18,7 +18,7 @@ metadata:
       there needs to be a way to quit the istio-proxy sidecar. This policy
       watches all namespaces and watches for job based pods admissions.
       From there a narrow scoped RBAC role and rb that are attached to the pod's
-      service account to allow for "get", "list", "watch" on all containers on said pod.
+      service account to allow for "get" on all containers on said pod.
       Additionally the "istio-proxy-quit" container is added to run and initiate
       the `/quitquitquit` endpoint on the proxy container.
 spec:
