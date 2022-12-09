@@ -222,7 +222,7 @@ components:
           version: "2.5.1"
           source: {}
         # Kyverno podSecurityStandard
-        podSecurityStandard: "baseline"
+        podSecurityStandard: "restricted"
         # Override Chart Values
         values: {}
   minio:
