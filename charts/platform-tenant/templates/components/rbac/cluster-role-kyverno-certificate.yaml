@@ -1,0 +1,11 @@
+{{- if and .Values.components.rbac.enabled ( and .Values.components.kyverno.enabled .Values.components.certManager.enabled ) -}}
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ list "gateway" $ | include "platform-tenant.format.name.local" }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+rules:
+  - apiGroups: ["cert-manager.io"]
+    resources: ["certificates"]
+    verbs: ["*"]
+{{- end -}}

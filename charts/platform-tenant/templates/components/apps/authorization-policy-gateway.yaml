@@ -1,0 +1,26 @@
+{{- $istio := .Values.components.istio -}}
+{{- $component := $istio.components.authPolicy -}}
+{{- $gateway := $istio.components.gateway -}}
+{{- if and (and $istio.enabled $component.enabled) $gateway.enabled -}}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ list "allow" "http" . | include "platform-tenant.format.name.shared" }}
+  namespace: {{ $istio.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+spec:
+  action: ALLOW
+  selector:
+    matchLabels:
+      app: {{ $gateway.name }}
+  rules:
+    - to:
+        - operation:
+            hosts:
+              {{- range (include "platform-tenant.apps.hosts" $ | fromYaml).hosts }}
+              - {{ . | quote }}
+              {{- end }}
+            ports:
+              - "443"
+              - "80"
+{{- end -}}

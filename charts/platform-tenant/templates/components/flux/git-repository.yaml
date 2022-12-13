@@ -1,0 +1,25 @@
+{{- $flux := .Values.components.flux -}}
+{{- $source := $flux.components.source -}}
+{{- if and $flux.enabled $source.enabled -}}
+{{- include "skyfjell.common.require.api.flux.source" . -}}
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: GitRepository
+metadata:
+  name: {{ list $source.name . | include "platform-tenant.format.name.shared" }}
+  namespace: {{ $flux.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+spec:
+  url: {{ $source.url }}
+  interval: 1m
+  ref:
+    {{- if $source.ref }}
+    {{- toYaml . | indent 6 }}
+    {{ else }}
+    branch: name
+    {{- end }}
+  {{- with $source.secretName }}
+  secretRef:
+    name: {{ . | quote }}
+    {{- end }}
+{{- end -}}

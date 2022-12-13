@@ -1,8 +1,10 @@
-{{- if and .Values.rbac.enable .Values.rbac.tenantClusterRole.create -}}
+{{/*
+{{- if and .Values.components.rbac.enabled .Values.components.rbac.components.tenantClusterRole.enabled -}}
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ include "helper.clusterRoleName" .}}
+  name: {{ printf "%s-%s" (include "platform-tenant.fullname" .) "tenant" }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 rules:
   - apiGroups: ["", "extensions", "apps", "batch"]
     resources: ["*"]
@@ -14,3 +16,4 @@ rules:
     resources: ["helmrepositories", "gitrepositories"]
     verbs: ["*"]
 {{- end -}}
+*/}}

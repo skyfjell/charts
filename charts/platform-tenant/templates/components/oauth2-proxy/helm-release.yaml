@@ -1,0 +1,23 @@
+{{- if .Values.components.authProxy.enabled -}}
+{{- include "skyfjell.common.require.api.flux.helm-release" . -}}
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ list "proxy" . | include "platform-tenant.format.name.shared" }}
+  namespace: {{ list $ | include "platform-tenant.format.namespace" }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+spec:
+  chart:
+    spec:
+      chart: {{ .Values.components.authProxy.chart.name }}
+      version: {{ .Values.components.authProxy.chart.version }}
+      sourceRef:
+        kind: HelmRepository
+        name: {{ list "proxy" . | include "platform-tenant.format.name.shared" }}
+        namespace: {{ .Values.components.flux.namespace }}
+  interval: 1h0m0s
+  values:
+{{- $defaultValues := ( include "platform-tenant.app.oauth2-proxy.template" . | fromYaml ) }}
+{{ ( mergeOverwrite $defaultValues (default dict .Values.components.authProxy.overrideValues )) | toYaml | indent 4 }}
+{{- end -}}

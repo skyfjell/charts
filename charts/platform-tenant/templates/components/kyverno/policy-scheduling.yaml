@@ -1,0 +1,48 @@
+{{- $key := "scheduling" -}}
+{{- $component := get .Values.components.kyverno.components $key  -}}
+{{- if and .Values.components.kyverno.enabled $component.enabled -}}
+
+{{- $name := list $key $ | include "platform-tenant.format.name.local" -}}
+{{- $namespace := list $ | include "platform-tenant.format.namespace" -}}
+
+{{- include "skyfjell.common.require.api.kyverno.cluster-policy" . -}}
+---
+apiVersion: kyverno.io/v1
+kind: Policy
+metadata:
+  name: {{ $name }}
+  namespace: {{ $namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+  annotations:
+    policies.kyverno.io/title: Scheduling policy
+    policies.kyverno.io/category: Pod Scheduling
+    policies.kyverno.io/description: >-
+      Adds scheduling objects to all jobs, deployments, daemons etc in the monitoring
+      namespace.
+spec:
+  validationFailureAction: enforce
+  rules:
+    - name: add-scheduling
+      match:
+        any:
+          - resources:
+              kinds:
+                - Job
+                - DaemonSet
+                - Deployment
+                - StatefulSet
+                - ReplicaSet
+      mutate:
+        patchStrategicMerge:
+          spec:
+            template:
+              spec:
+              {{- with $component.nodeSelector }}
+                nodeSelector:
+                  {{- toYaml . | nindent 18 }}
+              {{- end }}
+              {{- with $component.tolerations }}
+                tolerations:
+                  {{- toYaml . | nindent 18}}
+              {{- end }}
+{{- end -}}

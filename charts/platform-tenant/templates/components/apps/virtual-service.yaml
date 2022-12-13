@@ -1,0 +1,7 @@
+{{- if and .Values.components.authProxy.enabled .Values.components.apps -}}
+{{- include "skyfjell.common.require.api.istio.vs" . -}}
+{{ range .Values.components.apps }}
+---
+{{ list . $ | include "platform-tenant.app.virtual-service.template" }}
+{{- end -}}
+{{- end -}}

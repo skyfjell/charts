@@ -1,0 +1,20 @@
+{{/*
+{{- $flux := .Values.components.flux -}}
+{{- $kustomization := $flux.components.kustomization -}}
+{{- $rbac := .Values.components.rbac -}}
+{{- if and $rbac.enabled ( and $kustomization.enabled $flux.enabled ) -}}
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: {{ .Values.components.namespace.name }}
+  name: {{ printf "%s-%s" (include "platform-tenant.fullname" .) "flux-ro" }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+rules:
+  - apiGroups: ["kustomize.toolkit.fluxcd.io"]
+    resources: ["kustomization"]
+    resourceNames: 
+      - {{ default (include "platform-tenant.fullname" .) $kustomization.name }}
+    verbs:
+      - get
+{{- end -}}
+*/}}

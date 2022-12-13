@@ -1,0 +1,92 @@
+# helm install example ./ -f examples/values-complete.yaml
+
+prefix: "tnt"
+
+annotations:
+  root-annotation: root-annotation-value
+
+labels:
+  root-label: root-label-value
+
+components:
+  namespace:
+    name: "test"
+  rbac:
+    enabled: true
+  flux:
+    enabled: false
+    components:
+      source:
+        url: ssh://git@github.com/skyfjell/manifests/test
+  serviceAccount:
+    enabled: false
+    annotations:
+      sa-annotation: sa-annotation-value
+
+  kyverno:
+    enabled: false
+    serviceAccountName: "kyverno-service-account"
+    components:
+      metadata:
+        enabled: false
+        labels:
+          app: MyApp
+          version: v1
+        annotations:
+          skyfell.io/thingy: another
+      scheduling:
+        enabled: false
+        tolerations:
+          - key: Key1
+            operator: Equal
+            value: Value1
+            Effect: NoSchedule
+      gateway:
+        domains: ".internal"
+        manageCerts: true
+
+  o11y:
+    enabled: false
+
+  istio:
+    enabled: true
+    components:
+      authPolicy:
+        enabled: true
+  certManager:
+    enabled: true
+    issuerRef:
+      name: self-signed
+      kind: ClusterIssuer
+      group: cert-manager.io
+
+  authProxy:
+    enabled: true
+    displayName: "Login With Keycloak"
+    issuerUri: "https://sso.example.com/auth/realms/test"
+    jwksUri: "https://sso.example.com/auth/realms/test/protocol/openid-connect/certs"
+    existingSecret: "super-secret"
+    cookieDomain: ".tenant.example.com"
+    clientId: tnt
+
+  apps:
+    - name: "test-app-1"
+      host: "tenant.example.com"
+      service:
+        port: 8001
+        host: test-app-1.tnt-example.svc.cluster.local
+      routingOverride:
+        http:
+          - match:
+              - uri:
+                  prefix: /another-app
+            route:
+              - destination:
+                  host: test-app-3.tnt-example.svc.cluster.local
+                  port:
+                    number: 8002
+    - name: "test-app-2"
+      host: "test-app-2.tenant.example.com"
+      service:
+        port: 8080
+        host: test-app-2.tnt-example.svc.cluster.local

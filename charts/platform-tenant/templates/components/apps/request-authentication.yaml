@@ -1,0 +1,20 @@
+{{- if and (and .Values.components.istio.enabled .Values.components.istio.components.authPolicy.enabled) .Values.components.authProxy.enabled -}}
+{{ range .Values.components.apps }}
+---
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: {{ list .name $ | include "platform-tenant.format.name.shared" }}
+  namespace: {{ list $ | include "platform-tenant.format.namespace" }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  jwtRules:
+    - issuer: {{ $.Values.components.authProxy.issuerUri }}
+      jwksUri: {{ $.Values.components.authProxy.jwksUri }}
+      audiences:
+        - {{ $.Values.components.authProxy.clientId }}
+{{- end }}
+{{- end -}}
