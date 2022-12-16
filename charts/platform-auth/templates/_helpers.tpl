@@ -6,7 +6,8 @@ Expand the name of the chart.
 {{- end }}
 
 {{- define "platform-auth.format.name" -}}
-  {{- last . | include "platform-auth.name" | prepend . | initial | include "skyfjell.common.format.name" -}}
+  {{- $ := last . -}}
+  {{- prepend . $.Values.prefix | initial | include "skyfjell.common.format.name" -}}
 {{- end }}
 
 {{- define "platform-auth.postgresql.userPasswordKey" -}}

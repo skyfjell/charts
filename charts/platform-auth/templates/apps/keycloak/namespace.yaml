@@ -1,9 +1,0 @@
-{{ $component := .Values.components.keycloak }}
-
-{{- if $component.enabled -}}
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: {{ $component.namespace }}
-{{- end -}}

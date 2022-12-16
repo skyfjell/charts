@@ -1,0 +1,10 @@
+{{- $component := .Values.components.proxy -}}
+
+{{- if $component.enabled -}}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ list $component $ | include "skyfjell.common.format.component.namespace" }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+{{- end -}}

@@ -1,0 +1,36 @@
+{{ $component := .Values.components.proxy -}}
+
+{{- if $component.enabled -}}
+  {{- if .Values.crdCheck -}}
+    {{- include "require.api.flux.helmRelease" . -}}
+  {{- end -}}
+
+{{- $name := list $component.name $ | include "platform-auth.format.name" -}}
+
+{{- $repoName := list .Values.components.helmRepositories.components.traefik.name $ | include "platform-auth.format.name" -}}
+{{- $repoName := default $repoName $component.chart.sourceRef.name -}}
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ $name }}
+  namespace: {{ .Values.components.flux.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+spec:
+  releaseName: {{ $name }}
+  targetNamespace: {{ list $component $ | include "skyfjell.common.format.component.namespace" }}
+  chart:
+    spec:
+      chart: {{ $component.chart.name }}
+      {{- with $component.chart.version }}
+      version: {{ . }}
+      {{- end }}
+      sourceRef:
+        kind: {{ $component.chart.sourceRef.kind }}
+        name: {{ $repoName }}
+        namespace: {{ .Values.components.flux.namespace }}
+  interval: 1h0m0s
+  values:
+{{- $defaultValues := ( include "platform-auth.app.proxy.template.values" $ | fromYaml ) }}
+{{ ( mergeOverwrite $defaultValues (default dict $component.valuesOverride )) | toYaml | indent 4 }}
+{{- end -}}

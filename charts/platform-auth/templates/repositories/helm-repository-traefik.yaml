@@ -1,20 +1,20 @@
-{{ $repo := .Values.helmRepositories.traefik }}
-{{ 
-  $enabled := and 
-    $repo.enabled 
-    .Values.components.traefik.enabled 
-    (empty .Values.components.traefik.chart.sourceRef.name) 
-}}
+{{- $component := .Values.components.helmRepositories.components.traefik -}}
+{{-
+  $enabled := and
+    $component.enabled
+    .Values.components.proxy.enabled
+    (empty .Values.components.proxy.chart.sourceRef.name)
+-}}
 
 {{- if $enabled }}
 {{- include "require.api.flux.source" . -}}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: {{ list $repo.name $ | include "platform-auth.format.name" }}
+  name: {{ list $component.name $ | include "platform-auth.format.name" }}
   namespace: {{ .Values.components.flux.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
-  url: {{ $repo.url }}
+  url: {{ $component.url }}
   interval: 10m
 {{- end }}

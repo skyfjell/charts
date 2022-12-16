@@ -1,7 +1,7 @@
 {{- define "platform-auth.components.keycloak.components.database.values" -}}
-{{ $component := .Values.components.keycloak.components.database }}
-{{ $parentComponent := .Values.components.keycloak }}
-{{ $name := list $parentComponent.name $component.name $ | include "platform-auth.format.name" }}
+{{- $component := .Values.components.keycloak.components.database -}}
+{{- $parent := .Values.components.keycloak -}}
+{{- $name := list $parent.name $component.name | include "skyfjell.common.format.name" -}}
 fullnameOverride: {{ $name }}
 fullname: {{ $name }}
 global:
@@ -11,7 +11,7 @@ global:
       existingSecret: {{ $component.auth.existingSecret }}
       username: {{ $component.auth.username }}
       secretKeys:
-      {{- toYaml $component.auth.secretKeys | nindent 8 }}  
+      {{- toYaml $component.auth.secretKeys | nindent 8 }}
 {{- $chartName := $component.chart.name }}
 {{- if or (eq $chartName "postgresql") (eq $chartName "postgresql-ha") }}
 {{ if eq $chartName "postgresql" }}
@@ -20,10 +20,10 @@ primary:
 postgres:
 {{- end }}
   nodeSelector:
-    {{ toYaml .Values.nodeSelector | indent 4 }}
-  {{- if .Values.tolerations }}
+    {{ default .Values.nodeSelector $parent.nodSelector $component.nodeSelector | toYaml | indent 4 }}
+  {{- with default .Values.tolerations $parent.tolerations $component.tolerations }}
   tolerations:
-  {{ range .Values.tolerations }}
+  {{ range . }}
     - {{ .  | quote}}
   {{- end }}
   {{- end }}

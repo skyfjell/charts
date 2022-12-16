@@ -1,0 +1,32 @@
+{{- if .Values.components.istio.enabled -}}
+  {{- if .Values.crdCheck -}}
+    {{- include "require.api.istio.authorization-policy" $ -}}
+  {{- end -}}
+
+{{ $component := .Values.components.keycloak }}
+{{ $database := .Values.components.keycloak.components.database }}
+{{ $namespace := list $component $ | include "skyfjell.common.format.component.namespace" }}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ list $component.namespace $component.name $database.name | include "skyfjell.common.format.name" }}
+  namespace: {{ $namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+    skyfjell.io/from-ns: {{ $namespace }}
+    skyfjell.io/from: {{ $component.name }}
+    skyfjell.io/to-ns: {{ $namespace }}
+    skyfjell.io/to: {{ $component.name }}
+spec:
+  action: ALLOW
+  selector:
+    matchLabels:
+      app: {{ list $component.name $database.name | include "skyfjell.common.format.name" }}
+  rules:
+    - from:
+        - source:
+            namespaces:
+              - {{ $namespace }}
+            principals:
+              - {{ printf "cluster.local/ns/%s/sa/%s" $namespace $component.name }}
+{{- end -}}

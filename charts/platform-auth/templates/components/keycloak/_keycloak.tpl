@@ -1,24 +1,24 @@
 {{- define "platform-auth.components.keycloak.values" -}}
-{{ $component := .Values.components.keycloak }}
-{{- with .Values.nodeSelector }}
+{{- $component := .Values.components.keycloak -}}
+{{- with default .Values.nodeSelector $component.nodeSelector }}
 nodeSelector:
-  {{ toYaml . | indent 2}}
+  {{ toYaml . | indent 2 }}
 {{- end }}
-{{- with .Values.tolerations }}
+{{- with default .Values.tolerations $component.tolerations }}
 tolerations:
 {{ range .Values.tolerations }}
-  - {{ .  | quote}}
+  - {{ .  | quote }}
 {{- end }}
 {{- end }}
-fullnameOverride: {{ list $component.name $ | include "platform-auth.format.name" }}
+fullnameOverride: {{ $component.name }}
 serviceAccount:
-  name: {{ list $component.name $ | include "platform-auth.format.name" }}
+  name: {{ $component.name }}
 extraEnv: |
   {{- if or $component.admin.username $component.admin.usernameSecretRef }}
   - name: KEYCLOAK_ADMIN
    {{- if $component.admin.usernameSecretRef }}
     valueFrom:
-      secretKeyRef: {{- toYaml $component.admin.usernameSecretRef | nindent 8 }}    
+      secretKeyRef: {{- toYaml $component.admin.usernameSecretRef | nindent 8 }}
   {{- else }}
     value: {{ $component.admin.username | quote }}
   {{- end }}
@@ -58,7 +58,7 @@ dbchecker:
   enabled: true
 database:
   vendor: postgres
-  hostname: {{ list $component.name $component.components.database.name $ | include "platform-auth.format.name" }}
+  hostname: {{ list $component.name $component.components.database.name | include "skyfjell.common.format.name" }}
   port: 5432
   database: {{ $component.components.database.auth.database }}
   username: {{ $component.components.database.auth.username }}
