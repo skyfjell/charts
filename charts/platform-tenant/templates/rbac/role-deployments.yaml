@@ -1,4 +1,4 @@
-{{- if .Values.rbac.enable -}}
+{{- if .Values.components.rbac.enable -}}
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -8,15 +8,15 @@ rules:
   - apiGroups: ["", "extensions", "apps"]
     resources: ["*"]
     verbs: ["*"]
-    {{- if .Values.flux.kustomization.create }}
+    {{- if .Values.components.flux.components.kustomization.create }}
   - apiGroups: ["kustomize.toolkit.fluxcd.io"]
     resources: ["kustomization"]
     resourceNames: 
-      - {{ default (include "platform-tenant.fullname" .) .Values.flux.kustomization.name }}
+      - {{ default (include "platform-tenant.fullname" .) .Values.components.flux.components.kustomization.name }}
     verbs:
       - get
     {{- end }}
-  {{- with .Values.rbac.extraRules }}
+  {{- with .Values.components.rbac.extraRules }}
     {{- toYaml . | nindent 2}}
   {{- end }}
 {{- end -}}

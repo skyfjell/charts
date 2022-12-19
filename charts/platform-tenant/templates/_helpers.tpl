@@ -51,10 +51,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Create the name of the service account to use
 */}}
 {{- define "platform-tenant.serviceAccount.name" -}}
-{{- if .Values.serviceAccount.enabled }}
-{{- default (include "platform-tenant.fullname" .) .Values.serviceAccount.name }}
+{{- if .Values.components.serviceAccount.enabled }}
+{{- default (include "platform-tenant.fullname" .) .Values.components.serviceAccount.name }}
 {{- else }}
-{{- default "default" .Values.serviceAccount.name }}
+{{- default "default" .Values.components.serviceAccount.name }}
 {{- end }}
 {{- end }}
 

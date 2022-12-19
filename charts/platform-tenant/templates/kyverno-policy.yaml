@@ -1,11 +1,11 @@
-{{- if .Values.kyverno.enable -}}
+{{- if .Values.components.kyverno.enable -}}
 {{- include "require.api.kyverno.clusterPolicy" . -}}
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
-  name: {{ default (include "platform-tenant.fullname" .) .Values.kyverno.name }}
+  name: {{ default (include "platform-tenant.fullname" .) .Values.components.kyverno.name }}
   annotations:
-    policies.kyverno.io/title: {{ default (include "platform-tenant.fullname" .) .Values.kyverno.name }} policy 
+    policies.kyverno.io/title: {{ default (include "platform-tenant.fullname" .) .Values.components.kyverno.name }} policy 
     policies.kyverno.io/category: Pod Scheduling
     policies.kyverno.io/description: >-
       Adds metadata to all jobs, deployments, daemons etc in the monitoring
@@ -27,24 +27,24 @@ spec:
       mutate:
         patchStrategicMerge:
           metadata:
-          {{- with .Values.kyverno.annotations }}
+          {{- with .Values.components.kyverno.annotations }}
             annotations:
               {{- toYaml . | nindent 14 }}
           {{- end }}          
             labels:
               app.kubernetes.io/part-of: {{ (include "platform-tenant.fullname" .) | quote }}
-              {{- with (omit .Values.kyverno.labels "app.kubernetes.io/part-of") }}
+              {{- with (omit .Values.components.kyverno.labels "app.kubernetes.io/part-of") }}
               {{- toYaml . | nindent 14 }}
               {{- end }}
           spec:
             template:
-              {{- if or .Values.kyverno.nodeSelector .Values.kyverno.tolerations }}
+              {{- if or .Values.components.kyverno.nodeSelector .Values.components.kyverno.tolerations }}
               spec:
-              {{- with .Values.kyverno.nodeSelector }}
+              {{- with .Values.components.kyverno.nodeSelector }}
                 nodeSelector:
                   {{- toYaml . | nindent 18 }}
               {{- end }}
-              {{- with .Values.kyverno.tolerations }}
+              {{- with .Values.components.kyverno.tolerations }}
                 tolerations:
                   {{- toYaml . | nindent 18}}
               {{- end }}

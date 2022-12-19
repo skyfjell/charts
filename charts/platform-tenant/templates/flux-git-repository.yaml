@@ -1,20 +1,20 @@
-{{- if .Values.flux.source.create -}}
+{{- if .Values.components.flux.components.source.create -}}
 {{- include "require.api.flux.source" . -}}
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: GitRepository
 metadata:
-  name: {{ default (include "platform-tenant.fullname" .) .Values.flux.source.name }}
-  namespace: {{ .Values.flux.namespace }}
+  name: {{ default (include "platform-tenant.fullname" .) .Values.components.flux.components.source.name }}
+  namespace: {{ .Values.components.flux.namespace }}
 spec:
-  url: {{ .Values.flux.source.url }}
+  url: {{ .Values.components.flux.components.source.url }}
   interval: 1m
   ref:
-    {{- if .Values.flux.source.ref }}
+    {{- if .Values.components.flux.components.source.ref }}
     {{- toYaml . | indent 6 }}
     {{ else }}
     branch: name
     {{- end }}
-  {{- with .Values.flux.source.secretName }}
+  {{- with .Values.components.flux.components.source.secretName }}
   secretRef:
     name: {{ . | quote }}
     {{- end }}

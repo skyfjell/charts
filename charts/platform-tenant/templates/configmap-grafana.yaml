@@ -1,15 +1,15 @@
-{{- if .Values.o11y.enable -}}
+{{- if .Values.components.o11y.enable -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ .Values.o11y.namespace }}
+  namespace: {{ .Values.components.o11y.namespace }}
   name: {{ printf "%s-%s" (include "platform-tenant.fullname" $) "dasboard" | trunc 63 | trimSuffix "-" }}
-  {{- with .Values.o11y.annotations }}
+  {{- with .Values.components.o11y.annotations }}
   annotations:
   {{ toYaml . | indent 4}}  
   {{- end }}
   labels:
-  {{- with .Values.o11y.labels }}
+  {{- with .Values.components.o11y.labels }}
   {{ toYaml . | nindent 4 }}
   {{- end }}
 {{ include "platform-tenant.labels" $ | indent 4 }}
@@ -87,7 +87,7 @@ data:
                   "uid": "${logsource}"
                 },
                 "editorMode": "code",
-                "expr": "{pod=~\"kustomize-controller.+\",namespace=\"{{ .Values.flux.namespace }}\"} |~ \"\\\"namespace\\\":\\\"{{ .Values.targetNamespace.name }}\\\"\"",
+                "expr": "{pod=~\"kustomize-controller.+\",namespace=\"{{ .Values.components.flux.namespace }}\"} |~ \"\\\"namespace\\\":\\\"{{ .Values.targetNamespace.name }}\\\"\"",
                 "queryType": "range",
                 "refId": "A"
               }
@@ -124,7 +124,7 @@ data:
                   "uid": "${logsource}"
                 },
                 "editorMode": "code",
-                "expr": "{pod=~\"source-controller.+\",namespace=\"{{ .Values.flux.namespace }}\"} |~ \"\\\"namespace\\\":\\\"{{ .Values.targetNamespace.name }}\\\"\"",
+                "expr": "{pod=~\"source-controller.+\",namespace=\"{{ .Values.components.flux.namespace }}\"} |~ \"\\\"namespace\\\":\\\"{{ .Values.targetNamespace.name }}\\\"\"",
                 "queryType": "range",
                 "refId": "A"
               }
@@ -161,7 +161,7 @@ data:
                   "uid": "${logsource}"
                 },
                 "editorMode": "code",
-                "expr": "{pod=~\"helm-controller.+\",namespace=\"{{ .Values.flux.namespace }}\"} |~ \"\\\"namespace\\\":\\\"{{ .Values.targetNamespace.name }}\\\"\"",
+                "expr": "{pod=~\"helm-controller.+\",namespace=\"{{ .Values.components.flux.namespace }}\"} |~ \"\\\"namespace\\\":\\\"{{ .Values.targetNamespace.name }}\\\"\"",
                 "queryType": "range",
                 "refId": "A"
               }

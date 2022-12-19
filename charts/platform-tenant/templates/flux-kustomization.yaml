@@ -1,16 +1,16 @@
-{{- if .Values.flux.kustomization.create -}}
+{{- if .Values.components.flux.components.kustomization.create -}}
 {{- include "require.api.flux.kustomize" . -}}
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
-  name: {{ default (include "platform-tenant.fullname" .) .Values.flux.kustomization.name }}
-  namespace: {{ .Values.flux.namespace }}  
+  name: {{ default (include "platform-tenant.fullname" .) .Values.components.flux.components.kustomization.name }}
+  namespace: {{ .Values.components.flux.namespace }}  
 spec:
   sourceRef:
     kind: GitRepository
-    name: {{ default (include "platform-tenant.fullname" .) .Values.flux.source.name }}
-  serviceAccountName: {{ default (include "platform-tenant.fullname" .) .Values.serviceAccount.name }}
-  {{- $customSpec := omit .Values.flux.kustomization.spec "serviceAccountName" "sourceRef" }}
+    name: {{ default (include "platform-tenant.fullname" .) .Values.components.flux.components.source.name }}
+  serviceAccountName: {{ default (include "platform-tenant.fullname" .) .Values.components.serviceAccount.name }}
+  {{- $customSpec := omit .Values.components.flux.components.kustomization.spec "serviceAccountName" "sourceRef" }}
   {{- $defaultSpec := (include "helper.kustomizationSpec" . | fromYaml) }}
   {{- toYaml (merge $customSpec $defaultSpec) | nindent 2 }}
 {{- end -}}
