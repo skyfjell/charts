@@ -77,6 +77,19 @@ entries:
     version: 0.0.16
   kyverno-policies:
   - apiVersion: v2
+    created: "2022-12-20T23:16:42.606404031Z"
+    dependencies:
+    - name: common
+      repository: '@skyfjell'
+      version: 0.0.x
+    description: A Helm chart for Kyverno policies
+    digest: 83bbdf262c25bbf9977bad3fe74383407bfa27e809734e08546a0826d85ca7f6
+    name: kyverno-policies
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/kyverno-policies-0.0.3/kyverno-policies-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
     created: "2022-12-09T22:52:00.657511144Z"
     dependencies:
     - name: common
@@ -374,4 +387,4 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/skyfjell-common-0.0.1/skyfjell-common-0.0.1.tgz
     version: 0.0.1
-generated: "2022-12-09T22:52:00.909387635Z"
+generated: "2022-12-20T23:16:42.722812046Z"
