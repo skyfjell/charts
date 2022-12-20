@@ -23,7 +23,7 @@ metadata:
       the `/quitquitquit` endpoint on the proxy container.
 spec:
   background: false
-  validationFailureAction: Enforce
+  validationFailureAction: enforce
   rules:
     - name: istio-proxy-quit-create-role
       match:
