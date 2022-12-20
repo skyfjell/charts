@@ -1,13 +1,14 @@
 {{- define "platform-system.components.vault-operator.defaultValues" -}}
 {{- $ := . -}}
 {{- $global := $.global -}}
-{{- $component := $.Values.components.vault.components.operator -}}
+{{- $parent := $.Values.components.vault -}}
+{{- $component := $parent.components.operator -}}
 
-{{- $anno := merge $global.annotations $component.annotations -}}
-{{- $nodeSel := merge $global.nodeSelector $component.nodeSelector -}}
-{{- $tol := default $global.tolerations $component.tolerations -}}
+{{- $anno := merge $global.annotations $component.annotations $parent.annotations -}}
+{{- $nodeSel := default $global.nodeSelector $component.nodeSelector $parent.nodeSelector -}}
+{{- $tol := default $global.tolerations $component.tolerations $parent.nodeSelector -}}
 
-fullnameOverride: {{ $component.name }}
+fullnameOverride: {{ list $parent.name $component.name $ | include "skyfjell.common.format.name" }}
 
 {{- with $anno }}
 podAnnotations:

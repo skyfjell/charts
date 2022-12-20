@@ -69,5 +69,12 @@ Create the name of the service account to use
 {{- define "platform-system.require.dependencies" -}}
   {{- $ := . -}}
   {{- $kyverno := $.Values.components.kyverno -}}
-- name: {{ list $kyverno.name $kyverno.components.policies.name $ | include "platform-system.format.name" }}
+  {{- $kyvernoPolicies := $kyverno.components.policies -}}
+  {{- $skyfjellPolicies := $kyverno.components.skyfjellPolicies -}}
+{{- if and $kyverno.enabled $kyvernoPolicies.enabled -}}
+- name: {{ list $kyverno.name $kyvernoPolicies.name $ | include "platform-system.format.name" }}
+{{- end }}
+{{- if and $kyverno.enabled $skyfjellPolicies.enabled }}
+- name: {{ list $kyverno.name $skyfjellPolicies.name $ | include "platform-system.format.name" }}
+{{- end }}
 {{- end }}
