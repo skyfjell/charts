@@ -25,7 +25,7 @@ spec:
   background: false
   validationFailureAction: enforce
   rules:
-    - name: istio-proxy-quit-create-role
+    - name: {{ list $parent.name $component.name "create-role" | include "skyfjell.common.format.name" }}
       match:
         any:
           - resources:
@@ -61,7 +61,7 @@ spec:
               verbs: ["get"]
               resourceNames:
                 - {{ "request.object.metadata.name" | include "skyfjell.common.format.literal" | quote }}
-    - name: istio-proxy-quit-mutate-container
+    - name: {{ list $parent.name $component.name "mutate-container" | include "skyfjell.common.format.name" }}
       match:
         any:
           - resources:
@@ -76,9 +76,12 @@ spec:
         patchStrategicMerge:
           spec:
             containers:
-              - name: {{ $component.name }}
+              - name: {{ list $parent.name $component.name | include "skyfjell.common.format.name" }}
                 image: {{ printf "%s/%s:%s" $component.image.registry $component.image.repository $component.image.tag }}
                 imagePullPolicy: {{ $component.image.pullPolicy}}
+                securityContext:
+                  runAsUser: 1337
+                  readOnlyRootFilesystem: true
                 env:
                   - name: K8S_NAMESPACE
                     valueFrom:
@@ -94,7 +97,7 @@ spec:
                   - name: {{ .name }}
                     {{- toYaml ( omit . "name") | nindent 22 }}
                   {{- end }}
-    - name: istio-proxy-quit-create-rolebinding
+    - name: {{ list $parent.name $component.name "create-rolebinding" | include "skyfjell.common.format.name" }}
       match:
         any:
           - resources:
