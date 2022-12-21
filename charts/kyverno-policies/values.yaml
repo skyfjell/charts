@@ -16,7 +16,7 @@ components:
         image:
           registry: ghcr.io/skyfjell
           repository: istio-proxy-quit
-          tag: 0.0.1
+          tag: 0.0.3
           pullPolicy: IfNotPresent
         sleepInterval: "5s"
         env: []
