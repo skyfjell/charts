@@ -6,8 +6,9 @@
 {{- $repo := .Values.components.helmRepositories.components.skyfjell -}}
 {{- $sourceName := list $repo.name $ | include "platform-system.format.name" -}}
 {{- $sourceName := default $sourceName $component.chart.source.name -}}
+
+{{- if and $parent.enabled $component.enabled (eq $solution.name "flux") -}}
 ---
-{{- if and $parent.enabled $component.enabled (eq $solution.name "flux") }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -30,5 +31,5 @@ spec:
         namespace: {{ $solution.namespace | quote }}
   interval: {{ $solution.interval }}
   values:
-{{ $component.values | toYaml | indent 4 }}
+{{- $component.values | toYaml | nindent 4 }}
 {{- end }}

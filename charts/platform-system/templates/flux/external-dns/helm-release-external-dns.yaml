@@ -1,11 +1,12 @@
-{{ $component := .Values.components.externalDns }}
-{{ $solution := .Values.solution }}
+{{- $component := .Values.components.externalDns -}}
+{{- $solution := .Values.solution -}}
 
 {{- $repo := .Values.components.helmRepositories.components.bitnami -}}
 {{- $sourceName := list $repo.name $ | include "platform-system.format.name" -}}
 {{- $sourceName := default $sourceName $component.chart.source.name -}}
 
-{{ if and $component.enabled (eq $solution.name "flux") }}
+{{- if and $component.enabled (eq $solution.name "flux") -}}
+---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -27,7 +28,7 @@ spec:
   interval: {{ $solution.interval }}
   values:
 {{- $defaultValues := ( include "platform-system.components.external-dns.defaultValues" $ | fromYaml ) }}
-{{ mergeOverwrite $defaultValues $component.values | toYaml | indent 4 }}
-{{ end }}
+{{- mergeOverwrite $defaultValues $component.values | toYaml | nindent 4 }}
+{{- end }}
 
 

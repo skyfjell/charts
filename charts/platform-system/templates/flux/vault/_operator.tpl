@@ -8,22 +8,22 @@
 {{- $nodeSel := default $global.nodeSelector $component.nodeSelector $parent.nodeSelector -}}
 {{- $tol := default $global.tolerations $component.tolerations $parent.nodeSelector -}}
 
-fullnameOverride: {{ list $parent.name $component.name $ | include "skyfjell.common.format.name" }}
+fullnameOverride: {{ list $parent.name $component.name | include "skyfjell.common.format.name" }}
 
 {{- with $anno }}
 podAnnotations:
-  {{ . | indent 6}}
+  {{ . | indent 2}}
 {{- end }}
 {{- with $nodeSel }}
 nodeSelector:
-  {{ . | indent 6}}
+  {{ . | indent 2}}
 {{- end }}
 {{- with $tol }}
 tolerations:
-  {{ . | indent 6}}
+  {{ . | indent 2}}
 {{- end }}
 {{- with $component.serviceAccountAnnotations }}
 serviceAccount:
-  annotations: {{- toYaml . | nindent 8 }}
-{{- end }}
+  annotations: {{- toYaml . | nindent 4 }}
 {{- end -}}
+{{- end }}

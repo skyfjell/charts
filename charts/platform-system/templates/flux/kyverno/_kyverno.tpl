@@ -13,22 +13,22 @@ installCRDs: true
 
 {{- with $anno }}
 annotations:
-  {{ . | indent 2}}
+  {{- . | nindent 2}}
 {{- end }}
 
 {{- with $tol }}
 tolerations:
-  {{ . | indent 2}}
+  {{- . | nindent 2}}
 {{- end }}
 
 {{- with $nodeSel }}
 nodeSelector:
-  {{ . | indent 2}}
+  {{- . | nindent 2}}
 {{- end }}
 
 {{- with $component.serviceAccountAnnotations }}
 serviceAccount:
-  annotations: {{- toYaml . | nindent 4 }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
 {{- end }}
-
-{{- end -}}
+{{- end }}

@@ -1,7 +1,7 @@
-{{ $key := "base" }}
-{{ $parent := .Values.components.istio }}
-{{ $component := get $parent.components $key }}
-{{ $solution := .Values.solution }}
+{{- $key := "base" -}}
+{{- $parent := .Values.components.istio -}}
+{{- $component := get $parent.components $key -}}
+{{- $solution := .Values.solution -}}
 
 {{- $repo := .Values.components.helmRepositories.components.istio -}}
 {{- $sourceName := list $repo.name $ | include "platform-system.format.name" -}}

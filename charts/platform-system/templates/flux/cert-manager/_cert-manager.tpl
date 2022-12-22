@@ -12,15 +12,15 @@ fullnameOverride: {{ $component.name }}
 installCRDs: true
 {{- with $anno }}
 annotations:
-  {{ . | indent 2}}
+  {{- . | nindent 2}}
 {{- end }}
 {{- with $tol }}
 tolerations:
-  {{ . | indent 2}}
+  {{- . | nindent 2}}
 {{- end }}
 {{- with $nodeSel }}
 nodeSelector:
-  {{ . | indent 2}}
+  {{- . | nindent 2}}
 {{- end }}
 {{- with $component.serviceAccountAnnotations }}
 serviceAccount:
@@ -31,17 +31,17 @@ webhook:
   securePort: {{ $component.webhookSecurePort }}
   {{- with $tol }}
   tolerations:
-    {{ . | indent 4}}
+    {{- . | nindent 4}}
   {{- end }}
   {{- with $nodeSel }}
   nodeSelector:
-    {{ . | indent 4}}
+    {{- . | nindent 4}}
   {{- end }}
 {{ if or $tol $nodeSel }}
 cainjector:
   {{- with $tol }}
   tolerations:
-    {{ . | indent 4}}
+    {{- . | nindent 4}}
   {{- end }}
   {{- with $nodeSel }}
   nodeSelector:
@@ -50,11 +50,11 @@ cainjector:
 startupapicheck:
   {{- with $tol }}
   tolerations:
-    {{ . | indent 4}}
+    {{- . | nindent 4}}
   {{- end }}
   {{- with $nodeSel }}
   nodeSelector:
-    {{ . | indent 4}}
+    {{- . | nindent 4}}
   {{- end }}
 {{- end -}}
 {{- end -}}

@@ -11,28 +11,28 @@
 operator:
   {{- with $anno }}
   annotations:
-    {{ . | indent 6}}
+    {{- . | nindent 4 }}
   {{- end }}
   {{- with $nodeSel }}
   nodeSelector:
-    {{ . | indent 6}}
+    {{- . | nindent 4 }}
   {{- end }}
   {{- with $tol }}
   tolerations:
-    {{ . | indent 6}}
+    {{- . | nindent 4 }}
   {{- end }}
 console:
   {{- with $anno }}
   annotations:
-    {{ . | indent 6}}
+    {{- . | nindent 4 }}
   {{- end }}
   {{- with $nodeSel }}
   nodeSelector:
-    {{ . | indent 6}}
+    {{- . | nindent 4 }}
   {{- end }}
   {{- with $tol }}
   tolerations:
-    {{ . | indent 6}}
+    {{- . | nindent 4 }}
   {{- end }}
 {{- end -}}
 {{- end -}}
