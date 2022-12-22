@@ -92,7 +92,7 @@ spec:
                       fieldRef:
                         fieldPath: metadata.name
                   - name: K8S_SELF_NAME
-                    value: {{ $component.name }}
+                    value: {{ list $parent.name $component.name | include "skyfjell.common.format.name" }}
                   {{- range $component.env }}
                   - name: {{ .name }}
                     {{- toYaml ( omit . "name") | nindent 22 }}
