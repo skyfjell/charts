@@ -16,9 +16,9 @@ components:
         image:
           registry: ghcr.io/skyfjell
           repository: istio-proxy-quit
-          tag: 0.0.3
+          tag: 0.0.4
           pullPolicy: IfNotPresent
         sleepInterval: "5s"
         env: []
       kyverno:
-        namespace: kyverno
+        namespace: system-kyverno
