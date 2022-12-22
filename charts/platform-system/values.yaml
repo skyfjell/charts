@@ -215,8 +215,6 @@ components:
         enabled: true
         # Component release name. Will be prefixed by parent component(s)
         name: policies
-        # Enable Istio CRDs/Injection
-        istioEnabled: true
         # Chart/Source Configuration
         chart:
           version: "2.5.1"
@@ -224,6 +222,17 @@ components:
         # Kyverno podSecurityStandard
         podSecurityStandard: "restricted"
         # Override Chart Values
+        values: {}
+      skyfjellPolicies:
+        # Toggle Component
+        enabled: true
+        # Component release name. Will be prefixed by parent component(s)
+        name: policies-skyfjell
+        chart:
+          name: kyverno-policies
+          version: 0.0.6
+          # Uses the skyfjell helm repository by default.
+          source: {}
         values: {}
   minio:
     # Toggle Component
@@ -295,6 +304,14 @@ components:
     istioEnabled: true
     # Namespace to Create/Install - Resolves to: `[prefix]-[namespace|name]`
     namespace: ""
+    # Affinity - Deeper component values take precedence.
+    affinity: {}
+    # Annotations - Deeper component values are merged.
+    annotations: {}
+    # Node Selector - Deeper component values take precedence.
+    nodeSelector: {}
+    # Tolerations - Deeper component values take precedence.
+    tolerations: []
     components:
       operator:
         # Toggle Component

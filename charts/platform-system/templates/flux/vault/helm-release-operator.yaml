@@ -10,10 +10,10 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: {{ list $component.name $ | include "platform-system.format.name" }}
+  name: {{ list $parent.name $component.name $ | include "platform-system.format.name" }}
   namespace: {{ $solution.namespace | quote }}
 spec:
-  releaseName: {{ $component.name }}
+  releaseName: {{ list $parent.name $component.name $ | include "platform-system.format.name" }}
   targetNamespace: {{ list $parent . | include "skyfjell.common.format.component.namespace" }}
   dependsOn:
     {{- include "platform-system.require.dependencies" $ | nindent 4 }}

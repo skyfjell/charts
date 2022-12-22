@@ -1,13 +1,13 @@
-{{- $key := "policies" -}}
+{{- $key := "skyfjellPolicies" -}}
 {{- $parent := .Values.components.kyverno -}}
 {{- $component := get $parent.components $key -}}
 {{- $solution := .Values.solution -}}
 
-{{- $repo := .Values.components.helmRepositories.components.kyverno -}}
+{{- $repo := .Values.components.helmRepositories.components.skyfjell -}}
 {{- $sourceName := list $repo.name $ | include "platform-system.format.name" -}}
 {{- $sourceName := default $sourceName $component.chart.source.name -}}
 ---
-{{ if and $parent.enabled $component.enabled (eq $solution.name "flux") }}
+{{- if and $parent.enabled $component.enabled (eq $solution.name "flux") }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -17,10 +17,12 @@ spec:
   releaseName: {{ list $parent.name $component.name $ | include "platform-system.format.name" }}
   targetNamespace: {{ list $parent . | include "skyfjell.common.format.component.namespace" }}
   dependsOn:
+    {{- if $parent.enabled }}
     - name: {{ list $parent.name $ | include "platform-system.format.name" }}
+    {{- end }}
   chart:
     spec:
-      chart: kyverno-policies
+      chart: {{ $component.chart.name }}
       version: {{ $component.chart.version }}
       sourceRef:
         kind: {{ default $parent.chart.source.kind $component.chart.source.kind }}
@@ -28,6 +30,5 @@ spec:
         namespace: {{ $solution.namespace | quote }}
   interval: {{ $solution.interval }}
   values:
-{{- $defaultValues := include "platform-system.components.kyverno-policies.defaultValues" $ | fromYaml }}
-{{ mergeOverwrite $defaultValues $component.values | toYaml | indent 4 }}
-{{ end }}
+{{ $component.values | toYaml | indent 4 }}
+{{- end }}
