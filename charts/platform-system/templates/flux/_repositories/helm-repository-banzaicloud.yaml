@@ -1,6 +1,7 @@
 {{- $component := .Values.components.helmRepositories.components.banzaicloud -}}
 
 {{- if and $component.enabled .Values.components.vault.components.operator.enabled (eq .Values.solution.name "flux") -}}
+---
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:

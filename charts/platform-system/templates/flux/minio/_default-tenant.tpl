@@ -12,50 +12,56 @@ tenant:
   pools:
     - storageClassName: {{ default "default" $component.storageClassName }}
       {{- with $anno }}
-      annotations: {{- . | nindent 10 }}
+      annotations:
+        {{- . | nindent 8 }}
       {{- end }}
       {{- with $nodeSel }}
-      nodeSelector: {{- . | nindent 10}}
+      nodeSelector:
+        {{- . | nindent 8 }}
       {{- end }}
       {{- with $tol }}
-      tolerations: {{- . | nindent 10}}
+      tolerations:
+        {{- . | nindent 8 }}
       {{- end }}
   prometheus:
     storageClassName: {{ default "default" $component.storageClassName }}
     {{- with $anno }}
     annotations:
-      {{ . | indent 8}}
+      {{- . | nindent 6 }}
     {{- end }}
     {{- with $nodeSel }}
     nodeSelector:
-      {{ . | indent 6}}
+      {{- . | nindent 6 }}
     {{- end }}
     {{- with $tol }}
-    tolerations: {{- . | nindent 8}}
+    tolerations:
+      {{- . | nindent 6 }}
     {{- end }}
   log:
     {{- with $anno }}
     annotations:
-      {{ . | indent 8}}
+      {{- . | nindent 6 }}
     {{- end }}
     {{- with $nodeSel }}
     nodeSelector:
-      {{ . | indent 8}}
+      {{ . | nindent 6 }}
     {{- end }}
     {{- with $tol }}
-    tolerations: {{- . | nindent 8 }}
+    tolerations:
+      {{- . | nindent 6 }}
     {{- end }}
     db:
       storageClassName: {{ default "default" $component.storageClassName }}
       {{- with $anno }}
       annotations:
-        {{ . | indent 10}}
+        {{- . | nindent 8 }}
       {{- end }}
       {{- with $nodeSel }}
       nodeSelector:
-        {{ . | indent 10}}
+        {{- . | indent 8 }}
       {{- end }}
       {{- with $tol }}
-      tolerations: {{- . | nindent 10}}
+      tolerations:
+        {{- . | nindent 8 }}
       {{- end }}
 {{- end -}}
