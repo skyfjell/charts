@@ -29,7 +29,7 @@ components:
     namespace: ""
     chart:
       # version of the chart
-      version: "1.8.2"
+      version: "1.10.1"
       source:
         kind: HelmRepository
         name: ""
@@ -58,7 +58,7 @@ components:
     # Chart/Source Configuration
     chart:
       # version of the chart
-      version: "6.7.2"
+      version: "6.12.2"
       # source of the chart
       source:
         kind: HelmRepository
@@ -94,7 +94,7 @@ components:
     # Chart/Source Configuration
     chart:
       # version for istio components. Istio keeps components in sync
-      version: "1.16.0"
+      version: "1.16.1"
       source:
         kind: HelmRepository
         name: ""
@@ -194,7 +194,7 @@ components:
     namespace: ""
     # Chart/Source Configuration
     chart:
-      version: "2.5.1"
+      version: "2.6.5"
       source:
         kind: HelmRepository
         name: ""
@@ -217,7 +217,7 @@ components:
         name: policies
         # Chart/Source Configuration
         chart:
-          version: "2.5.1"
+          version: "2.6.5"
           source: {}
         # Kyverno podSecurityStandard
         podSecurityStandard: "restricted"
@@ -251,7 +251,7 @@ components:
         name: minio
         # Chart/Source Configuration
         chart:
-          version: "4.4.27"
+          version: "4.5.5"
           source:
             kind: HelmRepository
             name: platform-system-minio
@@ -277,7 +277,7 @@ components:
         namespace: ""
         # Chart/Source Configuration
         chart:
-          version: "4.4.27"
+          version: "4.5.5"
           # source of the chart
           source:
             kind: HelmRepository
@@ -320,7 +320,7 @@ components:
         # Chart/Source Configuration
         chart:
           # version of the chart
-          version: "1.16.1"
+          version: "1.17.0"
           # source of the chart
           source:
             kind: HelmRepository
