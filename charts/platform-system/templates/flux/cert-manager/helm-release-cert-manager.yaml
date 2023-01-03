@@ -14,6 +14,9 @@ kind: HelmRelease
 metadata:
   name: {{ list $component.name $ | include "platform-system.format.name" }}
   namespace: {{ $solution.namespace | quote }}
+  labels:
+    {{- include "platform-system.labels" $ | nindent 4 }}
+    {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   releaseName: {{ list $component.name $ | include "platform-system.format.name" }}
   {{- if .Values.components.istio.enabled }}

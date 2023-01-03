@@ -6,9 +6,11 @@ global:
 components:
   istio:
     components:
-      istiod:
-        components:
-          externalAuth:
-            enabled: true
       gateway:
         enabled: true
+  velero:
+    provider:
+      name: aws
+      bucket: "velero-s3-123213213213"
+      region: "us-east-2"
+      kmsKeyId: "alias/my-kms-id"

@@ -13,6 +13,9 @@ kind: HelmRelease
 metadata:
   name: {{ list $parent.name $component.name $ | include "platform-system.format.name" }}
   namespace: {{ $solution.namespace | quote }}
+  labels:
+    {{- include "platform-system.labels" $ | nindent 4 }}
+    {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   releaseName: {{ list $parent.name $component.name $ | include "platform-system.format.name" }}
   targetNamespace: {{ list $parent . | include "skyfjell.common.format.component.namespace" }}

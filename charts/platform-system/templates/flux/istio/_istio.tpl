@@ -27,13 +27,14 @@ global:
 
 {{- define "platform-system.components.istio.components.istiod.defaultValues" -}}
 {{- $ := . -}}
-{{- $global := $.global -}}
+{{- $global := $.Values.global -}}
 {{- $parent := $.Values.components.istio -}}
 {{- $component := $parent.components.istiod -}}
 
 {{- $anno := merge $global.annotations $parent.annotations $component.annotations -}}
 {{- $nodeSel := default $global.nodeSelector $parent.nodeSelector $component.nodeSelector -}}
 {{- $tol := default $global.tolerations $parent.tolerations $component.tolerations -}}
+{{- $aff := default $global.affinity $parent.affinity $component.affinity  -}}
 
 global:
   istioNamespace: {{ list $parent $ | include "skyfjell.common.format.component.namespace" }}
@@ -41,15 +42,19 @@ global:
 pilot:
   {{- with $anno }}
   podAnnotations:
-    {{ . | indent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with $nodeSel }}
   nodeSelector:
-    {{ . | indent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with $tol }}
   tolerations:
-    {{ . | indent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $aff }}
+  affinity:
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
 meshConfig:
@@ -100,25 +105,30 @@ meshConfig:
 
 {{- define "platform-system.components.istio.components.gateway.defaultValues" -}}
 {{- $ := . -}}
-{{- $global := $.global -}}
+{{- $global := $.Values.global -}}
 {{- $parent := $.Values.components.istio -}}
 {{- $component := $parent.components.gateway -}}
 
 {{- $anno := merge $global.annotations $parent.annotations $component.annotations -}}
 {{- $nodeSel := merge $global.nodeSelector $parent.nodeSelector $component.nodeSelector -}}
 {{- $tol := default $global.tolerations $parent.tolerations $component.tolerations -}}
+{{- $aff := default $global.affinity $parent.affinity $component.affinity  -}}
+
 
 name: {{ $component.name }}
 
 {{- with $nodeSel }}
 nodeSelector:
-  {{ . | indent 2 }}
+  {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- with $tol }}
 tolerations:
-  {{ . }}
+  {{- toYaml . | nindent 2 }}
 {{- end }}
-
+{{- with $aff }}
+affinity:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
 {{- end -}}
 
 {{- define "platform-system.components.istio.components.gateway.values" }}
