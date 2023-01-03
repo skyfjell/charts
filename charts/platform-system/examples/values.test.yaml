@@ -10,7 +10,7 @@ components:
         enabled: true
   velero:
     provider:
-      aws:
-        bucket: "velero-s3-123213213213"
-        region: "us-east-2"
-        kmsKeyId: "alias/my-kms-id"
+      name: aws
+      bucket: "velero-s3-123213213213"
+      region: "us-east-2"
+      kmsKeyId: "alias/my-kms-id"

@@ -54,10 +54,7 @@ affinity:
 {{- end }}
 credentials:
   useSecret: false
-{{- if (gt ( keys $component.provider | len ) 1) }}
-{{ fail "Only one provider configuration can be set."}}
-{{- end }}
-{{- if (hasKey $component.provider "aws") }}
+{{- if eq (get $component.provider "name") "aws" }}
 {{ include "platform-system.components.velero.defaultValues.aws" $  }}
 {{- end -}}
 {{- end -}}

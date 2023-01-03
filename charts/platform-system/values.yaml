@@ -364,13 +364,13 @@ components:
     # aws configuration
     # Example configuration below, with defaults. Optional fields noted.
     # provider:
-    #   aws:
-    #     bucket: "my-s3-bucket"
-    #     region: "us-east-1"
-    #     # optional
-    #     kmsKeyId: "alias/my-kms-id"
-    #     # optional if using S3, set if using minio
-    #     s3Url: "https://s3.us-east-1.amazonaws.com"
+    #   name: aws
+    #   bucket: "my-s3-bucket"
+    #   region: "us-east-1"
+    #   # optional
+    #   kmsKeyId: "alias/my-kms-id"
+    #   # optional if using S3, set if using minio
+    #   s3Url: "https://s3.us-east-1.amazonaws.com"
     provider: {}
     # values to override with
     values: {}
