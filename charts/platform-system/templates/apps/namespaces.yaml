@@ -13,6 +13,7 @@ metadata:
   name: {{ list . $ | include "skyfjell.common.format.component.namespace" }}
   labels:
     {{- include "platform-system.labels" $ | nindent 4 }}
+    {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
     {{- if or (and $istio.enabled .istioEnabled) (and $istio.enabled $.Values.global.istioEnabled) }}
     istio-injection: enabled
     {{- end }}

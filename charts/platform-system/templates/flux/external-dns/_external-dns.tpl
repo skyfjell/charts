@@ -1,26 +1,31 @@
 {{- define "platform-system.components.external-dns.defaultValues" -}}
 {{- $ := . -}}
-{{- $global := $.global -}}
+{{- $global := $.Values.global -}}
 {{- $component := $.Values.components.externalDns -}}
 
 {{- $anno := merge $global.annotations $component.annotations -}}
 {{- $nodeSel := merge $global.nodeSelector $component.nodeSelector -}}
 {{- $tol := default $global.tolerations $component.tolerations -}}
+{{- $aff := default $global.affinity $component.affinity  -}}
 
 fullnameOverride: {{ $component.name }}
 
 installCRDs: true
 {{- with $anno }}
 annotations:
-  {{ . | nindent 2}}
+  {{ toYaml . | nindent 2 }}
 {{- end }}
 {{- with $tol }}
 tolerations:
-  {{- . | nindent 2}}
+  {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- with $nodeSel }}
 nodeSelector:
-  {{- . | nindent 2}}
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with $aff }}
+affinity:
+  {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- with $component.serviceAccountAnnotations }}
 serviceAccount:

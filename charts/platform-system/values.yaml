@@ -336,6 +336,44 @@ components:
         serviceAccountAnnotations: {}
         # Override Chart Values
         values: {}
+  velero:
+    # Toggle Component
+    enabled: true
+    # Component Release Name - Prefixed by parent component(s)
+    name: velero
+    # Enable Istio CRDs/Injection
+    istioEnabled: true
+    # Namespace to Create/Install - Resolves to: `[prefix]-[namespace|name]`
+    namespace: ""
+    # Affinity - Deeper component values take precedence.
+    affinity: {}
+    # Annotations - Deeper component values are merged.
+    annotations: {}
+    # Node Selector - Deeper component values take precedence.
+    nodeSelector: {}
+    # Tolerations - Deeper component values take precedence.
+    tolerations: []
+    chart:
+      # version of the chart
+      version: "3.0.0"
+      # source of the chart
+      source:
+        kind: HelmRepository
+        name: ""
+    # provider for backend. Only supports aws at the moment, for other providers, use values to override
+    # aws configuration
+    # Example configuration below, with defaults. Optional fields noted.
+    # provider:
+    #   aws:
+    #     bucket: "my-s3-bucket"
+    #     region: "us-east-1"
+    #     # optional
+    #     kmsKeyId: "alias/my-kms-id"
+    #     # optional if using S3, set if using minio
+    #     s3Url: "https://s3.us-east-1.amazonaws.com"
+    provider: {}
+    # values to override with
+    values: {}
 
   helmRepositories:
     components:
@@ -366,6 +404,10 @@ components:
       skyfjell:
         name: skyfjell
         url: https://charts.skyfjell.io
+        enabled: true
+      vmware:
+        name: vmware
+        url: https://vmware-tanzu.github.io/helm-charts
         enabled: true
 
 # Global Values

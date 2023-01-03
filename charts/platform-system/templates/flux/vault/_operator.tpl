@@ -1,26 +1,29 @@
 {{- define "platform-system.components.vault-operator.defaultValues" -}}
 {{- $ := . -}}
-{{- $global := $.global -}}
+{{- $global := $.Values.global -}}
 {{- $parent := $.Values.components.vault -}}
 {{- $component := $parent.components.operator -}}
 
 {{- $anno := merge $global.annotations $component.annotations $parent.annotations -}}
 {{- $nodeSel := default $global.nodeSelector $component.nodeSelector $parent.nodeSelector -}}
 {{- $tol := default $global.tolerations $component.tolerations $parent.nodeSelector -}}
+{{- $aff := default $global.affinity $component.affinity $parent.affinity -}}
 
 fullnameOverride: {{ list $parent.name $component.name | include "skyfjell.common.format.name" }}
-
+{{- with $aff }}
+affinity:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
 {{- with $anno }}
-podAnnotations:
-  {{ . | indent 2}}
+  {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- with $nodeSel }}
 nodeSelector:
-  {{ . | indent 2}}
+  {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- with $tol }}
 tolerations:
-  {{ . | indent 2}}
+  {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- with $component.serviceAccountAnnotations }}
 serviceAccount:
