@@ -34,7 +34,7 @@ jobs:
           flux install
       - name: Test Release
         run: |
-          helm install --wait --debug system ./charts/platform-system -f ./charts/platform-system/examples/values.test.yaml
+          helm install --wait --debug system charts/platform-system -f charts/platform-system/examples/values.test.yaml
   test-platform-auth:
     needs: test-platform-system
     runs-on: ubuntu-latest
@@ -42,4 +42,4 @@ jobs:
       - name: Test Release
         run: |
           helm dependency update charts/platform-auth
-          helm install --wait --debug system ./charts/platform-auth -f /charts/platform-auth/examples/values.test.yaml
+          helm install --wait --debug system charts/platform-auth -f charts/platform-auth/examples/values.test.yaml
