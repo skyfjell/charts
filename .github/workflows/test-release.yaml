@@ -33,7 +33,7 @@ jobs:
         run: |
           curl -s https://fluxcd.io/install.sh | sudo bash
           flux install
-      # - name: Test Release
-      #   working-directory: charts/platform-system
-      #   run: |
-      #     helm install --debug system . --set crdCheck=false -f examples/values.test.yaml
+      - name: Test Release
+        working-directory: charts/platform-system
+        run: |
+          helm install --wait --debug system . -f examples/values.test.yaml
