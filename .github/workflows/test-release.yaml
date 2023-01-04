@@ -17,13 +17,14 @@ jobs:
         with:
           version: v3.8.1
       - name: Setup Deps
+        working-directory: charts/platform-system
         run: |
           helm repo add skyfjell https://charts.skyfjell.io
-          helm dependency update charts/platform-system
+          helm dependency update
       - uses: AbsaOSS/k3d-action@v2
         name: "Create Single Cluster"
         with:
-          cluster-name: "test-platform"
+          cluster-name: "test-platform-system"
           args: >-
             --no-lb
             --agents 1
@@ -33,13 +34,27 @@ jobs:
           curl -s https://fluxcd.io/install.sh | sudo bash
           flux install
       - name: Test Release
+        working-directory: charts/platform-system
         run: |
-          helm install --wait --debug system charts/platform-system -f charts/platform-system/examples/values.test.yaml
+          helm install --wait --debug system . -f examples/values.test.yaml
   test-platform-auth:
     needs: test-platform-system
     runs-on: ubuntu-latest
     steps:
-      - name: Test Release
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.8.1
+      - name: Setup Deps
+        working-directory: charts/platform-auth
         run: |
-          helm dependency update charts/platform-auth
-          helm install --wait --debug system charts/platform-auth -f charts/platform-auth/examples/values.test.yaml
+          helm repo add skyfjell https://charts.skyfjell.io
+          helm dependency update
+      - name: Test Release
+        working-directory: charts/platform-auth
+        run: |
+          helm install --wait --debug auth . -f examples/values.test.yaml
