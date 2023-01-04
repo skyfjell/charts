@@ -1,4 +1,4 @@
-name: Test Charts
+name: Test Chart Templates
 
 on:
   pull_request:
@@ -21,7 +21,7 @@ jobs:
           charts=$(ls charts | jq -c -e -R -s 'split("\n") -[""]')
           array_diff=$(jq -c -n --argjson array1 "$ignores" --argjson array2 "$charts" '{"all": $array2,"some":$array1} | .all-.some' )
           echo "CHARTS=$array_diff" >> $GITHUB_OUTPUT
-  test-charts:
+  test-templates:
     needs: list-manifests
     runs-on: ubuntu-latest
     strategy:

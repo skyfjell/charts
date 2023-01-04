@@ -1,0 +1,39 @@
+name: Test Release
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-platform-system:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.8.1
+      - name: Setup Deps
+        working-directory: charts/platform-system
+        run: |
+          helm repo add skyfjell https://charts.skyfjell.io
+          helm dependency update
+      - uses: AbsaOSS/k3d-action@v2
+        name: "Create Single Cluster"
+        with:
+          cluster-name: "test-platform-system"
+          args: >-
+            --no-lb
+            --agents 1
+            --k3s-arg "--disable=traefik@server:0"
+      - name: Install flux
+        run: |
+          curl -s https://fluxcd.io/install.sh | sudo bash
+          flux install
+      # - name: Test Release
+      #   working-directory: charts/platform-system
+      #   run: |
+      #     helm install --debug system . --set crdCheck=false -f examples/values.test.yaml
