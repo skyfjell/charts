@@ -34,9 +34,8 @@ jobs:
           curl -s https://fluxcd.io/install.sh | sudo bash
           flux install
       - name: Test Release
-        working-directory: charts/platform-system
         run: |
-          helm install --wait --debug system . -f examples/values.test.yaml
+          helm install --wait --debug system ./charts/platform-system -f ./charts/platform-system/examples/values.test.yaml
   test-platform-auth:
     needs: test-platform-system
     runs-on: ubuntu-latest
@@ -44,4 +43,6 @@ jobs:
       - name: Test Release
         working-directory: charts/platform-auth
         run: |
+          helm repo add skyfjell https://charts.skyfjell.io
+          helm dependency update
           helm install --wait --debug system . -f examples/values.test.yaml
