@@ -37,3 +37,10 @@ jobs:
         working-directory: charts/platform-system
         run: |
           helm install --wait --debug system . -f examples/values.test.yaml
+  test-platform-auth:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test Release
+        working-directory: charts/platform-auth
+        run: |
+          helm install --wait --debug system . -f examples/values.test.yaml
