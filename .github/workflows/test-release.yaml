@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  test-platform-system:
+  test-release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -16,11 +16,6 @@ jobs:
         uses: azure/setup-helm@v3
         with:
           version: v3.8.1
-      - name: Setup Deps
-        working-directory: charts/platform-system
-        run: |
-          helm repo add skyfjell https://charts.skyfjell.io
-          helm dependency update
       - uses: AbsaOSS/k3d-action@v2
         name: "Create Single Cluster"
         with:
@@ -29,32 +24,18 @@ jobs:
             --no-lb
             --agents 1
             --k3s-arg "--disable=traefik@server:0"
-      - name: Install flux
-        run: |
-          curl -s https://fluxcd.io/install.sh | sudo bash
-          flux install
-      - name: Test Release
-        working-directory: charts/platform-system
-        run: |
-          helm install --wait --debug system . -f examples/values.test.yaml
-  test-platform-auth:
-    needs: test-platform-system
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Install Helm
-        uses: azure/setup-helm@v3
-        with:
-          version: v3.8.1
-      - name: Setup Deps
-        working-directory: charts/platform-auth
+      - name: Install Dependencies
         run: |
           helm repo add skyfjell https://charts.skyfjell.io
+          curl -s https://fluxcd.io/install.sh | sudo bash
+          flux install
+      - name: Test Platform System
+        working-directory: charts/platform-system
+        run: |
           helm dependency update
-      - name: Test Release
+          helm install --wait --debug system . -f examples/values.test.yaml
+      - name: Test Platform Auth
         working-directory: charts/platform-auth
         run: |
+          helm dependency update
           helm install --wait --debug auth . -f examples/values.test.yaml
