@@ -24,7 +24,7 @@ jobs:
       - uses: AbsaOSS/k3d-action@v2
         name: "Create Single Cluster"
         with:
-          cluster-name: "test-platform-system"
+          cluster-name: "test-platform"
           args: >-
             --no-lb
             --agents 1
@@ -38,6 +38,7 @@ jobs:
         run: |
           helm install --wait --debug system . -f examples/values.test.yaml
   test-platform-auth:
+    needs: test-platform-system
     runs-on: ubuntu-latest
     steps:
       - name: Test Release
