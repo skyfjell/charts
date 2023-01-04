@@ -17,10 +17,9 @@ jobs:
         with:
           version: v3.8.1
       - name: Setup Deps
-        working-directory: charts/platform-system
         run: |
           helm repo add skyfjell https://charts.skyfjell.io
-          helm dependency update
+          helm dependency update charts/platform-system
       - uses: AbsaOSS/k3d-action@v2
         name: "Create Single Cluster"
         with:
@@ -41,8 +40,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Test Release
-        working-directory: charts/platform-auth
         run: |
-          helm repo add skyfjell https://charts.skyfjell.io
-          helm dependency update
-          helm install --wait --debug system . -f examples/values.test.yaml
+          helm dependency update charts/platform-auth
+          helm install --wait --debug system ./charts/platform-auth -f /charts/platform-auth/examples/values.test.yaml
