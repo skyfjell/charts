@@ -36,6 +36,8 @@ configuration:
 {{- $nodeSel := default $global.nodeSelector $component.nodeSelector -}}
 {{- $tol := default $global.tolerations $component.tolerations -}}
 {{- $aff := default $global.affinity $component.affinity  -}}
+
+fullnameOverride: {{ $component.name }}
 {{- with $nodeSel }}
 nodeSelector:
   {{- toYaml . | nindent 2 }}
