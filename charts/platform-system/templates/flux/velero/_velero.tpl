@@ -38,6 +38,10 @@ configuration:
 {{- $aff := default $global.affinity $component.affinity  -}}
 
 fullnameOverride: {{ $component.name }}
+{{- with $component.serviceAccountAnnotations }}
+serviceAccount:
+  annotations: {{- toYaml . | nindent 4 }}
+{{- end }}
 {{- with $nodeSel }}
 nodeSelector:
   {{- toYaml . | nindent 2 }}
