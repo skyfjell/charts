@@ -1,7 +1,7 @@
 {{ define "platform-system.components.velero.defaultValues.aws" }}
 {{- $ := . -}}
 {{- $component := $.Values.components.velero -}}
-{{- $aws := $component.provider.aws -}}
+{{- $aws := $component.provider -}}
 initContainers:
   - name: velero-plugin-for-aws
     image: velero/velero-plugin-for-aws:v1.5.2

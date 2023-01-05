@@ -17,7 +17,7 @@ metadata:
     {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   releaseName: {{ list $component.name $ | include "platform-system.format.name" }}
-  targetNamespace: {{ list . | include "skyfjell.common.format.component.namespace" }}
+  targetNamespace: {{ list $component . | include "skyfjell.common.format.component.namespace" }}
   dependsOn:
     {{- include "platform-system.require.dependencies" $ | nindent 4 }}
   chart:
