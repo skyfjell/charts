@@ -22,3 +22,37 @@ components:
         env: []
       kyverno:
         namespace: system-kyverno
+  velero:
+    name: velero
+    namespace: system-velero
+    # enabled set to false
+    enabled: false
+    components:
+      backupPolicy:
+        enabled: true
+        # schedules for each namespace with
+        # labels:
+        #   skyfjell.io/backups: enabled
+        #
+        # namespaces can be customized on use case basis
+        #  labels:
+        #    skyfjell.io/backups-ignore: yearly
+        #
+        # the format is [resolution]: ttl in golang's time.ParseDuration format
+        # to turn off set [resolution]: null
+        schedules:
+          hourly: 72h0m0s # 3 day ttl
+          daily: 168h0m0s # week ttl
+          weekly: 730h0m0s # month ttl
+          monthly: 8760h0m0s # year ttl
+        # additionalSchedules is an array with of values
+        #
+        # additionalSchedules:
+        #   - name: kebab-name
+        #     schedule: "* * * * 1"
+        #     ttl: 3600
+        #
+        #  Can suppress additional schedules with
+        #  labels:
+        #    skyfjell.io/backups-ignore: kebab-name
+        additionalSchedules: []
