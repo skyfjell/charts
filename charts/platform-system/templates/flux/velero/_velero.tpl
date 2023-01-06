@@ -40,7 +40,8 @@ configuration:
 fullnameOverride: {{ $component.name }}
 {{- with $component.serviceAccountAnnotations }}
 serviceAccount:
-  annotations: {{- toYaml . | nindent 4 }}
+  server:
+    annotations: {{- toYaml . | nindent 4 }}
 {{- end }}
 {{- with $nodeSel }}
 nodeSelector:
