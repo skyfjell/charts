@@ -1,0 +1,19 @@
+
+{{ $velero := .Values.components.velero }}
+{{- if and $velero.enabled -}}
+{{ range (keys $velero.schedules) }}
+{{ $ttl := (get $velero.schedules .)}}
+{{ if $ttl }}
+---
+apiVersion: velero.io/v1
+kind: Schedule
+metadata: 
+  name: {{ printf "platform-system-%s-backup" . }}
+  namespace: {{ $velero.namespace }}
+spec:
+  schedule: {{ include "platform-system-config.velero.scheduleLookup" . }}
+  template:
+    ttl: {{ $ttl | quote }}
+{{ end }}
+{{- end -}}
+{{- end -}}

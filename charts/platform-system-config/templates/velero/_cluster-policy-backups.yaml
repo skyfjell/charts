@@ -1,0 +1,69 @@
+{{/*
+{{- $parent := .Values.components.velero -}}
+{{- $component := $parent.components.backupPolicy -}}
+
+{{/*Map preset schedules to additionalSchedules format and concat lists*/}}
+
+{{/*- $skeds := default list $component.additionalSchedules -}}
+{{- range (keys $component.schedules) -}}
+  {{- $ttl := (get $component.schedules .) -}}
+  {{- $cron := (include "kyverno-policies.components.velero.scheduleLookup" . ) -}}
+  #{{ can be set to null to exclude }}
+  {{- if $ttl -}}
+    {{- $skeds = append $skeds (dict "name" . "schedule" $cron "ttl" $ttl ) -}}
+  {{- end -}}
+{{- end -/*}}
+{{/*
+{{- if and $parent.enabled $component.enabled -}}
+
+{{- range $skeds }}
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: {{ list $parent.name $component.name .name $ | include "kyverno-policies.format.name" }}
+  labels:
+    {{- include "kyverno-policies.labels" $ | nindent 4 }}
+    {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+  annotations:
+    policies.kyverno.io/title: Velero Backups
+    policies.kyverno.io/category: Velero
+    policies.kyverno.io/subject: Schedules
+    policies.kyverno.io/description: >-
+      Creates a series of backup schedules in a namespace with annotation `skyfjell.io/backups: enabled`
+      with increasing time resolution.
+spec:
+  background: true
+  validationFailureAction: enforce
+  rules:
+    - name: {{ list $parent.name $component.name "backup" | include "skyfjell.common.format.name" }}
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+      preconditions:
+        all:
+          - key: {{ "request.object.metadata.labels.\"skyfjell.io/backups\" || ''" | include "skyfjell.common.format.literal" | quote }}
+            operator: Equals
+            value: "enabled"
+          - key: {{ "request.object.metadata.labels.\"skyfjell.io/backups-ignore\" || ''"  | include "skyfjell.common.format.literal" | quote }}
+            operator: NotEquals
+            value: {{ .name | quote }}    
+      generate:
+        apiVersion: velero.io/v1
+        kind: Schedule
+        name: {{ printf "%s-%s" ("request.object.metadata.name" | include "skyfjell.common.format.literal") .name | quote }} 
+        namespace: {{ $parent.namespace }}
+        synchronize: true
+        data:
+          metadata:
+            labels: {{- include "skyfjell.common.chartLabels" $ | nindent 14 }}
+          schedule: {{ .schedule | quote }}
+          template:
+            includeNamespaces:
+              - {{ "request.object.metadata.name" | include "skyfjell.common.format.literal" | quote }}
+            ttl: {{ .ttl | quote }} 
+{{ end }}
+{{- end -}}
+*/}}
