@@ -14,7 +14,7 @@ components:
     # Component Release Name - Prefixed by parent component(s)
     name: config
     chart:
-      version: "0.0.1"
+      version: "0.0.3"
       source:
         kind: HelmRepository
         name: ""
@@ -353,6 +353,7 @@ components:
     nodeSelector: {}
     # Tolerations - Deeper component values take precedence.
     tolerations: []
+    serviceAccountAnnotations: {}
     chart:
       # version of the chart
       version: "3.0.0"
@@ -360,21 +361,37 @@ components:
       source:
         kind: HelmRepository
         name: ""
-    # provider for backend. Only supports aws at the moment, for other providers, use values to override
-    # aws configuration
-    # Example configuration below, with defaults. Optional fields noted.
-    # provider:
-    #   name: aws
-    #   bucket: "my-s3-bucket"
-    #   region: "us-east-1"
-    #   # optional
-    #   kmsKeyId: "alias/my-kms-id"
-    #   # optional if using S3, set if using minio
-    #   s3Url: "https://s3.us-east-1.amazonaws.com"
-    provider: {}
-    # values to override with
-    values: {}
-
+    components:
+      # server is the configuration for the helm release of velero server
+      server:
+        enabled: true
+        # provider for backend. Only supports aws at the moment, for other providers, use values to override
+        # aws configuration
+        # Example configuration below, with defaults. Optional fields noted.
+        # provider:
+        #   name: aws
+        #   bucket: "my-s3-bucket"
+        #   region: "us-east-1"
+        #   # optional
+        #   kmsKeyId: "alias/my-kms-id"
+        #   # optional if using S3, set if using minio
+        #   s3Url: "https://s3.us-east-1.amazonaws.com"
+        provider: {}
+        # values to override with
+        values: {}
+      backupPolicy:
+        enabled: true
+        # retention in golang's time.ParseDuration format
+        # set key to null `hourly: null` to omit schedule
+        schedules:
+          hourly:
+            ttl: 72h0m0s # 3 day retention
+          daily:
+            ttl: 168h0m0s # week retention
+          weekly:
+            ttl: 730h0m0s # month retention
+          monthly:
+            ttl: 8760h0m0s # year retention
   helmRepositories:
     components:
       banzaicloud:
