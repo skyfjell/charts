@@ -3,13 +3,3 @@ components:
     components:
       namespaceInjection:
         allowDisable: true
-  velero:
-    enabled: true
-    components:
-      backupPolicy:
-        schedules:
-          daily: null
-        additionalSchedules:
-          - name: kebab-name
-            schedule: "* * * * *"
-            ttl: 0h0m30s

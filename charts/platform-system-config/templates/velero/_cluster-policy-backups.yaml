@@ -1,17 +1,19 @@
+{{/*
 {{- $parent := .Values.components.velero -}}
 {{- $component := $parent.components.backupPolicy -}}
 
 {{/*Map preset schedules to additionalSchedules format and concat lists*/}}
-{{- $skeds := default list $component.additionalSchedules -}}
+
+{{/*- $skeds := default list $component.additionalSchedules -}}
 {{- range (keys $component.schedules) -}}
   {{- $ttl := (get $component.schedules .) -}}
   {{- $cron := (include "kyverno-policies.components.velero.scheduleLookup" . ) -}}
-  {{/* can be set to null to exclude */}}
+  #{{ can be set to null to exclude }}
   {{- if $ttl -}}
     {{- $skeds = append $skeds (dict "name" . "schedule" $cron "ttl" $ttl ) -}}
   {{- end -}}
-{{- end -}}
-
+{{- end -/*}}
+{{/*
 {{- if and $parent.enabled $component.enabled -}}
 
 {{- range $skeds }}
@@ -61,6 +63,7 @@ spec:
           template:
             includeNamespaces:
               - {{ "request.object.metadata.name" | include "skyfjell.common.format.literal" | quote }}
-            ttl: {{ .ttl | quote }}          
+            ttl: {{ .ttl | quote }} 
 {{ end }}
 {{- end -}}
+*/}}
