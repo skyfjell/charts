@@ -360,21 +360,34 @@ components:
       source:
         kind: HelmRepository
         name: ""
-    # provider for backend. Only supports aws at the moment, for other providers, use values to override
-    # aws configuration
-    # Example configuration below, with defaults. Optional fields noted.
-    # provider:
-    #   name: aws
-    #   bucket: "my-s3-bucket"
-    #   region: "us-east-1"
-    #   # optional
-    #   kmsKeyId: "alias/my-kms-id"
-    #   # optional if using S3, set if using minio
-    #   s3Url: "https://s3.us-east-1.amazonaws.com"
-    provider: {}
-    # values to override with
-    values: {}
-
+    components:
+      server:
+        enabled: true
+        # provider for backend. Only supports aws at the moment, for other providers, use values to override
+        # aws configuration
+        # Example configuration below, with defaults. Optional fields noted.
+        # provider:
+        #   name: aws
+        #   bucket: "my-s3-bucket"
+        #   region: "us-east-1"
+        #   # optional
+        #   kmsKeyId: "alias/my-kms-id"
+        #   # optional if using S3, set if using minio
+        #   s3Url: "https://s3.us-east-1.amazonaws.com"
+        provider: {}
+        # values to override with
+        values: {}
+      # backupPolicy generation with kyverno
+      backupPolicy:
+        enabled: true
+        # schedules for each clusterwide backup
+        # the format is [resolution]: ttl in golang's time.ParseDuration format
+        # to turn off set [resolution]: null
+        schedules:
+          hourly: 72h0m0s # 3 day ttl
+          daily: 168h0m0s # week ttl
+          weekly: 730h0m0s # month ttl
+          monthly: 8760h0m0s # year ttl
   helmRepositories:
     components:
       banzaicloud:

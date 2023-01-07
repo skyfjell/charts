@@ -1,4 +1,5 @@
-{{- $component := .Values.components.velero -}}
+{{- $parent := .Values.components.velero -}}
+{{- $component := $parent.components.server -}}
 {{- $solution := .Values.solution -}}
 
 {{- $repo := .Values.components.helmRepositories.components.vmware -}}
