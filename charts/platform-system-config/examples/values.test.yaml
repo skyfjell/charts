@@ -1,0 +1,16 @@
+components:
+  certManager:
+    enabled: true
+    name: "cert-manager"
+    namespace: "cert-manager"
+  istio:
+    enabled: true
+    name: "istio"
+    namespace: "istio"
+    mTLSMode: "STRICT"
+  velero:
+    enabled: true
+    name: "velero"
+    namespace: "velero"
+    schedules:
+      hourly: null

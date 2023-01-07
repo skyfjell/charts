@@ -5,7 +5,7 @@ apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: platform-system-flux-helm-webhook
-  namespace: {{ list $component $ | include "skyfjell.common.format.component.namespace" }}
+  namespace: {{ $component.namespace }}
 spec:
   action: ALLOW
   selector:
