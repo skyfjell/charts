@@ -15,7 +15,6 @@ jobs:
         env:
           IGNORE_FOLDERS: |
             common
-            platform-system-config
         run: |
           ignores=$(echo $IGNORE_FOLDERS | tr -d '\n' | jq -c  -R -s 'split(" ") -[""]')
           charts=$(ls charts | jq -c -e -R -s 'split("\n") -[""]')

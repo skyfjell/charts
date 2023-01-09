@@ -1,0 +1,31 @@
+# Prefix Global/Shared Resources
+prefix: "system"
+# Supported Values: `flux`
+# TODO: Support `argo`
+solution:
+  name: flux
+  namespace: flux-system
+
+components:
+  certManager:
+    enabled: false
+    name: "cert-manager"
+    namespace: ""
+  istio:
+    enabled: false
+    name: "istio"
+    namespace: ""
+    mTLSMode: "STRICT"
+  velero:
+    enabled: false
+    name: "velero"
+    namespace: ""
+    schedules:
+      hourly:
+        ttl: 72h0m0s # 3 day retention
+      daily:
+        ttl: 168h0m0s # 1 week retention
+      weekly:
+        ttl: 730h0m0s # 1 month retention
+      monthly:
+        ttl: 8760h0m0s # 1 year retention
