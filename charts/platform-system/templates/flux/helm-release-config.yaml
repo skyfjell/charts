@@ -3,7 +3,7 @@
 {{- $istio := .Values.components.istio -}}
 {{- $velero := .Values.components.velero -}}
 {{- $certManager := .Values.components.certManager -}}
-{{- $backupPolicy := $velero.components.backupPolicy -}}
+{{- $schedule := $velero.components.schedule -}}
 {{- $repo := .Values.components.helmRepositories.components.skyfjell -}}
 {{- $sourceName := list $repo.name $ | include "platform-system.format.name" -}}
 {{- $sourceName := default $sourceName $component.chart.source.name -}}
@@ -45,9 +45,9 @@ spec:
         namespace: {{ list .Values.components.istio . | include "skyfjell.common.format.component.namespace" }}
         mTLSMode: {{ .Values.components.istio.mTLSMode }}
       velero:        
-        enabled: {{ and $velero.enabled $backupPolicy.enabled }}
+        enabled: {{ and $velero.enabled $schedule.enabled }}
         name: {{ $velero.name }}
         namespace: {{ list $velero . | include "skyfjell.common.format.component.namespace" }}
-        schedules: {{- $backupPolicy.schedules | toYaml | nindent 10 }}
+        schedules: {{- $schedule.schedules | toYaml | nindent 10 }}
 
 {{- end }}

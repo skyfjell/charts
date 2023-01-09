@@ -379,7 +379,7 @@ components:
         provider: {}
         # values to override with
         values: {}
-      backupPolicy:
+      schedule:
         enabled: true
         # retention in golang's time.ParseDuration format
         # set key to null `hourly: null` to omit schedule
