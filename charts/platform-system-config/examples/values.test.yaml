@@ -13,4 +13,6 @@ components:
     name: "velero"
     namespace: "velero"
     schedules:
-      hourly: null
+      hourly:
+        ttl: 48h0m0s
+      daily: null

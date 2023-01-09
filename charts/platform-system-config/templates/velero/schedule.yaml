@@ -13,7 +13,7 @@ metadata:
 spec:
   schedule: {{ include "platform-system-config.velero.scheduleLookup" . }}
   template:
-    ttl: {{ $ttl | quote }}
+    ttl: {{ $ttl.ttl | quote }}
 {{ end }}
 {{- end -}}
 {{- end -}}

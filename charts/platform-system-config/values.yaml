@@ -21,7 +21,11 @@ components:
     name: "velero"
     namespace: ""
     schedules:
-      hourly: 72h0m0s # 3 day retention
-      daily: 168h0m0s # 1 week retention
-      weekly: 730h0m0s # 1 month retention
-      monthly: 8760h0m0s # 1 year retention
+      hourly:
+        ttl: 72h0m0s # 3 day retention
+      daily:
+        ttl: 168h0m0s # 1 week retention
+      weekly:
+        ttl: 730h0m0s # 1 month retention
+      monthly:
+        ttl: 8760h0m0s # 1 year retention
