@@ -1,6 +1,6 @@
 {{ define "platform-system.components.velero.defaultValues.aws" }}
 {{- $ := . -}}
-{{- $component := $.Values.components.velero -}}
+{{- $component := $.Values.components.velero.components.server -}}
 {{- $aws := $component.provider -}}
 initContainers:
   - name: velero-plugin-for-aws
@@ -61,7 +61,7 @@ affinity:
 {{- end }}
 credentials:
   useSecret: false
-{{- if eq (get $component.provider "name") "aws" }}
+{{- if eq (get $component.components.server.provider "name") "aws" }}
 {{ include "platform-system.components.velero.defaultValues.aws" $  }}
 {{- end -}}
 {{- end -}}

@@ -9,8 +9,10 @@ components:
       gateway:
         enabled: true
   velero:
-    provider:
-      name: aws
-      bucket: "velero-s3-123213213213"
-      region: "us-east-2"
-      kmsKeyId: "alias/my-kms-id"
+    components:
+      server:
+        provider:
+          name: aws
+          bucket: "velero-s3-123213213213"
+          region: "us-east-2"
+          kmsKeyId: "alias/my-kms-id"
