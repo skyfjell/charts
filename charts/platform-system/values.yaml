@@ -345,15 +345,6 @@ components:
     istioEnabled: true
     # Namespace to Create/Install - Resolves to: `[prefix]-[namespace|name]`
     namespace: ""
-    # Affinity - Deeper component values take precedence.
-    affinity: {}
-    # Annotations - Deeper component values are merged.
-    annotations: {}
-    # Node Selector - Deeper component values take precedence.
-    nodeSelector: {}
-    # Tolerations - Deeper component values take precedence.
-    tolerations: []
-    serviceAccountAnnotations: {}
     chart:
       # version of the chart
       version: "3.0.0"
@@ -364,6 +355,15 @@ components:
     components:
       # server is the configuration for the helm release of velero server
       server:
+        # Affinity - Deeper component values take precedence.
+        affinity: {}
+        # Annotations - Deeper component values are merged.
+        annotations: {}
+        # Node Selector - Deeper component values take precedence.
+        nodeSelector: {}
+        # Tolerations - Deeper component values take precedence.
+        tolerations: []
+        serviceAccountAnnotations: {}
         enabled: true
         # provider for backend. Only supports aws at the moment, for other providers, use values to override
         # aws configuration

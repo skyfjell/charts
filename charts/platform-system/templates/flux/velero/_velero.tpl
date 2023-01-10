@@ -31,17 +31,18 @@ configuration:
 {{- define "platform-system.components.velero.defaultValues" -}}
 {{- $ := . -}}
 {{- $global := $.Values.global -}}
-{{- $component := $.Values.components.velero -}}
+{{- $velero := $.Values.components.velero -}}
+{{- $component := $velero.components.server -}}
 {{- $anno := merge $global.annotations $component.annotations -}}
 {{- $nodeSel := default $global.nodeSelector $component.nodeSelector -}}
 {{- $tol := default $global.tolerations $component.tolerations -}}
 {{- $aff := default $global.affinity $component.affinity  -}}
 
-fullnameOverride: {{ $component.name }}
+fullnameOverride: {{ $velero.name }}
 {{- with $component.serviceAccountAnnotations }}
 serviceAccount:
   server:
-    annotations: {{- toYaml . | nindent 4 }}
+    annotations: {{- toYaml . | nindent 6 }}
 {{- end }}
 {{- with $nodeSel }}
 nodeSelector:
@@ -61,7 +62,7 @@ affinity:
 {{- end }}
 credentials:
   useSecret: false
-{{- if eq (get $component.components.server.provider "name") "aws" }}
+{{- if eq (get $component.provider "name") "aws" }}
 {{ include "platform-system.components.velero.defaultValues.aws" $  }}
 {{- end -}}
 {{- end -}}
