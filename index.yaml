@@ -189,6 +189,19 @@ entries:
     version: 0.0.1
   platform-system:
   - apiVersion: v2
+    created: "2023-01-10T20:28:35.806004438Z"
+    dependencies:
+    - name: common
+      repository: '@skyfjell'
+      version: 0.0.x
+    description: Skyfjell Platform System Chart
+    digest: 878926ed44d7f7748ebf9adccf3bae2dce9edf8c7bae75fd2c0fc09874a79b7b
+    name: platform-system
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-system-0.0.12/platform-system-0.0.12.tgz
+    version: 0.0.12
+  - apiVersion: v2
     appVersion: 0.0.0
     created: "2022-10-25T18:30:20.779340788Z"
     description: Skyfjell Platform System Chart
@@ -439,4 +452,4 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/skyfjell-common-0.0.1/skyfjell-common-0.0.1.tgz
     version: 0.0.1
-generated: "2023-01-09T21:01:18.378280633Z"
+generated: "2023-01-10T20:28:35.80638024Z"
