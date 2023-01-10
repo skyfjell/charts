@@ -11,6 +11,8 @@ components:
   velero:
     components:
       server:
+        serviceAccountAnnotations:
+          "eks.amazonaws.com/role-arn": "arn:aws:iam::XXXXXXXXXXXX:role/velero"
         provider:
           name: aws
           bucket: "velero-s3-123213213213"
