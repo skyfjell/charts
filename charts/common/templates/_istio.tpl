@@ -3,62 +3,62 @@
 */}}
 
 {{/* Error message */}}
-{{ define "errorMessage.istio" }}
-    {{ fail ( printf "Chart require %s to be present. See https://istio.io/latest/docs/setup/install for more info." . ) }} 
+{{ define "skyfjell.common.require.api.istio.message" }}
+  {{- "Istio is installed as a part of the Platform System chart: https://github.com/skyfjell/charts/tree/main/charts/platform-system" -}}
+  {{- "\n" -}}
+  {{- "Or to install Istio: https://istio.io/latest/docs/setup/install" -}}
 {{ end }}
 
 {{/*
   Checks generally if API version for flux is installed. Currently only checking require CRDs.
 */}}
 
-{{ define "require.api.istio.gateway" }}
-  {{ include "require.api.istio.base" ( list "networking.istio.io" "Gateway" $ ) }}
+{{ define "skyfjell.common.require.api.istio.gateway" }}
+  {{ include "skyfjell.common.require.api.istio.base" ( list "networking.istio.io" "Gateway" $ ) }}
 {{ end }}
 
-{{ define "require.api.istio.sidecar" }}
-  {{ include "require.api.istio.base" ( list "networking.istio.io" "Sidecar" $ ) }}
+{{ define "skyfjell.common.require.api.istio.sidecar" }}
+  {{ include "skyfjell.common.require.api.istio.base" ( list "networking.istio.io" "Sidecar" $ ) }}
 {{ end }}
 
-{{ define "require.api.istio.vs" }}
-  {{ include "require.api.istio.base" ( list "networking.istio.io" "VirtualService" $ ) }}
+{{ define "skyfjell.common.require.api.istio.vs" }}
+  {{ include "skyfjell.common.require.api.istio.base" ( list "networking.istio.io" "VirtualService" $ ) }}
 {{ end }}
 
-{{ define "require.api.istio.all" }}
-  {{ include "require.api.istio.networking" . }}
+{{ define "skyfjell.common.require.api.istio.all" }}
+  {{ include "skyfjell.common.require.api.istio.networking" . }}
 {{ end }}
 
-{{ define "require.api.istio.networking" }}
-  {{ include "require.api.istio.vs" . }}
-  {{ include "require.api.istio.sidecar" . }}
-  {{ include "require.api.istio.gateway" . }}
+{{ define "skyfjell.common.require.api.istio.networking" }}
+  {{ include "skyfjell.common.require.api.istio.vs" . }}
+  {{ include "skyfjell.common.require.api.istio.sidecar" . }}
+  {{ include "skyfjell.common.require.api.istio.gateway" . }}
 {{ end }}
 
-{{ define "require.api.istio.peer-authentication" }}
-  {{ include "require.api.istio.base" ( list "security.istio.io" "PeerAuthentication" $ ) }}
+{{ define "skyfjell.common.require.api.istio.peer-authentication" }}
+  {{ include "skyfjell.common.require.api.istio.base" ( list "security.istio.io" "PeerAuthentication" $ ) }}
 {{ end }}
 
-{{ define "require.api.istio.authorization-policy" }}
-  {{ include "require.api.istio.base" ( list "security.istio.io" "AuthorizationPolicy" $ ) }}
+{{ define "skyfjell.common.require.api.istio.authorization-policy" }}
+  {{ include "skyfjell.common.require.api.istio.base" ( list "security.istio.io" "AuthorizationPolicy" $ ) }}
 {{ end }}
 
-{{ define "require.api.istio.request-authentication" }}
-  {{ include "require.api.istio.base" ( list "security.istio.io" "RequestAuthentication" $ ) }}
+{{ define "skyfjell.common.require.api.istio.request-authentication" }}
+  {{ include "skyfjell.common.require.api.istio.base" ( list "security.istio.io" "RequestAuthentication" $ ) }}
 {{ end }}
 
-{{ define "require.api.istio.security" }}
-  {{ include "require.api.istio.peer-authentication" . }}
-  {{ include "require.api.istio.authorization-policy" . }}
-  {{ include "require.api.istio.request-authentication" . }}
+{{ define "skyfjell.common.require.api.istio.security" }}
+  {{ include "skyfjell.common.require.api.istio.peer-authentication" . }}
+  {{ include "skyfjell.common.require.api.istio.authorization-policy" . }}
+  {{ include "skyfjell.common.require.api.istio.request-authentication" . }}
 {{ end }}
 
 {{/*
   Checks specifically for an istio api version and resource.
 
-  Use like `{{ include "require.api.istio.base" ( list "networking.istio.io" "VirtualService" $) }}`
+  Use like `{{ include "skyfjell.common.require.api.istio.base" ( list "networking.istio.io" "VirtualService" $) }}`
 */}}
-{{- define "require.api.istio.base" }}
-   {{- include "require.api" ( prepend . "errorMessage.istio" ) -}}
+{{- define "skyfjell.common.require.api.istio.base" }}
+  {{- include "skyfjell.common.require.api.istio.message" . | prepend . | include "skyfjell.common.require.api" -}}
 {{- end -}}
- 
- 
 
