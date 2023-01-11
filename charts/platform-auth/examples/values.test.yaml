@@ -19,3 +19,10 @@ components:
         enabled: true
         auth:
           existingSecret: "secret-pg"
+global:
+  tolerations:
+    - key: example-key
+      operator: Exists
+      effect: NoSchedule
+  nodeSelector:
+    "kubernetes.io/os": "linux"
