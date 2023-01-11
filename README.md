@@ -1,22 +1,21 @@
 # Skyfjell Helm Charts
 
-Install using
+Repo Setup and Installation:
 
 ```
 helm repo add skyfjell https://charts.skyfjell.io
 helm repo update
+helm install [release-name] skyfjell/[chart-name]
 ```
 
-## Skyfjell Platform Charts
+## [null](./charts/null)
 
-### [platform-system](./charts/platform-system)
+Arbitrarily deploy Kubernetes manifests via Helm.
 
-### [platform-auth](./charts/platform-auth)
+## [platform-system](./charts/platform-system)
 
-### [platform-factory](./charts/platform-factory)
+## [platform-auth](./charts/platform-auth)
 
-### [platform-tenant](./charts/platform-tenant)
+## [platform-factory](./charts/platform-factory)
 
-## `null` Chart
-
-### [null](./charts/null)
+## [platform-tenant](./charts/platform-tenant)

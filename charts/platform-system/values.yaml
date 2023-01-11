@@ -432,6 +432,9 @@ global:
   affinity: {}
   annotations: {}
   labels: {}
-  istioEnabled: true
   nodeSelector: {}
   tolerations: []
+  istioEnabled: true
+  skyfjell:
+    validate:
+      api: true
