@@ -1,5 +1,5 @@
 {{ if .Values.components.istio.enabled -}}
-{{- include "require.api.istio.peer-authentication" . -}}
+{{- include "skyfjell.common.require.api.istio.peer-authentication" . -}}
 apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
 metadata:

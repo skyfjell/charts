@@ -9,7 +9,8 @@
 -}}
 
 {{- if $enabled -}}
-{{- include "require.api.flux.source" . -}}
+{{- include "skyfjell.common.require.api.flux.source" . -}}
+---
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:

@@ -6,8 +6,9 @@
     (empty .Values.components.keycloak.chart.sourceRef.name)
 -}}
 
-{{- if $enabled }}
-{{- include "require.api.flux.source" . -}}
+{{- if $enabled -}}
+{{- include "skyfjell.common.require.api.flux.source" . -}}
+---
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:

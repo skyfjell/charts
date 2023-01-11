@@ -14,15 +14,15 @@
 */}}
 
 {{ define "skyfjell.common.require.api.istio.gateway" }}
-  {{ include "skyfjell.common.require.api.istio.base" ( list "networking.istio.io" "Gateway" $ ) }}
+  {{ list "networking.istio.io" "Gateway" $ | include "skyfjell.common.require.api.istio.base" }}
 {{ end }}
 
 {{ define "skyfjell.common.require.api.istio.sidecar" }}
-  {{ include "skyfjell.common.require.api.istio.base" ( list "networking.istio.io" "Sidecar" $ ) }}
+  {{ list "networking.istio.io" "Sidecar" $ | include "skyfjell.common.require.api.istio.base" }}
 {{ end }}
 
 {{ define "skyfjell.common.require.api.istio.vs" }}
-  {{ include "skyfjell.common.require.api.istio.base" ( list "networking.istio.io" "VirtualService" $ ) }}
+  {{ list "networking.istio.io" "VirtualService" $ | include "skyfjell.common.require.api.istio.base" }}
 {{ end }}
 
 {{ define "skyfjell.common.require.api.istio.all" }}
@@ -36,15 +36,15 @@
 {{ end }}
 
 {{ define "skyfjell.common.require.api.istio.peer-authentication" }}
-  {{ include "skyfjell.common.require.api.istio.base" ( list "security.istio.io" "PeerAuthentication" $ ) }}
+  {{ list "security.istio.io" "PeerAuthentication" $ | include "skyfjell.common.require.api.istio.base" }}
 {{ end }}
 
 {{ define "skyfjell.common.require.api.istio.authorization-policy" }}
-  {{ include "skyfjell.common.require.api.istio.base" ( list "security.istio.io" "AuthorizationPolicy" $ ) }}
+  {{ list "security.istio.io" "AuthorizationPolicy" $ | include "skyfjell.common.require.api.istio.base" }}
 {{ end }}
 
 {{ define "skyfjell.common.require.api.istio.request-authentication" }}
-  {{ include "skyfjell.common.require.api.istio.base" ( list "security.istio.io" "RequestAuthentication" $ ) }}
+  {{ list "security.istio.io" "RequestAuthentication" $ | include "skyfjell.common.require.api.istio.base" }}
 {{ end }}
 
 {{ define "skyfjell.common.require.api.istio.security" }}
@@ -56,7 +56,7 @@
 {{/*
   Checks specifically for an istio api version and resource.
 
-  Use like `{{ include "skyfjell.common.require.api.istio.base" ( list "networking.istio.io" "VirtualService" $) }}`
+  Use like `{{ list "networking.istio.io" "VirtualService" $ | include "skyfjell.common.require.api.istio.base" }}`
 */}}
 {{- define "skyfjell.common.require.api.istio.base" }}
   {{- include "skyfjell.common.require.api.istio.message" . | prepend . | include "skyfjell.common.require.api" -}}

@@ -1,6 +1,6 @@
 {{- if and .Values.components.keycloak.url .Values.components.certManager.enabled -}}
 {{ $component := .Values.components.keycloak }}
-{{- include "require.api.certManager.certificate" $ -}}
+{{- include "skyfjell.common.require.api.cert-manager.certificate" $ -}}
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate

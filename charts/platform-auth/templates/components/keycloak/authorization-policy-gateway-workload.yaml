@@ -3,9 +3,7 @@
 {{- $gateway := $istio.components.gateway -}}
 
 {{- if and $component.host $istio.enabled -}}
-  {{- if .Values.crdCheck -}}
-    {{- include "require.api.istio.authorization-policy" $ -}}
-  {{- end -}}
+{{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
 
 {{ $namespace := list $component $ | include "skyfjell.common.format.component.namespace" }}
 ---

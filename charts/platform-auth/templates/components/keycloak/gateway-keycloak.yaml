@@ -2,7 +2,7 @@
 {{ $istio := .Values.components.istio }}
 
 {{- if and $component.host $istio.enabled -}}
-{{- include "require.api.istio.gateway" $ -}}
+{{- include "skyfjell.common.require.api.istio.gateway" $ -}}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
