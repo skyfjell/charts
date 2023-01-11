@@ -3,40 +3,40 @@
 */}}
 
 {{/* Error message */}}
-{{ define "errorMessage.flux" }}
-  {{ fail ( printf "Chart require %s to be present. See https://fluxcd.io/flux/installation for more info." . ) }}
+{{ define "skyfjell.common.require.api.flux.message" }}
+  {{- "Flux is required. Install Flux: https://fluxcd.io/flux/installation" -}}
 {{ end }}
 
 {{/*
   Checks generally if API version for flux is installed. Currently only checking require CRDs.
 */}}
-{{ define "require.api.flux.helmRelease" }}
-  {{ include "require.api.flux.base" ( list "helm.toolkit.fluxcd.io" "HelmRelease" $ ) }}
+{{ define "skyfjell.common.require.api.flux.helm-release" }}
+  {{ list "helm.toolkit.fluxcd.io" "HelmRelease" . | include "skyfjell.common.require.api.flux.base" }}
 {{ end }}
 
-{{ define "require.api.flux.kustomize" }}
-  {{ include "require.api.flux.base" ( list "kustomize.toolkit.fluxcd.io" "Kustomization" $ ) }}
+{{ define "skyfjell.common.require.api.flux.kustomize" }}
+  {{ list "kustomize.toolkit.fluxcd.io" "Kustomization" $ | include "skyfjell.common.require.api.flux.base" }}
 {{ end }}
 
-{{ define "require.api.flux.source" }}
-  {{ include "require.api.flux.base" ( list "source.toolkit.fluxcd.io" "HelmRepository" $ ) }}
-  {{ include "require.api.flux.base" ( list "source.toolkit.fluxcd.io" "GitRepository" $ ) }}
+{{ define "skyfjell.common.require.api.flux.source" }}
+  {{ list "source.toolkit.fluxcd.io" "HelmRepository" . | include "skyfjell.common.require.api.flux.base" }}
+  {{ list "source.toolkit.fluxcd.io" "GitRepository" . | include "skyfjell.common.require.api.flux.base" }}
 {{ end }}
 
-{{ define "require.api.flux.all" }}
-  {{ include "require.api.flux.helmRelease" . }}
-  {{ include "require.api.flux.kustomize" . }}
-  {{ include "require.api.flux.source" . }}
+{{ define "skyfjell.common.require.api.flux.all" }}
+  {{ include "skyfjell.common.require.api.flux.helm-release" . }}
+  {{ include "skyfjell.common.require.api.flux.kustomize" . }}
+  {{ include "skyfjell.common.require.api.flux.source" . }}
 {{ end }}
 
 
 {{/*
   Checks specifically for a flux api version and resource.
 
-  Use like `{{ include "require.api.flux.base" ( list "helm.toolkit.fluxcd.io" "HelmRelease" $) }}`
+  Use like `{{ include "skyfjell.common.require.api.flux.base" ( list "helm.toolkit.fluxcd.io" "HelmRelease" $) }}`
 */}}
-{{- define "require.api.flux.base" }}
-   {{- include "require.api" ( prepend . "errorMessage.flux" ) -}}
+{{- define "skyfjell.common.require.api.flux.base" }}
+  {{- include "skyfjell.common.require.api.flux.message" . | prepend . | include "skyfjell.common.require.api" -}}
 {{- end -}}
- 
+
 

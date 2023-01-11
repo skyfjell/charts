@@ -3,29 +3,28 @@
 */}}
 
 {{/* Error message */}}
-{{ define "errorMessage.traefik" }}
-    {{ fail ( printf "Chart require %s to be present. See https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart for more info." . ) }}
+{{ define "skyfjell.common.require.api.traefik.message" }}
+  {{- "Traefik is installed as a part of the Platform Auth chart: https://github.com/skyfjell/charts/tree/main/charts/platform-auth" -}}
+  {{- "\n" -}}
+  {{- "Or to install Traefik: https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart" -}}
 {{ end }}
+
 {{/*
   Checks generally if API version for traefik is installed. Currently only checking require CRDs.
 */}}
-{{ define "require.api.traefik.ingressRoute" }}
-  {{ include "require.api.traefik.base" ( list "traefik.containo.us" "IngressRoute" $ ) }}
+{{ define "skyfjell.common.require.api.traefik.ingressRoute" }}
+  {{ include "skyfjell.common.require.api.traefik.base" ( list "traefik.containo.us" "IngressRoute" $ ) }}
 {{ end }}
 
-
-{{ define "require.api.traefik.all" }}
-  {{ include "require.api.traefik.ingressRoute" . }}
+{{ define "skyfjell.common.require.api.traefik.all" }}
+  {{ include "skyfjell.common.require.api.traefik.ingressRoute" . }}
 {{ end }}
-
 
 {{/*
   Checks specifically for a traefik api version and resource.
 
-  Use like `{{ include "require.api.traefik.base" ( list "traefik.containo.us" "IngressRoute" $ ) }}`
+  Use like `{{ include "skyfjell.common.require.api.traefik.base" ( list "traefik.containo.us" "IngressRoute" $ ) }}`
 */}}
-{{- define "require.api.traefik.base" }}
-   {{- include "require.api" ( prepend . "errorMessage.traefik" ) -}}
+{{- define "skyfjell.common.require.api.traefik.base" }}
+  {{- include "skyfjell.common.require.api.traefik.message" . | prepend . | include "skyfjell.common.require.api" -}}
 {{- end -}}
- 
-
