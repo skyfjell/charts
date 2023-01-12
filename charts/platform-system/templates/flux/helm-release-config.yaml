@@ -22,8 +22,12 @@ metadata:
 spec:
   targetNamespace: {{ .Values.components.istio.namespace }}
   dependsOn:
+    {{- if $velero.enabled }}
     - name: {{ list $velero.name $ | include "platform-system.format.name" }}
       namespace: {{ .Values.solution.namespace | quote }}
+    {{- else }}
+    {{- include "platform-system.require.dependencies" $ | nindent 4 }}
+    {{- end }}
   chart:
     spec:
       chart: platform-system-config
@@ -51,5 +55,4 @@ spec:
         name: {{ $velero.name }}
         namespace: {{ list $velero . | include "skyfjell.common.format.component.namespace" }}
         schedules: {{- $schedule.schedules | toYaml | nindent 10 }}
-
 {{- end }}
