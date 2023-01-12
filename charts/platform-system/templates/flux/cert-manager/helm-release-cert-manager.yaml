@@ -1,3 +1,4 @@
+{{- include "skyfjell.common.require.api.flux.helm-release" . -}}
 {{- $component := .Values.components.certManager -}}
 {{- $solution := .Values.solution -}}
 

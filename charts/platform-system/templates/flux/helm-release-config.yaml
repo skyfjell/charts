@@ -10,6 +10,8 @@
 
 {{- if and ( eq .Values.solution.name "flux") $component.enabled -}}
 ---
+# {{ toString $.Release.IsInstall }}
+# {{ $.Release.IsUpgrade }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:

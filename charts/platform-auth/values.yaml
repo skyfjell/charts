@@ -1,11 +1,6 @@
 # Prefix Global/Shared Resources
 prefix: "auth"
 
-annotations: {}
-labels: {}
-nodeSelector: {}
-tolerations: []
-
 components:
   # Flux Configuration
   flux:
@@ -119,5 +114,12 @@ components:
         url: https://charts.bitnami.com/bitnami
         enabled: true
 
-# Dev Configuration
-crdCheck: true
+global:
+  affinity: {}
+  annotations: {}
+  labels: {}
+  nodeSelector: {}
+  tolerations: []
+  skyfjell:
+    validate:
+      api: true

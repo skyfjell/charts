@@ -1,11 +1,10 @@
-global:
-  tolerations:
-    - key: values
-  nodeSelector:
-    "skyfjell.io/node-selector": "platform-system"
 components:
   istio:
     components:
+      istiod:
+        components:
+          externalAuth:
+            enabled: true
       gateway:
         enabled: true
   velero:
@@ -18,3 +17,10 @@ components:
           bucket: "velero-s3-123213213213"
           region: "us-east-2"
           kmsKeyId: "alias/my-kms-id"
+global:
+  tolerations:
+    - key: example-key
+      operator: Exists
+      effect: NoSchedule
+  nodeSelector:
+    "kubernetes.io/os": "linux"
