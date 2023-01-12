@@ -1,9 +1,7 @@
 {{ $component := .Values.components.proxy -}}
 
 {{- if $component.enabled -}}
-  {{- if .Values.crdCheck -}}
-    {{- include "require.api.flux.helmRelease" . -}}
-  {{- end -}}
+{{- include "skyfjell.common.require.api.flux.helm-release" . -}}
 
 {{- $name := list $component.name $ | include "platform-auth.format.name" -}}
 

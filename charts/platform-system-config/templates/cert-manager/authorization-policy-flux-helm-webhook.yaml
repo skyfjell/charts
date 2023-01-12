@@ -1,6 +1,7 @@
 {{- $component := .Values.components.certManager -}}
 {{ if and .Values.components.istio.enabled $component.enabled (eq .Values.solution.name "flux") -}}
-{{ include "require.api.istio.authorization-policy" . }}
+{{ include "skyfjell.common.require.api.istio.authorization-policy" . -}}
+---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:

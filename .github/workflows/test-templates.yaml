@@ -44,4 +44,4 @@ jobs:
       - name: Test ${{ matrix.manifest }} Examples
         working-directory: charts/${{ matrix.manifest }}
         run: |
-          helm template --dry-run --debug test . --set crdCheck=false -f examples/values.test.yaml
+          helm template --dry-run --debug test . --set "global.skyfjell.validate.api=false" -f examples/values.test.yaml

@@ -5,13 +5,16 @@
   {{- $ :=  last . -}}
   {{- $api := first . -}}
   {{- $kind := rest . | first -}}
+  {{- $valid := "false" -}}
+
   {{- range $installed := $.Capabilities.APIVersions -}}
     {{- $matchApi := hasPrefix ( printf "%s/" $api ) $installed -}}
     {{- $matchKind := hasSuffix ( printf "/%s" $kind ) $installed -}}
     {{- if and $matchApi $matchKind -}}
-      {{- "true" -}}
+      {{- $valid = "true" -}}
     {{- end -}}
   {{- end -}}
+  {{- $valid -}}
 {{- end -}}
 
 {{/*
@@ -28,6 +31,7 @@
 
   {{- $valid := list $api $kind $ | include "skyfjell.common.require.api.check" -}}
   {{- $valid := eq $valid "true" -}}
+
   {{- $enabled := ((($.Values.global).skyfjell).validate).api -}}
 
   {{- if ne $enabled false -}}

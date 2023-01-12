@@ -1,7 +1,5 @@
 {{- if .Values.components.istio.enabled -}}
-  {{- if .Values.crdCheck -}}
-    {{- include "require.api.istio.authorization-policy" $ -}}
-  {{- end -}}
+{{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
 
 {{ $component := .Values.components.keycloak }}
 {{ $database := .Values.components.keycloak.components.database }}

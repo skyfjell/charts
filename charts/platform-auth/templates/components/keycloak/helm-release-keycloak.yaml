@@ -1,7 +1,7 @@
 {{ $component := .Values.components.keycloak }}
 
 {{- if and $component.enabled  }}
-{{- include "require.api.flux.helmRelease" . -}}
+{{- include "skyfjell.common.require.api.flux.helm-release" . -}}
 {{ $name := list $component.name $ | include "platform-auth.format.name" }}
 {{ $dbName := list $component.name $component.components.database.name $ | include "platform-auth.format.name" }}
 

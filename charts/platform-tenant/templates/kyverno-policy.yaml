@@ -1,11 +1,11 @@
 {{- if .Values.kyverno.enable -}}
-{{- include "require.api.kyverno.clusterPolicy" . -}}
+{{- include "skyfjell.common.require.api.kyverno.cluster-policy" . -}}
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: {{ default (include "platform-tenant.fullname" .) .Values.kyverno.name }}
   annotations:
-    policies.kyverno.io/title: {{ default (include "platform-tenant.fullname" .) .Values.kyverno.name }} policy 
+    policies.kyverno.io/title: {{ default (include "platform-tenant.fullname" .) .Values.kyverno.name }} policy
     policies.kyverno.io/category: Pod Scheduling
     policies.kyverno.io/description: >-
       Adds metadata to all jobs, deployments, daemons etc in the monitoring
@@ -30,7 +30,7 @@ spec:
           {{- with .Values.kyverno.annotations }}
             annotations:
               {{- toYaml . | nindent 14 }}
-          {{- end }}          
+          {{- end }}
             labels:
               app.kubernetes.io/part-of: {{ (include "platform-tenant.fullname" .) | quote }}
               {{- with (omit .Values.kyverno.labels "app.kubernetes.io/part-of") }}

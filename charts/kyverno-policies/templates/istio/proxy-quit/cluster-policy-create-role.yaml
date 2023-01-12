@@ -2,7 +2,7 @@
 {{- $component := $parent.components.proxyQuit }}
 {{- $name := list $parent.name $component.name $ | include "kyverno-policies.format.name" }}
 {{- if $component.enabled }}
-{{- include "require.api.kyverno.clusterPolicy" $ -}}
+{{- include "skyfjell.common.require.api.kyverno.cluster-policy" $ -}}
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:

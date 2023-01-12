@@ -1,5 +1,5 @@
 {{ if .Values.istio.certManager.createCerts}}
-  {{ include "require.api.certManager.certificate" $}}
+  {{ include "skyfjell.common.require.api.cert-manager.certificate" $}}
   {{ range $val := (.Values.istio.gateway ).servers }}
     {{ include "certManager.certificate" (list $val $)}}
   {{ end }}

@@ -2,7 +2,7 @@
 {{- $component := $parent.components.database -}}
 
 {{- if and $component.enabled $parent.enabled -}}
-{{- include "require.api.flux.helmRelease" . -}}
+{{- include "skyfjell.common.require.api.flux.helm-release" . -}}
 
 {{- $name := list $parent.name $component.name $ | include "platform-auth.format.name" -}}
 
