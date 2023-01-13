@@ -21,8 +21,8 @@ spec:
   action: ALLOW
   selector:
     matchLabels:
-      app.kubernetes.io/instance: {{ $component.name }}
-      app: keycloakx
+      app.kubernetes.io/name: {{ $component.name }}
+      app.kubernetes.io/instance: {{ list $component.name $ | include "platform-auth.format.name" }}
   rules:
     - from:
         - source:

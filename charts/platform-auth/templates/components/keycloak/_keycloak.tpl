@@ -11,6 +11,7 @@ tolerations:
 {{- end }}
 {{- end }}
 fullnameOverride: {{ $component.name }}
+nameOverride: {{ $component.name }}
 serviceAccount:
   name: {{ $component.name }}
 extraEnv: |
