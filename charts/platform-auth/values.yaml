@@ -16,6 +16,7 @@ components:
     namespace: "system-istio"
     components:
       gateway:
+        enabled: true
         # Istio Ingress Gateway Namespace for Apps
         namespace: system-istio-gateway
         # For `app` label selector

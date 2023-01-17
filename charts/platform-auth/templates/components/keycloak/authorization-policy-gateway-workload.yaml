@@ -2,10 +2,10 @@
 {{- $istio := .Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
 
-{{- if and $component.host $istio.enabled -}}
+{{- if and $component.host $istio.enabled $gateway.enabled -}}
 {{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
 
-{{ $namespace := list $component $ | include "skyfjell.common.format.component.namespace" }}
+{{- $namespace := list $component $ | include "skyfjell.common.format.component.namespace" -}}
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
