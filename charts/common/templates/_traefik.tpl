@@ -12,12 +12,12 @@
 {{/*
   Checks generally if API version for traefik is installed. Currently only checking require CRDs.
 */}}
-{{ define "skyfjell.common.require.api.traefik.ingressRoute" }}
+{{ define "skyfjell.common.require.api.traefik.ingress-route" }}
   {{ include "skyfjell.common.require.api.traefik.base" ( list "traefik.containo.us" "IngressRoute" $ ) }}
 {{ end }}
 
 {{ define "skyfjell.common.require.api.traefik.all" }}
-  {{ include "skyfjell.common.require.api.traefik.ingressRoute" . }}
+  {{ include "skyfjell.common.require.api.traefik.ingress-route" . }}
 {{ end }}
 
 {{/*
