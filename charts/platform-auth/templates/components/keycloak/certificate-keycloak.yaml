@@ -1,5 +1,5 @@
-{{- if and .Values.components.keycloak.url .Values.components.certManager.enabled -}}
 {{ $component := .Values.components.keycloak }}
+{{- if and $component.enabled $component.host .Values.components.certManager.enabled -}}
 {{- include "skyfjell.common.require.api.cert-manager.certificate" $ -}}
 ---
 apiVersion: cert-manager.io/v1
@@ -11,7 +11,7 @@ metadata:
 spec:
   secretName: {{ printf "%s-tls" (list $component.name $ | include "platform-auth.format.name") }}
   dnsNames:
-    - {{ .Values.components.keycloak.url }}
+    - {{ $component.host }}
   {{- with .Values.components.certManager.issuerRef }}
   issuerRef:
     {{- toYaml . | nindent 4 }}
