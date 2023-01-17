@@ -11,3 +11,7 @@
 {{- define "skyfjell.common.format.literal" -}}
 {{ "{{ " }}{{ . }}{{ " }}" }}
 {{- end -}}
+
+{{- define "skyfjell.common.format.safe" -}}
+  {{- regexReplaceAll "[^.a-zA-Z0-9-]+" . "-" | trimAll "-" | lower -}}
+{{- end -}}
