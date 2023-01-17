@@ -1,9 +1,10 @@
-{{- if .Values.components.istio.enabled -}}
-{{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
+{{- $component := .Values.components.keycloak -}}
+{{- $database := .Values.components.keycloak.components.database -}}
+{{- $istio := .Values.components.istio -}}
+{{- $namespace := list $component $ | include "skyfjell.common.format.component.namespace" -}}
 
-{{ $component := .Values.components.keycloak }}
-{{ $database := .Values.components.keycloak.components.database }}
-{{ $namespace := list $component $ | include "skyfjell.common.format.component.namespace" }}
+{{- if $istio.enabled -}}
+{{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy

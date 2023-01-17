@@ -1,6 +1,8 @@
 {{- $component := .Values.components.keycloak -}}
+{{- $istio := .Values.components.istio -}}
+{{- $gateway := $istio.components.gateway -}}
 
-{{- if and $component.host .Values.components.istio.enabled -}}
+{{- if and $component.host $istio.enabled -}}
 {{- include "skyfjell.common.require.api.istio.vs" $ -}}
 ---
 apiVersion: networking.istio.io/v1beta1
@@ -13,7 +15,7 @@ spec:
   hosts:
     - {{ $component.host }}
   gateways:
-    - {{ list $component.name $ | include "platform-auth.format.name" | printf "%s/%s" .Values.components.istio.components.gateway.namespace }}
+    - {{ list $component.name $ | include "platform-auth.format.name" | printf "%s/%s" $gateway.namespace }}
   http:
     - match:
         - uri:

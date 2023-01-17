@@ -1,9 +1,9 @@
-{{- if and .Values.components.keycloak.host .Values.components.istio.enabled -}}
-{{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
-
 {{- $component := .Values.components.keycloak -}}
 {{- $istio := .Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
+
+{{- if and $component.host $istio.enabled $gateway.enabled -}}
+{{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -18,7 +18,7 @@ spec:
   action: ALLOW
   selector:
     matchLabels:
-      {{- $selector := $component.components.gateway.selector | default $istio.components.gateway.selector }}
+      {{- $selector := $component.components.gateway.selector | default $gateway.selector }}
       {{- if $selector }}
       {{- $selector | toYaml | nindent 6 }}
       {{- else }}

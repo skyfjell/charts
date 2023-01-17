@@ -1,12 +1,15 @@
-{{ $component := .Values.components.keycloak }}
-{{- if and $component.enabled $component.host .Values.components.certManager.enabled -}}
+{{- $component := .Values.components.keycloak -}}
+{{- $istio := .Values.components.istio -}}
+{{- $gateway := $istio.components.gateway -}}
+
+{{- if and $component.enabled $component.host .Values.components.certManager.enabled $istio.enabled $gateway.enabled -}}
 {{- include "skyfjell.common.require.api.cert-manager.certificate" $ -}}
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: {{ list $component.name $ | include "platform-auth.format.name" }}
-  namespace: {{ .Values.components.istio.namespace }}
+  namespace: {{ $gateway.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   secretName: {{ printf "%s-tls" (list $component.name $ | include "platform-auth.format.name") }}
