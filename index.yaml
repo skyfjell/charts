@@ -194,6 +194,19 @@ entries:
     version: 0.0.1
   platform-auth:
   - apiVersion: v2
+    created: "2023-01-17T19:12:34.786111171Z"
+    dependencies:
+    - name: common
+      repository: '@skyfjell'
+      version: 0.0.x
+    description: Skyfjell Platform Auth Chart
+    digest: 06e29e975d68dbde4959b35a0e1c111062aecace5a4773a54c4507f8e04c51d1
+    name: platform-auth
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-auth-0.0.2/platform-auth-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
     appVersion: 0.0.0
     created: "2022-07-13T20:27:47.857013518Z"
     description: Skyfjell Platform Auth Chart
@@ -215,6 +228,19 @@ entries:
     - https://github.com/skyfjell/charts/releases/download/platform-factory-0.0.1/platform-factory-0.0.1.tgz
     version: 0.0.1
   platform-system:
+  - apiVersion: v2
+    created: "2023-01-17T19:12:35.050758294Z"
+    dependencies:
+    - name: common
+      repository: '@skyfjell'
+      version: 0.0.x
+    description: Skyfjell Platform System Chart
+    digest: b979e8311e79d2fbc6dd2eaba75383509d6d1d85ef74805305786e32693c08a0
+    name: platform-system
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-system-0.0.13/platform-system-0.0.13.tgz
+    version: 0.0.13
   - apiVersion: v2
     created: "2023-01-10T20:28:35.806004438Z"
     dependencies:
@@ -329,6 +355,19 @@ entries:
     - https://github.com/skyfjell/charts/releases/download/platform-system-0.0.1/platform-system-0.0.1.tgz
     version: 0.0.1
   platform-system-config:
+  - apiVersion: v2
+    created: "2023-01-17T19:12:35.377851493Z"
+    dependencies:
+    - name: common
+      repository: '@skyfjell'
+      version: 0.0.x
+    description: Platform System Configuration Chart
+    digest: 9b5bbb1c1e4cf0d7e7c48905911304c1ae429bbb11037261c586d9272acf7762
+    name: platform-system-config
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-system-config-0.0.4/platform-system-config-0.0.4.tgz
+    version: 0.0.4
   - apiVersion: v2
     created: "2023-01-09T21:01:18.377892925Z"
     dependencies:
@@ -479,4 +518,4 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/skyfjell-common-0.0.1/skyfjell-common-0.0.1.tgz
     version: 0.0.1
-generated: "2023-01-17T17:54:47.153139706Z"
+generated: "2023-01-17T19:12:35.377981693Z"
