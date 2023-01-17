@@ -45,3 +45,27 @@ jobs:
         working-directory: charts/${{ matrix.manifest }}
         run: |
           helm template --dry-run --debug test . --set "global.skyfjell.validate.api=false" -f examples/values.test.yaml
+  test-libraries:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.8.1
+      - name: Prepare mock chart
+        run: |
+          cd ..
+          mkdir -p ./test
+          cd ./test
+          helm create common-test
+          cd common-test
+          yq -i '.dependencies[0] = {"name": "common", "version": "0.0.x", "repository": "file://../../charts/charts/common"}' Chart.yaml
+          rm -rf templates/
+          mkdir templates/
+          cp -r ../../charts/charts/common/examples ./templates
+          helm dependency update
+          helm template --dry-run --debug test . --set "global.skyfjell.validate.api=false"

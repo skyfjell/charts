@@ -1,0 +1,5 @@
+chartLabels: {{ include "skyfjell.common.chartLabels" $ | nindent 2}}
+nameFormat: {{ list "test" "name" | include "skyfjell.common.format.name" }}
+namespaceFormat: {{ list (dict "name" "test" "namespace" "ns")  $ | include "skyfjell.common.format.component.namespace" }}
+# for objects that use double curly inside their own app
+literalFormat: {{ "bracket-me" | include "skyfjell.common.format.literal" | quote }}
