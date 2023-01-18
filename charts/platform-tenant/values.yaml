@@ -27,6 +27,7 @@ serviceAccount:
 components:
   namespace:
     enabled: true
+    # Defaults to `[.Values.prefix]-[.Release.Name]`
     name: ""
     annotations: {}
 
