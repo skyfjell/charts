@@ -1,0 +1,34 @@
+{{- if and .Values.components.authProxy.enabled .Values.components.apps -}}
+{{- include "skyfjell.common.require.api.istio.gateway" . -}}
+{{- range .Values.components.apps }}
+{{- $app := . }}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ list $app.name $ | include "platform-tenant.format.name.shared" }}
+  namespace: {{ $.Values.components.istio.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+spec:
+  selector:
+    app: {{ $.Values.components.istio.components.gateway.name }}
+  servers:
+    - hosts: 
+      - {{ $app.host | quote }}
+      port:
+        name: http
+        number: 80
+        protocol: HTTP
+      tls:
+        httpsRedirect: true
+    - hosts: 
+      - {{ $app.host | quote }}
+      port:
+        name: https
+        number: 443
+        protocol: HTTPS
+      tls:
+        credentialName: {{ $app.name  | printf "%s-tls" }}
+        mode: SIMPLE
+{{- end }}
+{{- end -}}

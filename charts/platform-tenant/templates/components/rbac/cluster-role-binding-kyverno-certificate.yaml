@@ -1,0 +1,17 @@
+{{- if and .Values.components.rbac.enabled ( and .Values.components.kyverno.enabled .Values.components.certManager.enabled ) -}}
+{{- $name := list "gateway" $ | include "platform-tenant.format.name.local" -}}
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace:  {{ .Values.components.namespace.name }}
+  name: {{ $name }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ list "gateway" $ | include "platform-tenant.format.name.local" }}
+subjects: # points to my ServiceAccount
+- kind: ServiceAccount
+  name: {{ .Values.components.kyverno.serviceAccountName }}
+  namespace: {{ .Values.components.kyverno.namespace }}
+{{- end }}
