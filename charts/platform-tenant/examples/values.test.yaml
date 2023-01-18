@@ -9,8 +9,6 @@ labels:
   root-label: root-label-value
 
 components:
-  namespace:
-    name: "test"
   rbac:
     enabled: true
   flux:
