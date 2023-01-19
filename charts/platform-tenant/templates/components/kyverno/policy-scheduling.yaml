@@ -1,6 +1,6 @@
 {{- $key := "scheduling" -}}
 {{- $component := get .Values.components.kyverno.components $key  -}}
-{{- if and .Values.components.kyverno.enabled $component.enabled -}}
+{{- if and .Values.components.kyverno.enabled $component.enabled (or $component.tolerations $component.nodeSelector) -}}
 
 {{- $name := list $key $ | include "platform-tenant.format.name.local" -}}
 {{- $namespace := list $ | include "platform-tenant.format.namespace" -}}
