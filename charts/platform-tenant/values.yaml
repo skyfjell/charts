@@ -19,18 +19,16 @@ labels: {}
 commonAnnotations: {}
 commonLabels: {}
 
-serviceAccount:
-  create: true
-  name: ""
-  annotations: {}
-
 components:
   namespace:
     enabled: true
     # Defaults to `[.Values.prefix]-[.Release.Name]`
     name: ""
     annotations: {}
-
+  serviceAccount:
+    create: true
+    name: ""
+    annotations: {}
   # flux configs
   flux:
     namespace: flux-system
@@ -107,6 +105,7 @@ components:
     enabled: true
     namespace: auth-proxy
     providerName: platform-auth-proxy
+    cliendId: ""
     # chart configuration for proxy app
     chart:
       url: https://oauth2-proxy.github.io/manifests
