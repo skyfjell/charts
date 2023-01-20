@@ -9,9 +9,8 @@
 {{- include "skyfjell.common.require.api.kyverno.cluster-policy" . -}}
 
 {{- $certManager := .Values.components.certManager -}}
-{{- $certPolicyEnabled := (and $component.manageCerts $certManager.enabled) -}}
 
-{{- if and $certPolicyEnabled (not $certManager.issuerRef) -}}
+{{- if and $certManager.enabled (not $certManager.issuerRef) -}}
   {{- fail ".Values.components.certManager.issuerRef needs to be defined." -}}
 {{- end -}}
 {{- $certName := ( printf "%s-cert" ( "request.object.metadata.name" | include "skyfjell.common.format.literal" ) | quote) -}}
@@ -21,78 +20,27 @@
 apiVersion: kyverno.io/v1
 kind: Policy
 metadata:
-  name: {{ $name }}
+  name: {{ printf "%s-cert-create" $name }}
   namespace: {{ $namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
   annotations:
     policies.kyverno.io/title: Gateway policy
     policies.kyverno.io/category: Networking
     policies.kyverno.io/description: |
-      Assures gateways are created with allowed domains and subdomains.
-      {{- if $component.manageCerts }}
-      Will create certificates on domains.
-      {{- end }}
+      Creates certificates on domains.
 spec:
   validationFailureAction: enforce
   rules:
-    - name: domain-allow
-      match:
-        resources:
-          kinds:
-            - Gateway
-      validate:
-        message: Only subdomains of {{ $component.domains }} are allowed.
-        deny:
-          conditions:
-            any:
-            - key: {{ printf "request.object.spec.servers[*].hosts[?!ends_with(@,'%s')][] | length(@)" $component.domains | include "skyfjell.common.format.literal" | quote }}
-              operator: GreaterThan
-              value: 0
-    - name: https-only
-      match:
-        resources:
-          kinds:
-            - Gateway
-      validate:
-        message: All non HTTPS protocols must redirect to HTTPS
-        deny:
-          conditions:
-            any:
-            - key: {{ "request.object.spec.servers[?port.protocol != 'HTTPS' && !(tls && tls.httpsRedirect) ] | length(@)"  | include "skyfjell.common.format.literal" | quote }}
-              operator: GreaterThan
-              value: 0
-    - name: https-simple-only
-      match:
-        resources:
-          kinds:
-            - Gateway
-      validate:
-        message: All TLS modes must be 'SIMPLE'
-        deny:
-          conditions:
-            any:
-            - key: {{ "request.object.spec.servers[?port.protocol == 'HTTPS' && !(tls && tls.mode == 'SIMPLE') ] | length(@)"  | include "skyfjell.common.format.literal" | quote }}
-              operator: GreaterThan
-              value: 0
-    - name: one-https-only
-      match:
-        resources:
-          kinds:
-            - Gateway
-      validate:
-        message: Only one HTTPS server per gateway allowed. If multiple needed, create another gateway resource.
-        deny:
-          conditions:
-            any:
-            - key: {{ "request.object.spec.servers[?port.protocol == 'HTTPS' && (tls && tls.mode == 'SIMPLE' && tls.credentialName) ] | length(@)"  | include "skyfjell.common.format.literal" | quote }}
-              operator: GreaterThan
-              value: 1
-    {{- if $certPolicyEnabled }}
     - name: generate-certificate
       match:
         resources:
           kinds:
             - Gateway
+      preconditions:
+        any:
+          - key: {{ printf "request.object.spec.servers[*].hosts[?!ends_with(@,'%s')][] | length(@)" $component.domains | include "skyfjell.common.format.literal" | quote }}
+            operator: GreaterThan
+            value: 0
       generate:
         apiVersion: cert-manager.io/v1
         kind: Certificate
@@ -113,5 +61,4 @@ spec:
             secretName: {{ "request.object.spec.servers[?port.protocol == 'HTTPS' && (tls && tls.mode == 'SIMPLE' && tls.credentialName) ].tls.credentialName | @[0]" | include "skyfjell.common.format.literal" | quote }}
             issuerRef: {{- $certManager.issuerRef | toYaml | nindent 14 }}
             dnsNames: {{ "request.object.spec.servers[?port.protocol == 'HTTPS' && (tls && tls.mode == 'SIMPLE' && tls.credentialName) ].hosts | @[]" | include "skyfjell.common.format.literal" | quote }}
-    {{- end }}
 {{- end }}
