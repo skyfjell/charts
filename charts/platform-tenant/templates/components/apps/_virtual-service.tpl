@@ -31,7 +31,7 @@ spec:
   hosts:
     - {{ $app.host }}
   gateways:
-    - {{ (list $app.name $ | include "platform-tenant.format.name.shared" ) | printf "%s/%s" $.Values.components.istio.namespace }}
+    - {{ (list $app.name $ | include "platform-tenant.format.name.shared" ) | printf "%s/%s" $.Values.components.istio.components.gateway.namespace }}
   {{- $defaultValues := (include "platform-tenant.app.virtual-service.routing" $app | fromYaml) }}
 {{ (mergeOverwrite $defaultValues (default dict $app.routingOverride)) | toYaml | indent 2 }}
 {{- end -}}

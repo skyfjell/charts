@@ -1,9 +1,10 @@
 {{- $key := "gateway" -}}
 {{- $component := get .Values.components.kyverno.components $key  -}}
 {{- if and .Values.components.kyverno.enabled $component.enabled -}}
+{{- $istio := .Values.components.istio -}}
 
 {{- $name := list $key $ | include "platform-tenant.format.name.local" -}}
-{{- $namespace := list $ | include "platform-tenant.format.namespace" -}}
+{{- $namespace := $.Values.components.istio.components.gateway.namespace -}}
 
 {{- include "skyfjell.common.require.api.kyverno.cluster-policy" . -}}
 
