@@ -38,7 +38,7 @@ spec:
             - Gateway
       preconditions:
         any:
-          - key: {{ printf "request.object.spec.servers[*].hosts[?!ends_with(@,'%s')][] | length(@)" $component.domains | include "skyfjell.common.format.literal" | quote }}
+          - key: {{ printf "request.object.spec.servers[*].hosts[?ends_with(@,'%s')][] | length(@)" $component.domains | include "skyfjell.common.format.literal" | quote }}
             operator: GreaterThan
             value: 0
       generate:
