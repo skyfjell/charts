@@ -89,7 +89,6 @@ components:
       gateway:
         enabled: true
         domains: ""
-        manageCerts: true
 
   # If loki, prometheus and grafana installed
   # this configures a namespaced dashboard.
