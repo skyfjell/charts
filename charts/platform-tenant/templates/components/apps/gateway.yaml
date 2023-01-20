@@ -7,7 +7,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   name: {{ list $app.name $ | include "platform-tenant.format.name.shared" }}
-  namespace: {{ $.Values.components.istio.namespace }}
+  namespace: {{ $.Values.components.istio.components.gateway.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   selector:

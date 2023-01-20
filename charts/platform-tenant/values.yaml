@@ -161,6 +161,8 @@ components:
       gateway:
         enabled: true
         name: ingress
+        # namespace of istio gateway component
+        namespace: "system-istio-gateway"
       externalAuth:
         enabled: true
         name: oauth2-proxy
