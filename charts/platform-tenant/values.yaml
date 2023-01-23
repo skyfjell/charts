@@ -166,7 +166,7 @@ components:
         namespace: "system-istio-gateway"
       externalAuth:
         enabled: true
-        name: oauth2-proxy
+        name: proxy
       authPolicy:
         enabled: true
         providerName: ""

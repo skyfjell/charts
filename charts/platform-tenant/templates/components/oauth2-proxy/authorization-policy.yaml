@@ -1,8 +1,9 @@
 {{- if and .Values.components.authProxy.enabled .Values.components.istio.enabled -}}
+{{- $name := list "proxy" . | include "platform-tenant.format.name.shared" -}}
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: {{ list "proxy" $ | include "platform-tenant.format.name.shared" }}
+  name: {{ list "proxy" . | include "platform-tenant.format.name.shared" }}
   namespace: {{ list $ | include "platform-tenant.format.namespace" }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
@@ -15,5 +16,5 @@ spec:
             namespaces:
               - {{ $.Values.components.authProxy.namespace }}
             principals:
-              - cluster.local/ns/auth-proxy/sa/auth-proxy-auth-traefik
+              - {{ printf "cluster.local/ns/%s/sa/%s" $.Values.components.authProxy.namespace $.Values.components.istio.components.externalAuth.name }}
 {{- end -}}
