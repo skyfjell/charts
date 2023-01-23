@@ -1,7 +1,6 @@
 {{- define "platform-auth.app.proxy.template.values" -}}
 {{- $component := .Values.components.proxy -}}
 fullnameOverride: {{ $component.name }}
-nameOverride: {{ $component.name }}
 instanceLabelOverride: {{ $component.name }}
 ingressClass:
   enabled: false
