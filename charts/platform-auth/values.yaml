@@ -93,7 +93,7 @@ components:
     namespace: ""
     chart:
       name: "traefik"
-      version: 20.2.0
+      version: 20.8.0
       sourceRef:
         # Defaults to `traefik` HelmRepository if not set
         name: ""
