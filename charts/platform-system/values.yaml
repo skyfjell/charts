@@ -128,9 +128,10 @@ components:
           externalAuth:
             # Enable only after `platform-auth` installed and its traefik proxy is running
             enabled: false
+            # Name the envoyExtAuthzHttp provider.
             name: "platform-auth-proxy"
             # TODO: Verify as output in `NOTES.txt` of `platform-auth` chart
-            service: "auth-proxy.traefik-proxy.svc.cluster.local"
+            service: "auth-proxy.proxy.svc.cluster.local"
             port: 80
         # Chart/Source Configuration
         chart:
