@@ -14,6 +14,7 @@ service:
   type: ClusterIP
 rbac:
   namespaced: false
+hostNetwork: true
 ingressRoute:
   dashboard:
     enabled: false
