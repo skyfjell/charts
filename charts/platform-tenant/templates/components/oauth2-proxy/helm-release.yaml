@@ -5,7 +5,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: {{ list "proxy" . | include "platform-tenant.format.name.shared" }}
-  namespace: {{ list $ | include "platform-tenant.format.namespace" }}
+  namespace: {{ .Values.components.flux.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   chart:
@@ -17,6 +17,7 @@ spec:
         name: {{ list "proxy" . | include "platform-tenant.format.name.shared" }}
         namespace: {{ .Values.components.flux.namespace }}
   interval: 1h0m0s
+  targetNamespace: {{ list $ | include "platform-tenant.format.namespace" }}
   values:
 {{- $defaultValues := ( include "platform-tenant.app.oauth2-proxy.template" . | fromYaml ) }}
 {{ ( mergeOverwrite $defaultValues (default dict .Values.components.authProxy.overrideValues )) | toYaml | indent 4 }}

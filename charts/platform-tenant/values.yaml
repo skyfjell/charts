@@ -159,12 +159,14 @@ components:
     components:
       gateway:
         enabled: true
+        # name of gateway componnent
+        # should match [platform-system](../platform-system) gateway component chart
         name: ingress
         # namespace of istio gateway component
         namespace: "system-istio-gateway"
       externalAuth:
         enabled: true
-        name: oauth2-proxy
+        name: proxy
       authPolicy:
         enabled: true
         providerName: ""
