@@ -1,27 +1,29 @@
 {{- $istio := .Values.components.istio -}}
-{{- if $istio.enabled -}}
+{{- $gateway := $istio.components.gateway -}}
+{{- if and $istio.enabled $gateway.enabled -}}
 {{ range .Values.components.apps }}
+{{- $app := . }}
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: {{ list .name $ | include "platform-tenant.format.name.shared" }}
+  name: {{ list $app.name $ | include "platform-tenant.format.name.shared" }}
   namespace: {{ list $ | include "platform-tenant.format.namespace" }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      app: {{ .name }}
+      app: {{ $app.name }}
   rules:
     - from:
         - source:
             namespaces:
-              - {{ $istio.namespace }}
+              - {{ $gateway.namespace }}
             principals:
-              - {{ printf "cluster.local/ns/%s/sa/%s-%s-gateway" $istio.namespace $istio.namespace (list $ | include "platform-tenant.format.name.shared") }}
+              - {{ printf "cluster.local/ns/%s/sa/%s" $gateway.namespace $gateway.name }}
       to:
         - operation:
             hosts:
-              - {{ .host }}
+              - {{ $app.host }}
 {{- end -}}
 {{- end -}}
