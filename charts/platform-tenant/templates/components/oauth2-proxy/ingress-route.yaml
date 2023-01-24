@@ -15,7 +15,7 @@ spec:
   routes:
     - kind: Rule
       middlewares:
-        - names: {{ list "proxy" "host" "header" . | include "platform-tenant.format.name.shared" }}
+        - name: {{ list "proxy" "host" "header" . | include "platform-tenant.format.name.shared" }}
       {{- $match := list }}
       {{- range $host := (include "platform-tenant.apps.hosts" . | fromYaml ).hosts }}
       {{- $match = append $match (printf "Headers(`X-Forwarded-Host`, `%s`)" $host) }}
