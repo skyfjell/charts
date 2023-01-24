@@ -6,7 +6,7 @@ apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: {{ list "allow" "http" . | include "platform-tenant.format.name.shared" }}
-  namespace: {{ $istio.namespace }}
+  namespace: {{ $gateway.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   action: ALLOW
