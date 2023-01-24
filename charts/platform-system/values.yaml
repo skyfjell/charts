@@ -131,7 +131,7 @@ components:
             # Name the envoyExtAuthzHttp provider.
             name: "platform-auth-proxy"
             # TODO: Verify as output in `NOTES.txt` of `platform-auth` chart
-            service: "auth-proxy.proxy.svc.cluster.local"
+            service: "proxy.auth-proxy.svc.cluster.local"
             port: 80
         # Chart/Source Configuration
         chart:
