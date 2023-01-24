@@ -9,11 +9,12 @@ providers:
     enabled: false
   kubernetesCRD:
     allowCrossNamespace: true
+    namespaces:
+      ["*"]
 service:
   type: ClusterIP
 rbac:
   namespaced: false
-hostNetwork: true
 ingressRoute:
   dashboard:
     enabled: false
