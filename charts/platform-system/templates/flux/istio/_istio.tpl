@@ -61,6 +61,7 @@ meshConfig:
   enablePrometheusMerge: true
   enableTracing: true
   defaultConfig:
+    holdApplicationUntilProxyStarts: true
     proxyMetadata:
       # Enable basic DNS proxying
       ISTIO_META_DNS_CAPTURE: "true"
