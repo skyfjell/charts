@@ -1,0 +1,17 @@
+{{- if .Values.components.authProxy.enabled -}}
+{{- include "skyfjell.common.require.api.traefik.all" . -}}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ list "proxy" "host" "header" . | include "platform-tenant.format.name.shared" }}
+  namespace: {{ list . | include "platform-tenant.format.namespace" }}
+  labels: {{- include "skyfjell.common.chartLabels" . | nindent 4 }}
+    app.kubernetes.io/name: traefik
+    app.kubernetes.io/instance: platform-auth-auth-proxy
+spec:
+  headers:
+    customRequestHeaders:
+      Host: {{ list "proxy" . | include "platform-tenant.format.name.shared" }}
+      X-Forwarded-Proto: https
+{{- end -}}
