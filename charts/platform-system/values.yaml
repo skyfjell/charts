@@ -14,7 +14,7 @@ components:
     # Component Release Name - Prefixed by parent component(s)
     name: config
     chart:
-      version: "0.0.4"
+      version: "0.1.0"
       source:
         kind: HelmRepository
         name: ""
@@ -231,7 +231,7 @@ components:
         name: policies-skyfjell
         chart:
           name: kyverno-policies
-          version: 0.0.6
+          version: "0.1.0"
           # Uses the skyfjell helm repository by default.
           source: {}
         values: {}
