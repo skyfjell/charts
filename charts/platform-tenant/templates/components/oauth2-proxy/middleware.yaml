@@ -12,6 +12,6 @@ metadata:
 spec:
   headers:
     customRequestHeaders:
-      Host: {{ list "proxy" . | include "platform-tenant.format.name.shared" }}
+      Host: {{ printf "%s.%s.svc" (list "proxy" . | include "platform-tenant.format.name.shared") (list . | include "platform-tenant.format.namespace")  }}
       X-Forwarded-Proto: https
 {{- end -}}
