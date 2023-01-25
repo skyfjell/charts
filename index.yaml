@@ -113,6 +113,19 @@ entries:
     version: 0.0.16
   kyverno-policies:
   - apiVersion: v2
+    created: "2023-01-25T18:47:47.147702362Z"
+    dependencies:
+    - name: common
+      repository: '@skyfjell'
+      version: 0.0.x
+    description: A Helm chart for Kyverno policies
+    digest: 97865eade4bdf3916ae57332d1aa09d5c078e76c6dd7d6251734606ff76d6918
+    name: kyverno-policies
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/kyverno-policies-0.1.0/kyverno-policies-0.1.0.tgz
+    version: 0.1.0
+  - apiVersion: v2
     created: "2022-12-22T02:28:38.279770608Z"
     dependencies:
     - name: common
@@ -203,6 +216,19 @@ entries:
     version: 0.0.1
   platform-auth:
   - apiVersion: v2
+    created: "2023-01-25T18:47:47.307309298Z"
+    dependencies:
+    - name: common
+      repository: '@skyfjell'
+      version: 0.0.x
+    description: Skyfjell Platform Auth Chart
+    digest: e1cec860ced99f102fd67a86cb28bdc349c61ab60f39c9739e2692c83bed3d9e
+    name: platform-auth
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-auth-0.1.0/platform-auth-0.1.0.tgz
+    version: 0.1.0
+  - apiVersion: v2
     created: "2023-01-23T20:34:12.098624826Z"
     dependencies:
     - name: common
@@ -250,6 +276,19 @@ entries:
     - https://github.com/skyfjell/charts/releases/download/platform-factory-0.0.1/platform-factory-0.0.1.tgz
     version: 0.0.1
   platform-system:
+  - apiVersion: v2
+    created: "2023-01-25T18:47:47.498244296Z"
+    dependencies:
+    - name: common
+      repository: '@skyfjell'
+      version: 0.0.x
+    description: Skyfjell Platform System Chart
+    digest: 5d0e91798570ecd02c84c72473b6d6054b1815ff9901108f76b7d1508d1857d2
+    name: platform-system
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-system-0.1.0/platform-system-0.1.0.tgz
+    version: 0.1.0
   - apiVersion: v2
     created: "2023-01-24T22:23:33.650274479Z"
     dependencies:
@@ -417,6 +456,19 @@ entries:
     version: 0.0.1
   platform-system-config:
   - apiVersion: v2
+    created: "2023-01-25T18:47:47.769434765Z"
+    dependencies:
+    - name: common
+      repository: '@skyfjell'
+      version: 0.0.x
+    description: Platform System Configuration Chart
+    digest: 937e7b76c8609b9e519f26bd88f664436f946d5330ae62fda15c47f3598325e2
+    name: platform-system-config
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-system-config-0.1.0/platform-system-config-0.1.0.tgz
+    version: 0.1.0
+  - apiVersion: v2
     created: "2023-01-17T19:12:35.377851493Z"
     dependencies:
     - name: common
@@ -497,6 +549,19 @@ entries:
     - https://github.com/skyfjell/charts/releases/download/platform-system-config-istio-0.0.1/platform-system-config-istio-0.0.1.tgz
     version: 0.0.1
   platform-tenant:
+  - apiVersion: v2
+    created: "2023-01-25T18:47:47.951405388Z"
+    dependencies:
+    - name: common
+      repository: '@skyfjell'
+      version: 0.0.x
+    description: Skyfjell Platform Tenant Chart
+    digest: 6a0e7cd4f3c12290c2b3b85eab6310db5883ad5653dbf6653988ff0056674946
+    name: platform-tenant
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-tenant-0.1.0/platform-tenant-0.1.0.tgz
+    version: 0.1.0
   - apiVersion: v2
     created: "2022-11-16T00:49:56.49951209Z"
     dependencies:
@@ -579,4 +644,4 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/skyfjell-common-0.0.1/skyfjell-common-0.0.1.tgz
     version: 0.0.1
-generated: "2023-01-24T22:23:33.650406581Z"
+generated: "2023-01-25T18:47:47.951598989Z"
