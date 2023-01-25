@@ -18,8 +18,11 @@ extraArgs:
   provider: oidc
   provider-display-name: {{ default (list . | include "platform-tenant.format.name.local")  $component.displayName }}
   oidc-issuer-url: {{ $component.issuerUri }}
+  # `reverse-proxy: true` forces the application to use `X-Forwarded-For` instead of the `Host` header
   reverse-proxy: true
+  # Auth terminates at this application for Istio external auth, only need to return 200 for istio to allow the request to the destination
   upstream: static://200
+  # Set the authorization header on the response for istio to pick up and pass to the destination service
   set-authorization-header: true
   email-domain: "*"
   cookie-secure: true
@@ -29,6 +32,7 @@ extraArgs:
   cookie-name: {{ printf "_%s_tenant_auth" ( $component.cookieDomain | replace "." "_" | lower ) }}
   cookie-domain: {{ $component.cookieDomain }}
   whitelist-domain: {{ join "," (include "platform-tenant.apps.hosts" . | fromYaml ).hosts | indent 4}}
+  # Skip splash link to auth provider
   skip-provider-button: true
 replicaCount: 1
 resources:
