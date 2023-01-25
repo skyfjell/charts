@@ -12,6 +12,8 @@ nameOverride: {{ list "proxy" . | include "platform-tenant.format.name.shared" }
 fullnameOverride: {{ list "proxy" . | include "platform-tenant.format.name.shared" }}
 config:
   existingSecret: {{ $component.existingSecret }}
+service:
+  portNumber: 4180
 extraArgs:
   provider: oidc
   provider-display-name: {{ default (list . | include "platform-tenant.format.name.local")  $component.displayName }}
