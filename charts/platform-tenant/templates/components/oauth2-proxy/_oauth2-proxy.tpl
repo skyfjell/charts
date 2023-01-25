@@ -18,6 +18,7 @@ extraArgs:
   provider: oidc
   provider-display-name: {{ default (list . | include "platform-tenant.format.name.local")  $component.displayName }}
   oidc-issuer-url: {{ $component.issuerUri }}
+  reverse-proxy: true
   upstream: static://200
   set-authorization-header: true
   email-domain: "*"
