@@ -1,0 +1,17 @@
+{{- $component := .Values.components.helmRepositories.components.privatebin -}}
+{{- $factory := .Values.components.privatebin -}}
+
+{{- if and $component.enabled  $factory.enabled .Values.components.flux.enabled -}}
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: {{ list $component.name $ | include "platform-factory.format.name" }}
+  namespace: {{ .Values.components.flux.namespace | quote }}
+  labels:
+    {{- include "platform-factory.labels" $ | nindent 4 }}
+    {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+spec:
+  url: {{ $component.url }}
+  interval: {{ default .Values.components.flux.interval $component.interval }}
+{{- end }}

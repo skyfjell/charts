@@ -1,0 +1,36 @@
+{{- include "skyfjell.common.require.api.flux.helm-release" . -}}
+{{- $component := $.Values.components.privatebin -}}
+{{- $solution := .Values.components.flux -}}
+
+{{- $istio := .Values.components.istio -}}
+{{- $gateway := $istio.components.gateway -}}
+
+{{- $repo := .Values.components.helmRepositories.components.privatebin -}}
+{{- $sourceName := list $repo.name $ | include "platform-factory.format.name" -}}
+{{- $sourceName := default $sourceName $component.chart.source.name -}}
+{{- if and $component.enabled .Values.components.flux.enabled -}}
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ list $component.name $ | include "platform-factory.format.name" }}
+  namespace: {{ $solution.namespace | quote }}
+  labels:
+    {{- include "platform-factory.labels" $ | nindent 4 }}
+    {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+spec:
+  releaseName: {{ list $component.name $ | include "platform-factory.format.name" }}
+  targetNamespace: {{ list $component . | include "platform-factory.format.namespace" }}
+  chart:
+    spec:
+      chart: privatebin
+      version: {{ $component.version }}
+      sourceRef:
+        kind: {{ $component.chart.source.kind }}
+        name: {{ $sourceName }}
+        namespace: {{ $solution.namespace | quote }}
+  interval: {{ $solution.interval }}
+  values:
+{{- $defaultValues := include "platform-factory.components.privatebin.defaultValues" $ | fromYaml -}}
+{{- mergeOverwrite $defaultValues $component.overrideValues | toYaml | nindent 4 -}}
+{{- end }}

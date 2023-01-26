@@ -5,6 +5,21 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
+{{- define "platform-factory.format.name" -}}
+  {{- $ := last . -}}
+  {{- prepend . $.Values.prefix | initial | include "skyfjell.common.format.name" -}}
+{{- end }}
+
+{{- define "platform-factory.format.namespace" -}}
+  {{- $ := last . -}}
+  {{- $component := first . -}}
+  {{- if $component.namespace.create -}}
+    {{ list (dict "name" $component.name "namespace" $component.namespace.name) $ | include "skyfjell.common.format.component.namespace" }}
+  {{- else -}}
+  {{ $component.namespace.name }}
+  {{- end -}}
+{{- end }}
+
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
@@ -34,6 +49,9 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "platform-factory.labels" -}}
+{{- with .Values.global.labels -}}
+{{ toYaml .}}
+{{- end -}}
 helm.sh/chart: {{ include "platform-factory.chart" . }}
 {{ include "platform-factory.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
@@ -60,27 +78,3 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
-
-{{/* Set tolerations from global if available and if not set it from app values*/}}  
-{{/* ex: tolerations: {{ include "helper.tolerations" (dict "globalTolerations" .Values.global.tolerations "appTolerations" .Values.components.<app>.tolerations ) | indent 6 }} */}}
-{{- define "helper.tolerations" }}                                                   
-{{- if .appTolerations }}                                                            
-{{ toYaml .appTolerations | indent 2 }}                                              
-{{- else if .globalTolerations }}                                                    
-{{ toYaml .globalTolerations | indent 2 }}                                           
-{{- else }}                                                                          
-{{- "[]" }}                                                                          
-{{- end }}                                                                           
-{{- end }}                                                                           
-                                                                                     
-{{/* Set nodeSelector from global if available and if not set it from app values*/}} 
-{{/* ex: nodeSelector: {{ include "helper.nodeSelector" (dict "globalNodeSelector" .Values.global.nodeSelector "appNodeSelector" .Values.components.<app>.nodeSelector) | indent 6 }} */}}
-{{- define "helper.nodeSelector" }}                                                  
-{{- if .appNodeSelector }}                                                           
-{{ toYaml .appNodeSelector | indent 2 }}                                             
-{{- else if .globalNodeSelector }}                                                   
-{{ toYaml .globalNodeSelector | indent 2 }}                                          
-{{- else }}                                                                          
-{{- "{}" }}                                                                          
-{{- end }}                                                                           
-{{- end }}                                                                           
