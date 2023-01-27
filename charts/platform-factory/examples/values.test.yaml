@@ -1,0 +1,11 @@
+components:
+  privatebin:
+    enabled: true
+    host: privatebin.example.com
+    namespace:
+      create: true
+  certManager:
+    issuerRef:
+      name: letsencrypt-prod
+      kind: ClusterIssuer
+      group: cert-manager.io
