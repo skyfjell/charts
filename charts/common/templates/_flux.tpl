@@ -18,9 +18,17 @@
   {{ list "kustomize.toolkit.fluxcd.io" "Kustomization" $ | include "skyfjell.common.require.api.flux.base" }}
 {{ end }}
 
-{{ define "skyfjell.common.require.api.flux.source" }}
-  {{ list "source.toolkit.fluxcd.io" "HelmRepository" . | include "skyfjell.common.require.api.flux.base" }}
+{{ define "skyfjell.common.require.api.flux.git-repository" }}
   {{ list "source.toolkit.fluxcd.io" "GitRepository" . | include "skyfjell.common.require.api.flux.base" }}
+{{ end }}
+
+{{ define "skyfjell.common.require.api.flux.helm-repository" }}
+  {{ list "source.toolkit.fluxcd.io" "HelmRepository" . | include "skyfjell.common.require.api.flux.base" }}
+{{ end }}
+
+{{ define "skyfjell.common.require.api.flux.source" }}
+  {{ include "skyfjell.common.require.api.flux.git-repository" . }}
+  {{ include "skyfjell.common.require.api.flux.helm-repository" . }}
 {{ end }}
 
 {{ define "skyfjell.common.require.api.flux.all" }}

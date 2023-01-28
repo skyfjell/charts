@@ -31,13 +31,13 @@ spec:
   # TODO: Support local and existing dependsOn
   chart:
     spec:
-      chart: {{ $component.chart.name }}
+      chart: {{ default $component.chart.name }}
       version: {{ default $component.chart.version }}
       sourceRef:
         kind: {{ default $component.chart.source.kind }}
         name: {{ $sourceName }}
         namespace: {{ $solution.namespace }}
-  interval: {{ default $.Values.components.flux.interval $component.chart.interval }}
+  interval: {{ default $solution.interval $component.chart.interval }}
   {{/*
   # Include the values template for this component in the depending chart
   # Leave `values` key off of component to disable
