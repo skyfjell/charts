@@ -51,11 +51,56 @@ components:
     affinity: {}
     labels: {}
     overrideValues: {}
+  jupyterhub:
+    enabled: false
+    name: "jupyterhub"
+    namespace:
+      create: true
+      name: ""
+    host: ""
+    chart:
+      version: "2.0.0"
+      source:
+        kind: HelmRepository
+        # uses chart's included helm repository name
+        name: ""
+    # Metadata and scheduling tags
+    # be defined on any component as well
+    annotations: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    labels: {}
+    # Auth is built off of GenericOAuthenticator implementation
+    # which is the suggested implementation going forward. Override
+    # with `overrideValues`
+    # config for https://github.com/jupyterhub/oauthenticator/blob/main/examples/generic/README.md
+    # Use above secret configs for
+    auth:
+      enabled: false
+      clientId:
+        key: ""
+        name: ""
+      clientSecret:
+        key: ""
+        name: ""
+      cryptKey:
+        key: ""
+        name: ""
+      # authorize_url: https://your-domain.us.auth0.com/authorize
+      # token_url: https://your-domain.us.auth0.com/oauth/token
+      # userdata_url: https://your-domain.us.auth0.com/userinf
+    overrideValues: {}
+
   helmRepositories:
     components:
       privatebin:
         name: privatebin
         url: https://privatebin.github.io/helm-chart
+        enabled: true
+      jupyterhub:
+        name: jupyterhub
+        url: https://jupyterhub.github.io/helm-chart
         enabled: true
 
 global:

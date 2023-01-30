@@ -1,11 +1,42 @@
 components:
-  privatebin:
+  istio:
     enabled: true
-    host: privatebin.example.com
-    namespace:
-      create: true
+    components:
+      gateway:
+        enabled: true
+        namespace: system-istio-gateway
+        name: ingress
   certManager:
     issuerRef:
       name: letsencrypt-prod
       kind: ClusterIssuer
       group: cert-manager.io
+  privatebin:
+    enabled: false
+    host: privatebin.example.com
+  jupyterhub:
+    enabled: true
+    host: jupyterhub.example.com
+    auth:
+      enabled: true
+      clientId:
+        key: "client-id"
+        name: "jh-secret"
+      clientSecret:
+        key: "client-secret"
+        name: "jh-secret"
+      cryptKey:
+        key: "crypt-secret"
+        name: "jh-secret"
+      oauth_callback_url: https://your-jupyterhub-domain/hub/oauth_callback
+      authorize_url: https://your-domain.us.generic.com/authorize
+      token_url: https://your-domain.us.generic.com/oauth/token
+      userdata_url: https://your-domain.us.generic.com/userinfo
+      scope:
+        - openid
+        - name
+        - profile
+        - email
+      username_key: name
+      allowed_groups: ["bus_analysts", "data_scientists", "ml_engineers"] # set inside OIDC provider
+      claim_groups_key: "groups" # Mapped in OIDC claims

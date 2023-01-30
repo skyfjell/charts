@@ -4,7 +4,7 @@
 {{- range $components -}}
 {{/* Remove components */}}
 {{- if (kindIs "map" .namespace)  }}
-{{- if and .namespace.create .enabled -}}
+{{- if and .namespace.create .enabled }}
 ---
 apiVersion: v1
 kind: Namespace

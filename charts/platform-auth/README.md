@@ -11,6 +11,7 @@ Other platform charts:
 - [platform-system](../platform-system)
 - [platform-o11y](../platform-o11y)
 - [platform-tenant](../platform-tenant)
+- [platform-factory](../platform-factory)
 
 See the root [README.md](../../README.md) for other charts in this repository.
 
@@ -53,9 +54,10 @@ metadata:
 spec:
   chart:
     spec:
-      chart: charts/platform-auth
+      chart: platform-auth
+      version: "*" # update to desired version
       sourceRef:
-        kind: GitRepository
+        kind: HelmRepository
         name: skyfjell
         namespace: flux-system
   interval: 0h10m0s

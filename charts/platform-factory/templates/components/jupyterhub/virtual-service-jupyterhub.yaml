@@ -1,4 +1,4 @@
-{{- $component := .Values.components.privatebin -}}
+{{- $component := .Values.components.jupyterhub -}}
 {{- $istio := .Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
 
@@ -24,5 +24,5 @@ spec:
         - destination:
             port:
               number: 80
-            host: {{ list $component.name  | include "skyfjell.common.format.name" }}
+            host: {{ list $component.name "proxy" "public" | include "skyfjell.common.format.name" }}
 {{- end }}

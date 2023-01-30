@@ -1,11 +1,11 @@
 {{- include "skyfjell.common.require.api.flux.helm-release" . -}}
-{{- $component := $.Values.components.privatebin -}}
+{{- $component := $.Values.components.jupyterhub -}}
 {{- $solution := .Values.components.flux -}}
 
 {{- $istio := .Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
 
-{{- $repo := .Values.components.helmRepositories.components.privatebin -}}
+{{- $repo := .Values.components.helmRepositories.components.jupyterhub -}}
 {{- $sourceName := list $repo.name $ | include "platform-factory.format.name" -}}
 {{- $sourceName := default $sourceName $component.chart.source.name -}}
 {{- if and $component.enabled .Values.components.flux.enabled -}}
@@ -23,7 +23,7 @@ spec:
   targetNamespace: {{ list $component . | include "platform-factory.format.namespace" }}
   chart:
     spec:
-      chart: privatebin
+      chart: jupyterhub
       version: {{ $component.chart.version }}
       sourceRef:
         kind: {{ $component.chart.source.kind }}
@@ -31,6 +31,6 @@ spec:
         namespace: {{ $solution.namespace | quote }}
   interval: {{ $solution.interval }}
   values:
-{{- $defaultValues := include "platform-factory.components.privatebin.defaultValues" $ | fromYaml -}}
+{{- $defaultValues := include "platform-factory.components.jupyterhub.defaultValues" $ | fromYaml -}}
 {{- mergeOverwrite $defaultValues $component.overrideValues | toYaml | nindent 4 -}}
 {{- end }}

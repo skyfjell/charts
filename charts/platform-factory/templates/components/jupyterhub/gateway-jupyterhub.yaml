@@ -1,4 +1,4 @@
-{{- $component := .Values.components.privatebin -}}
+{{- $component := .Values.components.jupyterhub -}}
 
 {{- $istio := .Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
