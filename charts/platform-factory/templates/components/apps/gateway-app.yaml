@@ -1,0 +1,51 @@
+{{- $istio := .Values.components.istio -}}
+{{- $apps := .Values.components.apps -}}
+{{- $gateway := $istio.components.gateway -}}
+{{- if and $apps $istio.enabled $gateway.enabled -}}
+{{- range $apps -}}
+{{- include "skyfjell.common.require.api.istio.gateway" $ -}}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ list .name $ | include "platform-factory.format.name" }}
+  namespace: {{ $gateway.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+spec:
+  selector:
+    {{- $selector := $gateway.selector | default $gateway.selector }}
+    {{- if $selector }}
+    {{- $selector | toYaml | nindent 4 }}
+    {{- else }}
+    app: {{ $gateway.name }}
+    {{- end }}
+  servers:
+    - hosts:
+        - {{ .host }}
+      port:
+        name: http2
+        number: 80
+        protocol: HTTP2
+      tls:
+        httpsRedirect: true
+    - hosts:
+        - {{ .host }}
+      port:
+        name: http
+        number: 80
+        protocol: HTTP
+      tls:
+        httpsRedirect: true
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - {{ .host }}
+      {{- if and $.Values.components.certManager.enabled $.Values.components.certManager.issuerRef }}
+      tls:
+        mode: SIMPLE
+        credentialName: {{ list .name "tls" $ | include "platform-factory.format.name" }}
+      {{- end }}
+{{- end -}}
+{{- end -}}

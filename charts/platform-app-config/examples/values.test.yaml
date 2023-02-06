@@ -1,0 +1,42 @@
+components:
+  certManager:
+    issuerRef:
+      name: letsencrypt-prod
+      kind: ClusterIssuer
+      group: cert-manager.io
+  app-one:
+    name: app-one
+    namespace: app-one
+    host: app-one.example.com
+    # will default to name
+    # serviceAccountName: ""
+    service:
+      # These are implied by the above. But if they differ can be configured explicitly here too.
+      # namespace: app-one
+      # name: app-one
+      port: 80
+      host: app-one.app-one.svc.cluster.local
+    authorization:
+      enabled: true
+      clientId: app-one
+    components:
+      postgresql:
+        name: postgresql
+        # service:
+        # name: app-one-postgresql
+        # namespace: app-one
+        # Without port: workload selector.
+        # port: 5432
+  app-one-postgresql:
+    name: app-one-postgresql
+    namespace: app-one
+    components:
+      app-one:
+        name: app-one
+        # Implied by parent ns.
+        # namespace: app-one
+        # service:
+        # These are implied by `list parent.name component.name | join "-"` and using parent namespace, but may be explicitly configured.
+        # name: app-one-postgresql
+        # namespace: app-one
+        # port: 80

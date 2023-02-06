@@ -1,0 +1,25 @@
+{{- $apps := omit .Values.components "certManager" "istio" -}}
+{{- range (keys $apps | sortAlpha) -}}
+{{- $app := get $apps . -}}
+{{- $istio := $.Values.components.istio -}}
+{{- $gateway := $istio.components.gateway -}}
+{{- if and $app.host $.Values.components.certManager.enabled $istio.enabled $gateway.enabled $.Values.components.certManager.issuerRef -}}
+{{- include "skyfjell.common.require.api.cert-manager.certificate" $ -}}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ list $app.name $ | include "platform-app-config.format.name" }}
+  namespace: {{ $gateway.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+  {{- include "platform-app-config.labels" $ | nindent 4 }}
+spec:
+  secretName: {{ printf "%s-tls" ( list $app.name $app.namespace $ | include "platform-app-config.format.name" ) }}
+  dnsNames:
+    - {{ $app.host }}
+  {{- with $.Values.components.certManager.issuerRef }}
+  issuerRef:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end -}}
+{{- end -}}

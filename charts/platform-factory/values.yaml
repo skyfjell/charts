@@ -57,6 +57,29 @@ components:
         name: privatebin
         url: https://privatebin.github.io/helm-chart
         enabled: true
+  # apps are a list applications in already existing namespaces
+  # that have istio sidecar injection enabled, mTLS and restrictive auth policies
+  # The structure of these arrays are
+  #
+  # apps:
+  #     # name
+  #   - name: "" # name of app
+  #     namespace: "" # namespace of app
+  apps:
+    - name: "test-app"
+      # namespace of app
+      namespace: "test-app"
+      host: "myapp.example.com"
+      service:
+        host: "my-service"
+        port: 8080
+    - name: "test-app2"
+      # namespace of app
+      namespace: "test-app"
+      host: "myapp2.example.com"
+      service:
+        host: "my-service2"
+        port: 8085
 
 global:
   affinity: {}

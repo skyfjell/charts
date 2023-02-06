@@ -1,0 +1,38 @@
+{{- $apps := omit .Values.components "certManager" "istio" -}}
+{{- range (keys $apps | sortAlpha) -}}
+{{- $app := get $apps . -}}
+{{- $istio := $.Values.components.istio -}}
+{{- $gateway := $istio.components.gateway -}}
+{{- if and $app.host $istio.enabled $gateway.enabled -}}
+{{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ list $app.name "gateway" "http" $ | include "platform-app-config.format.name" }}
+  namespace: {{ $gateway.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+    {{- include "platform-app-config.labels" $ | nindent 4 }}
+    skyfjell.io/from: {{ list $app.host "http" | include "skyfjell.common.format.name" }}
+    skyfjell.io/to-ns: {{ $gateway.namespace }}
+    skyfjell.io/to: {{ list $gateway.name "http" | include "skyfjell.common.format.name" }}
+spec:
+  action: ALLOW
+  selector:
+    matchLabels:
+      {{- $selector := $gateway.selector }}
+      {{- if $selector }}
+      {{- $selector | toYaml | nindent 6 }}
+      {{- else }}
+      app: {{ $istio.components.gateway.name }}
+      {{- end }}
+  rules:
+    - to:
+        - operation:
+            hosts:
+              - {{ $app.host }}
+            ports:
+              - "80"
+              - "443"
+{{- end -}} 
+{{- end -}}

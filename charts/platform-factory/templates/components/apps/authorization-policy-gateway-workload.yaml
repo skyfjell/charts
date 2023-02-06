@@ -1,0 +1,36 @@
+{{- $istio := .Values.components.istio -}}
+{{- $apps := .Values.components.apps -}}
+{{- $gateway := $istio.components.gateway -}}
+{{- if and $istio.enabled $gateway.enabled -}}
+{{- range $apps -}}
+{{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ list $gateway.namespace $gateway.name .namespace .name | include "skyfjell.common.format.name" }}
+  namespace: {{ .namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+    skyfjell.io/from-ns: {{ $gateway.namespace }}
+    skyfjell.io/from: {{ $gateway.name }}
+    skyfjell.io/to-ns: {{ .namespace }}
+    skyfjell.io/to: {{ .name }}
+spec:
+  action: ALLOW
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .name }}
+      app.kubernetes.io/instance: {{ list .name $ | include "platform-factory.format.name" }}
+  rules:
+    - from:
+        - source:
+            namespaces:
+              - {{ $gateway.namespace }}
+            principals:
+              - {{ printf "cluster.local/ns/%s/sa/%s" $gateway.namespace $gateway.name }}
+      to:
+        - operation:
+            hosts:
+              - {{ .host }}
+{{- end -}}
+{{- end -}}

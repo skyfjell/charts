@@ -1,0 +1,31 @@
+{{- $apps := omit .Values.components "certManager" "istio" -}}
+{{- $istio := $.Values.components.istio -}}
+{{- $gateway := $istio.components.gateway -}}
+{{- range (keys $apps | sortAlpha) -}}
+{{- $app := get $apps . -}}
+{{- if and $app.host $.Values.components.certManager.enabled $istio.enabled $gateway.enabled -}}
+{{- include "skyfjell.common.require.api.istio.vs" $ -}}
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ $app.name }}
+  namespace: {{ $app.namespace }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+  {{- include "platform-app-config.labels" $ | nindent 4 }}
+spec:
+  hosts:
+    - {{ $app.host }}
+  gateways:
+    - {{ list $app.name $ | include "platform-app-config.format.name" | printf "%s/%s" $gateway.namespace }}
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            port:
+              number: {{ $app.service.port }}
+            host: {{ default $app.name $app.service.host }}
+{{- end -}}
+{{- end -}}

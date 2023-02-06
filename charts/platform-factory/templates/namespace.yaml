@@ -1,4 +1,4 @@
-{{- $components := values .Values.components -}}
+{{- $components := values ( omit .Values.components "apps") -}}
 {{- $istio := .Values.components.istio -}}
 
 {{- range $components -}}
