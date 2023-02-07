@@ -1,6 +1,9 @@
 {{- define "skyfjell.common.template.flux.helm-release" -}}
 {{- $ := last . -}}
-{{- $component := first . -}}
+{{- /*
+# deepCopy to prevent mutating values
+*/ -}}
+{{- $component := first . | deepCopy -}}
 {{- $component = default (list) $component.ancestorNames | set $component "ancestorNames" -}}
 
 {{- if $component.chart -}}
@@ -53,7 +56,10 @@ spec:
 
 {{- with $component.components }}
   {{- range $child := . }}
-    {{- $child = set $child "parent" $component -}}
+    {{- /*
+    # deepCopy to prevent cycle
+    */ -}}
+    {{- $child = deepCopy $component | set $child "parent" -}}
     {{- $child = set $child "aggregateName" $component.name -}}
     {{- $child = default $child.namespace $component.namespace | set $child "namespace" -}}
     {{- $child = append $component.ancestorNames $component.name | set $child "ancestorNames" -}}
