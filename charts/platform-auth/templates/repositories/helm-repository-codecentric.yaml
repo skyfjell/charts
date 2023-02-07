@@ -3,7 +3,8 @@
   $enabled := and
     $component.enabled
     .Values.components.keycloak.enabled
-    (empty .Values.components.keycloak.chart.sourceRef.name)
+    .Values.components.keycloak.components.server.enabled
+    (empty .Values.components.keycloak.components.server.chart.sourceRef.name)
 -}}
 
 {{- if $enabled -}}
