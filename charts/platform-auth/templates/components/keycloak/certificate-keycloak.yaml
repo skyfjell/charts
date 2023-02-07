@@ -4,7 +4,7 @@
 {{- $istio := .Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
 
-{{- if and $parent.enabled $component.enabled $parent.host .Values.components.certManager.enabled $istio.enabled $gateway.enabled -}}
+{{- if and $parent.enabled $component.enabled $parent.hosts .Values.components.certManager.enabled $istio.enabled $gateway.enabled -}}
 {{- include "skyfjell.common.require.api.cert-manager.certificate" $ -}}
 ---
 apiVersion: cert-manager.io/v1
@@ -16,7 +16,7 @@ metadata:
 spec:
   secretName: {{ printf "%s-tls" (list $parent.name $ | include "platform-auth.format.name") }}
   dnsNames:
-    - {{ $parent.host }}
+    {{- toYaml $parent.hosts | nindent 4 }}
   {{- with .Values.components.certManager.issuerRef }}
   issuerRef:
     {{- toYaml . | nindent 4 }}

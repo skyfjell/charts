@@ -43,7 +43,7 @@ components:
       server:
         enabled: true
         # Public hostname
-        host: ""
+        hosts: []
         admin:
           username: "admin"
           # usernameSecretRef:

@@ -4,9 +4,13 @@ components:
       name: letsencrypt-prod
       kind: ClusterIssuer
       group: cert-manager.io
+  proxy:
+    enabled: true
   keycloak:
     enabled: true
-    host: sso.example.com
+    hosts:
+      - sso.example.com
+      - sso2.example.com
     components:
       server:
         admin:

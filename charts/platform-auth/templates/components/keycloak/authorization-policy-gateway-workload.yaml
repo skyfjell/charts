@@ -4,7 +4,7 @@
 {{- $istio := .Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
 
-{{- if and $parent.enabled $component.enabled $parent.host $istio.enabled $gateway.enabled -}}
+{{- if and $parent.enabled $component.enabled $parent.hosts $istio.enabled $gateway.enabled -}}
 {{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
 
 {{- $namespace := list $parent $ | include "skyfjell.common.format.component.namespace" -}}
@@ -35,5 +35,5 @@ spec:
       to:
         - operation:
             hosts:
-              - {{ $parent.host }}
+              {{- toYaml $parent.hosts | nindent 14 }}
 {{- end -}}

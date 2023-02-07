@@ -15,7 +15,7 @@ metadata:
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   hosts:
-    - {{ $parent.host }}
+    {{- toYaml $parent.hosts | nindent 4 }}
   gateways:
     - {{ list $parent.name $ | include "platform-auth.format.name" | printf "%s/%s" $gateway.namespace }}
   http:

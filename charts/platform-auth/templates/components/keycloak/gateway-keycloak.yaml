@@ -4,7 +4,7 @@
 {{- $istio := .Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
 
-{{- if and $parent.enabled $component.enabled $parent.host $istio.enabled -}}
+{{- if and $parent.enabled $component.enabled $parent.hosts $istio.enabled -}}
 {{- include "skyfjell.common.require.api.istio.gateway" $ -}}
 ---
 apiVersion: networking.istio.io/v1alpha3
@@ -23,7 +23,7 @@ spec:
     {{- end }}
   servers:
     - hosts:
-        - {{ $parent.host }}
+        {{- toYaml $parent.hosts | nindent 8 }}
       port:
         name: http2
         number: 80
@@ -31,7 +31,7 @@ spec:
       tls:
         httpsRedirect: true
     - hosts:
-        - {{ $parent.host }}
+        {{- toYaml $parent.hosts | nindent 8 }}
       port:
         name: http
         number: 80
@@ -43,7 +43,7 @@ spec:
         name: https
         protocol: HTTPS
       hosts:
-        - {{ $parent.host }}
+        {{- toYaml $parent.hosts | nindent 8 }}
       {{- if and .Values.components.certManager.enabled .Values.components.certManager.issuerRef }}
       tls:
         mode: SIMPLE
