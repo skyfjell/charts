@@ -11,11 +11,12 @@
 {{- $parent := get $component "parent" | default (dict)  -}}
 {{- $solution := $.Values.components.flux -}}
 
-{{- $repo := get $.Values.components.helmRepositories.components $component.chart.source.name -}}
-{{- $repo := $repo.name -}}
+{{- $sourceName := default ((($parent).chart).source).name $component.chart.source.name -}}
+{{- $repo := get $.Values.components.helmRepositories.components $sourceName -}}
 
-{{- $sourceName := list $repo $ | include (printf "%s.format.name" $.Chart.Name) -}}
-{{- $sourceName := default $sourceName $component.chart.source.name -}}
+{{- if ($repo).enabled -}}
+{{- $sourceName = list $repo.name $ | include (printf "%s.format.name" $.Chart.Name) -}}
+{{- end -}}
 
 {{- if and $component.enabled $solution.enabled }}
 {{- include "skyfjell.common.require.api.flux.helm-release" $ -}}
@@ -61,7 +62,7 @@ spec:
     */ -}}
     {{- $child = deepCopy $component | set $child "parent" -}}
     {{- $child = set $child "aggregateName" $component.name -}}
-    {{- $child = default $child.namespace $component.namespace | set $child "namespace" -}}
+    {{- $child = default $component.name $component.namespace $child.namespace | set $child "namespace" -}}
     {{- $child = append $component.ancestorNames $component.name | set $child "ancestorNames" -}}
     {{- list $child $ | include "skyfjell.common.template.flux.helm-release" -}}
   {{- end }}
