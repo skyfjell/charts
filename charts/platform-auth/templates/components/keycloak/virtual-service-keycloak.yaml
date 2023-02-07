@@ -4,7 +4,7 @@
 {{- $istio := .Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
 
-{{- if and $parent.host $component.enabled $istio.enabled -}}
+{{- if and $parent.hosts $component.enabled $istio.enabled -}}
 {{- include "skyfjell.common.require.api.istio.vs" $ -}}
 ---
 apiVersion: networking.istio.io/v1beta1
