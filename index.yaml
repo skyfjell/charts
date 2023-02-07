@@ -243,6 +243,19 @@ entries:
     version: 0.0.1
   platform-auth:
   - apiVersion: v2
+    created: "2023-02-07T20:21:42.256815565Z"
+    dependencies:
+    - name: common
+      repository: '@skyfjell'
+      version: 0.0.x
+    description: Skyfjell Platform Auth Chart
+    digest: 56536db71750b0062b36b0f6fa97ffac46d18758ab512576616dd1f2ac19b3c8
+    name: platform-auth
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-auth-0.1.1/platform-auth-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
     created: "2023-01-25T18:47:47.307309298Z"
     dependencies:
     - name: common
@@ -684,4 +697,4 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/skyfjell-common-0.0.1/skyfjell-common-0.0.1.tgz
     version: 0.0.1
-generated: "2023-02-07T19:02:14.776196747Z"
+generated: "2023-02-07T20:21:42.256951665Z"
