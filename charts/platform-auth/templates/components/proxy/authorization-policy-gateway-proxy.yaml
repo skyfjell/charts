@@ -2,7 +2,7 @@
 {{- $istio := .Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
 
-{{- if and $istio.enabled $gateway.enabled -}}
+{{- if and $istio.enabled $gateway.enabled $component.enabled -}}
 {{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
 
 {{ $namespace := list $component $ | include "skyfjell.common.format.component.namespace" }}

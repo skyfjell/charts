@@ -1,5 +1,8 @@
 {{- define "platform-auth.app.proxy.template.values" -}}
 {{- $component := .Values.components.proxy -}}
+{{- $nodeSel := merge $.Values.global.nodeSelector $component.nodeSelector -}}
+{{- $tol := default $.Values.global.tolerations $component.tolerations -}}
+
 fullnameOverride: {{ $component.name }}
 instanceLabelOverride: {{ $component.name }}
 ingressClass:
@@ -18,12 +21,13 @@ rbac:
 ingressRoute:
   dashboard:
     enabled: false
-nodeSelector:
-  {{ default .Values.nodeSelector $component.nodeSelector | toYaml | indent 4 }}
-{{- with default .Values.tolerations $component.nodeSelector }}
+{{- with $tol }}
 tolerations:
-{{ range . }}
-  - {{ .  | quote}}
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with $nodeSel }}
+nodeSelector:
+  {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- end }}
-{{- end }}
+

@@ -1,31 +1,33 @@
-{{- $component := .Values.components.keycloak -}}
-{{- $database := .Values.components.keycloak.components.database -}}
-{{- $istio := .Values.components.istio -}}
-{{- $namespace := list $component $ | include "skyfjell.common.format.component.namespace" -}}
+{{- $parent := .Values.components.keycloak -}}
+{{- $database := $parent.components.database -}}
+{{- $component := $parent.components.server -}}
 
-{{- if $istio.enabled -}}
+{{- $istio := .Values.components.istio -}}
+{{- $namespace := list $parent $ | include "skyfjell.common.format.component.namespace" -}}
+
+{{- if and $parent.enabled $component.enabled $parent.host $istio.enabled -}}
 {{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: {{ list $component.namespace $component.name $database.name | include "skyfjell.common.format.name" }}
+  name: {{ list $parent.namespace $parent.name $database.name | include "skyfjell.common.format.name" }}
   namespace: {{ $namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
     skyfjell.io/from-ns: {{ $namespace }}
-    skyfjell.io/from: {{ $component.name }}
+    skyfjell.io/from: {{ $parent.name }}
     skyfjell.io/to-ns: {{ $namespace }}
-    skyfjell.io/to: {{ $component.name }}
+    skyfjell.io/to: {{ $parent.name }}
 spec:
   action: ALLOW
   selector:
     matchLabels:
-      app: {{ list $component.name $database.name | include "skyfjell.common.format.name" }}
+      app: {{ list $parent.name $database.name | include "skyfjell.common.format.name" }}
   rules:
     - from:
         - source:
             namespaces:
               - {{ $namespace }}
             principals:
-              - {{ printf "cluster.local/ns/%s/sa/%s" $namespace $component.name }}
+              - {{ printf "cluster.local/ns/%s/sa/%s" $namespace $parent.name }}
 {{- end -}}

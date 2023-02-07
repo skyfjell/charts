@@ -1,9 +1,10 @@
-{{- $component := .Values.components.keycloak -}}
+{{- $parent := .Values.components.keycloak -}}
+{{- $component := $parent.components.server -}}
 
-{{- if and $component.enabled -}}
+{{- if and $parent.enabled $component.enabled -}}
 {{- include "skyfjell.common.require.api.flux.helm-release" . -}}
-{{- $name := list $component.name $ | include "platform-auth.format.name" -}}
-{{- $dbName := list $component.name $component.components.database.name $ | include "platform-auth.format.name" -}}
+{{- $name := list $parent.name $ | include "platform-auth.format.name" -}}
+{{- $dbName := list $parent.name $parent.components.database.name $ | include "platform-auth.format.name" -}}
 
 {{- $repoName := list .Values.components.helmRepositories.components.codecentric.name $ | include "platform-auth.format.name" -}}
 {{- $repoName := default $repoName $component.chart.sourceRef.name -}}
@@ -16,8 +17,8 @@ metadata:
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   releaseName: {{ $name }}
-  targetNamespace: {{ list $component $ | include "skyfjell.common.format.component.namespace" }}
-  {{- if $component.components.database.enabled }}
+  targetNamespace: {{ list $parent $ | include "skyfjell.common.format.component.namespace" }}
+  {{- if $parent.components.database.enabled }}
   dependsOn:
     - name: {{ $dbName }}
       namespace: {{ .Values.components.flux.namespace }}
@@ -35,5 +36,5 @@ spec:
   interval: 1h0m0s
   values:
 {{- $defaultValues := ( include "platform-auth.components.keycloak.values" $ | fromYaml ) }}
-{{ ( mergeOverwrite $defaultValues (default dict $component.valuesOverride )) | toYaml | indent 4 }}
+{{ ( mergeOverwrite $defaultValues (default dict $parent.valuesOverride )) | toYaml | indent 4 }}
 {{- end }}

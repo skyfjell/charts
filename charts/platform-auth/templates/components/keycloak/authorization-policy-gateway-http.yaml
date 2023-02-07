@@ -1,14 +1,15 @@
-{{- $component := .Values.components.keycloak -}}
+{{- $parent := .Values.components.keycloak -}}
+{{- $component := $parent.components.server -}}
 {{- $istio := .Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
 
-{{- if and $component.host $istio.enabled $gateway.enabled -}}
+{{- if and $parent.enabled $component.enabled $component.parent $istio.enabled $gateway.enabled -}}
 {{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: {{ list $component.namespace $component.name "http" $ | include "platform-auth.format.name" }}
+  name: {{ list $parent.namespace $parent.name "http" $ | include "platform-auth.format.name" }}
   namespace: {{ $gateway.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
     skyfjell.io/from: {{ list $component.host "http" | include "skyfjell.common.format.name" }}
@@ -18,7 +19,7 @@ spec:
   action: ALLOW
   selector:
     matchLabels:
-      {{- $selector := $component.components.gateway.selector | default $gateway.selector }}
+      {{- $selector := $parent.components.gateway.selector | default $gateway.selector }}
       {{- if $selector }}
       {{- $selector | toYaml | nindent 6 }}
       {{- else }}

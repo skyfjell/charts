@@ -37,28 +37,34 @@ components:
     name: keycloak
     # Keycloak Namespace
     namespace: ""
-    # Public hostname
-    host: ""
-    admin:
-      username: "admin"
-      # usernameSecretRef:
-      #   name: ""
-      #   key: ""
-      # don't use me in production
-      # password: ""
-      # passwordSecretRef:
-      #   name: ""
-      #   key: ""
-    # chart source config
-    chart:
-      name: "keycloakx"
-      version: "1.6.0"
-      sourceRef:
-        # Defaults to `codecentric` repo if not set
-        name: ""
-        kind: HelmRepository
-    valuesOverride: {}
+    nodeSelector: {}
+    tolerations: []
     components:
+      server:
+        enabled: true
+        # Public hostname
+        host: ""
+        admin:
+          username: "admin"
+          # usernameSecretRef:
+          #   name: ""
+          #   key: ""
+          # don't use me in production
+          # password: ""
+          # passwordSecretRef:
+          #   name: ""
+          #   key: ""
+        # chart source config
+        chart:
+          name: "keycloakx"
+          version: "1.6.0"
+          sourceRef:
+            # Defaults to `codecentric` repo if not set
+            name: ""
+            kind: HelmRepository
+        nodeSelector: {}
+        tolerations: []
+        valuesOverride: {}
       database:
         # Toggle Component
         # Defaults to postgres instance. Set false and pass auth to keycloak if needed
@@ -81,6 +87,8 @@ components:
             adminPasswordKey: "postgres-password"
             userPasswordKey: "password"
           database: keycloak
+        nodeSelector: {}
+        tolerations: []
         valuesOverride: {}
       gateway:
         # selector for istio gateway
@@ -99,6 +107,8 @@ components:
         name: ""
         kind: HelmRepository
     valuesOverride: {}
+    nodeSelector: {}
+    tolerations: []
 
   helmRepositories:
     components:

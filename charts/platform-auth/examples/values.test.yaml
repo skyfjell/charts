@@ -7,14 +7,15 @@ components:
   keycloak:
     enabled: true
     host: sso.example.com
-    admin:
-      usernameSecretRef:
-        name: keycloak-admin
-        key: username
-      passwordSecretRef:
-        name: keycloak-admin
-        key: password
     components:
+      server:
+        admin:
+          usernameSecretRef:
+            name: keycloak-admin
+            key: username
+          passwordSecretRef:
+            name: keycloak-admin
+            key: password
       database:
         enabled: true
         auth:

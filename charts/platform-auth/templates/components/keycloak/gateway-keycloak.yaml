@@ -1,14 +1,16 @@
-{{- $component := .Values.components.keycloak -}}
+{{- $parent := .Values.components.keycloak -}}
+{{- $component := $parent.components.server -}}
+
 {{- $istio := .Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
 
-{{- if and $component.host $istio.enabled -}}
+{{- if and $parent.enabled $component.enabled $parent.host $istio.enabled -}}
 {{- include "skyfjell.common.require.api.istio.gateway" $ -}}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: {{ list $component.name $ | include "platform-auth.format.name" }}
+  name: {{ list $parent.name $ | include "platform-auth.format.name" }}
   namespace: {{ $gateway.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
@@ -21,7 +23,7 @@ spec:
     {{- end }}
   servers:
     - hosts:
-        - {{ $component.host }}
+        - {{ $parent.host }}
       port:
         name: http2
         number: 80
@@ -29,7 +31,7 @@ spec:
       tls:
         httpsRedirect: true
     - hosts:
-        - {{ $component.host }}
+        - {{ $parent.host }}
       port:
         name: http
         number: 80
@@ -41,10 +43,10 @@ spec:
         name: https
         protocol: HTTPS
       hosts:
-        - {{ $component.host }}
+        - {{ $parent.host }}
       {{- if and .Values.components.certManager.enabled .Values.components.certManager.issuerRef }}
       tls:
         mode: SIMPLE
-        credentialName: {{ list $component.name "tls" $ | include "platform-auth.format.name" }}
+        credentialName: {{ list $parent.name "tls" $ | include "platform-auth.format.name" }}
       {{- end }}
 {{- end -}}
