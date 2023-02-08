@@ -5,7 +5,7 @@
 {{- $istio := .Values.components.istio -}}
 {{- $namespace := list $parent $ | include "skyfjell.common.format.component.namespace" -}}
 
-{{- if and $parent.enabled $component.enabled $parent.host $istio.enabled -}}
+{{- if and $parent.enabled $component.enabled $parent.hosts $istio.enabled -}}
 {{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
 ---
 apiVersion: security.istio.io/v1beta1

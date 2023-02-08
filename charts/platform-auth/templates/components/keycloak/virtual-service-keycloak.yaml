@@ -4,20 +4,22 @@
 {{- $istio := .Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
 
-{{- if and $parent.host $component.enabled $istio.enabled -}}
+{{- if and $parent.hosts $component.enabled $istio.enabled -}}
+{{- range $host := $parent.hosts }}
+{{- $uniqId := sha256sum $host | trunc 8 -}}
 {{- include "skyfjell.common.require.api.istio.vs" $ -}}
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: {{ $parent.name }}
+  name: {{ list $parent.name $uniqId $ | include "platform-auth.format.name" | trunc 63 }}
   namespace: {{ list $parent $ | include "skyfjell.common.format.component.namespace" }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   hosts:
-    - {{ $parent.host }}
+    - {{ $host }}
   gateways:
-    - {{ list $parent.name $ | include "platform-auth.format.name" | printf "%s/%s" $gateway.namespace }}
+    - {{ list $parent.name $uniqId $ | include "platform-auth.format.name" | printf "%s/%s" $gateway.namespace }}
   http:
     - match:
         - uri:
@@ -27,4 +29,5 @@ spec:
             port:
               number: 80
             host: {{ list $parent.name "http" | include "skyfjell.common.format.name" }}
+{{- end }}
 {{- end }}

@@ -3,16 +3,18 @@
 {{- $istio := .Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
 
-{{- if and $parent.enabled $component.enabled $component.parent $istio.enabled $gateway.enabled -}}
+{{- if and $parent.enabled $component.enabled $parent.hosts $istio.enabled $gateway.enabled -}}
+{{- range $host := $parent.hosts }}
 {{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
+{{- $uniqId := sha256sum $host | trunc 8 -}}
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: {{ list $parent.namespace $parent.name "http" $ | include "platform-auth.format.name" }}
+  name: {{ list $parent.namespace $parent.name "http" $uniqId $ | include "platform-auth.format.name" }}
   namespace: {{ $gateway.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
-    skyfjell.io/from: {{ list $component.host "http" | include "skyfjell.common.format.name" }}
+    skyfjell.io/from: {{ list $host "http" | include "skyfjell.common.format.name" }}
     skyfjell.io/to-ns: {{ $gateway.namespace }}
     skyfjell.io/to: {{ list $gateway.name "http" | include "skyfjell.common.format.name" }}
 spec:
@@ -29,8 +31,9 @@ spec:
     - to:
         - operation:
             hosts:
-              - {{ $component.host }}
+              - {{ $host }}
             ports:
               - "80"
               - "443"
+{{- end -}}
 {{- end -}}
