@@ -6,20 +6,20 @@
 
 {{- if and $parent.hosts $component.enabled $istio.enabled -}}
 {{- range $host := $parent.hosts }}
-{{ $safename := regexReplaceAll "\\." $host "-" }}
+{{- $uniqId := sha256sum $host | trunc 8 -}}
 {{- include "skyfjell.common.require.api.istio.vs" $ -}}
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: {{ list $parent.name $safename $ | include "platform-auth.format.name" | trunc 63 }}
+  name: {{ list $parent.name $uniqId $ | include "platform-auth.format.name" | trunc 63 }}
   namespace: {{ list $parent $ | include "skyfjell.common.format.component.namespace" }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
   hosts:
     - {{ $host }}
   gateways:
-    - {{ list $parent.name $safename $ | include "platform-auth.format.name" | trunc 63 | printf "%s/%s" $gateway.namespace }}
+    - {{ list $parent.name $uniqId $ | include "platform-auth.format.name" | printf "%s/%s" $gateway.namespace }}
   http:
     - match:
         - uri:

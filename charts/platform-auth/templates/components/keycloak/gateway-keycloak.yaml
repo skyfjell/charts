@@ -6,13 +6,13 @@
 
 {{- if and $parent.enabled $component.enabled $istio.enabled -}}
 {{- range $host := $parent.hosts }}
-{{- $safename := regexReplaceAll "\\." $host "-" }}
+{{- $uniqId := sha256sum $host | trunc 8 }}
 {{- include "skyfjell.common.require.api.istio.gateway" $ -}}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: {{ list $parent.name $safename $ | include "platform-auth.format.name" | trunc 63 }}
+  name: {{ list $parent.name $uniqId $ | include "platform-auth.format.name" }}
   namespace: {{ $gateway.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
@@ -49,7 +49,7 @@ spec:
       {{- if and $.Values.components.certManager.enabled $.Values.components.certManager.issuerRef }}
       tls:
         mode: SIMPLE
-        credentialName: {{ printf "%s-tls" (list $parent.name $safename $ | include "platform-auth.format.name" | trunc 59 ) }}
+        credentialName: {{ list $parent.name $uniqId $ | include "platform-auth.format.name" | printf "%s-tls" }}
       {{- end }}
 {{- end -}}
 {{- end -}}

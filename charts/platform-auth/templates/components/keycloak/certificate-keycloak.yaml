@@ -6,18 +6,18 @@
 
 {{- if and $parent.enabled $component.enabled .Values.components.certManager.enabled $istio.enabled $gateway.enabled -}}
 {{- range $host := $parent.hosts }}
-{{- $safename := regexReplaceAll "\\." $host "-" }}
+{{- $uniqId := sha256sum $host | trunc 8 -}}
 
 {{- include "skyfjell.common.require.api.cert-manager.certificate" $ -}}
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ list $parent.name $ | include "platform-auth.format.name" }}
+  name: {{ list $parent.name $uniqId $ | include "platform-auth.format.name" }}
   namespace: {{ $gateway.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
 spec:
-  secretName: {{ printf "%s-tls" (list $parent.name $safename $ | include "platform-auth.format.name" | trunc 59 ) }}
+  secretName: {{ list $parent.name $uniqId $ | include "platform-auth.format.name" | printf "%s-tls" }}
   dnsNames:
     - {{ $host }}
   {{- with $.Values.components.certManager.issuerRef }}
