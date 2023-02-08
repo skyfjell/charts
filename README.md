@@ -19,3 +19,5 @@ Arbitrarily deploy Kubernetes manifests via Helm.
 ## [platform-factory](./charts/platform-factory)
 
 ## [platform-tenant](./charts/platform-tenant)
+
+## [keycloak-slackbot](./charts/keycloak-slackbot)
