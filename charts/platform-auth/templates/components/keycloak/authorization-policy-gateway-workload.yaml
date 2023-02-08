@@ -4,10 +4,10 @@
 {{- $istio := .Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
 
-{{- if and $parent.enabled $component.enabled $parent.hosts $istio.enabled $gateway.enabled -}}
+{{- if and $parent.enabled $component.enabled $istio.enabled $gateway.enabled -}}
 {{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
-
 {{- $namespace := list $parent $ | include "skyfjell.common.format.component.namespace" -}}
+{{- range $host := $parent.hosts }}
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -35,5 +35,6 @@ spec:
       to:
         - operation:
             hosts:
-              {{- toYaml $parent.hosts | nindent 14 }}
+              - {{ $host }}
+{{- end -}}
 {{- end -}}
