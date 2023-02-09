@@ -147,6 +147,18 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/istio-install-0.0.16/istio-install-0.0.16.tgz
     version: 0.0.16
+  keycloak-slackbot:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2023-02-09T16:47:49.395426814Z"
+    description: A Helm chart that pings Keycloak for new users and post to a slack
+      channel.
+    digest: f6b4af14a7803dc87de40fddec4becb7aff55ceb19cf27abc788161693a8526d
+    name: keycloak-slackbot
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/keycloak-slackbot-0.0.1/keycloak-slackbot-0.0.1.tgz
+    version: 0.0.1
   keycloakslackbot:
   - apiVersion: v2
     appVersion: 0.0.1
@@ -731,4 +743,4 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/skyfjell-common-0.0.1/skyfjell-common-0.0.1.tgz
     version: 0.0.1
-generated: "2023-02-08T22:16:45.336364042Z"
+generated: "2023-02-09T16:47:49.395575214Z"
