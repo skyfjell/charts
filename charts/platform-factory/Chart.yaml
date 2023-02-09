@@ -1,9 +1,0 @@
-apiVersion: v2
-name: platform-factory
-description: Skyfjell Platform Factory Chart
-type: application
-version: 0.0.1
-dependencies:
-  - name: common
-    repository: "@skyfjell"
-    version: "0.0.x"

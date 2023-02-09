@@ -1,6 +1,0 @@
-components:
-  certManager:
-    issuerRef:
-      name: letsencrypt-prod
-      kind: ClusterIssuer
-      group: cert-manager.io
