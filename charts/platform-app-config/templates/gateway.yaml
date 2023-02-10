@@ -1,15 +1,16 @@
-{{- $apps := omit .Values.components "certManager" "istio" -}}
+{{- $apps := include "platform-app-config.filter.apps" $.Values.components | fromYaml -}}
 {{- $istio := $.Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
-{{- range (keys $apps | sortAlpha) -}}
-{{- $app := get $apps . -}}
+{{- range $appKey := (keys $apps | sortAlpha) -}}
+{{- $app := get $apps $appKey -}}
 {{- if and $app.host $.Values.components.certManager.enabled $istio.enabled $gateway.enabled -}}
 {{- include "skyfjell.common.require.api.istio.gateway" $ -}}
+{{- $appName := default $appKey $app.name -}}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: {{ list $app.name $ | include "platform-app-config.format.name" }}
+  name: {{ list $appName $ | include "platform-app-config.format.name" }}
   namespace: {{ $gateway.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
   {{- include "platform-app-config.labels" $ | nindent 4 }}
@@ -47,7 +48,7 @@ spec:
       {{- if and $.Values.components.certManager.enabled $.Values.components.certManager.issuerRef }}
       tls:
         mode: SIMPLE
-        credentialName: {{ printf "%s-tls" ( list $app.name $app.namespace $ | include "platform-app-config.format.name" ) }}
+        credentialName: {{ printf "%s-tls" ( list $appName ( default $appName $app.namespace ) $ | include "platform-app-config.format.name" ) }}
       {{- end }}
 {{- end -}}
 {{- end -}}

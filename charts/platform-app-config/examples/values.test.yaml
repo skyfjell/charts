@@ -13,9 +13,6 @@ components:
     # serviceAccountName: ""
     service:
       port: 80
-    authorization:
-      enabled: true
-      clientId: example-app-1
     components:
       # Example of an http dependency. Ports, paths, and methods are required for each operation.
       example-app-2:

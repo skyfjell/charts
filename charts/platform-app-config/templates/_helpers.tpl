@@ -57,3 +57,7 @@ Selector labels
 app.kubernetes.io/name: {{ include "platform-app-config.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{- define "platform-app-config.filter.apps" -}}
+{{- omit . "auth" "istio" "certManager" | toYaml -}}
+{{- end -}}

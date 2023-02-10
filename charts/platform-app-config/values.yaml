@@ -1,5 +1,5 @@
 # Refer to ./examples/values.test.yaml for application configuration
-prefix: ""
+prefix: "config"
 nameOverride: ""
 fullnameOverride: ""
 

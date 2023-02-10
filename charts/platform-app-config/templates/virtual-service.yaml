@@ -1,23 +1,24 @@
-{{- $apps := omit .Values.components "certManager" "istio" -}}
+{{- $apps := include "platform-app-config.filter.apps" $.Values.components | fromYaml -}}
 {{- $istio := $.Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
-{{- range (keys $apps | sortAlpha) -}}
-{{- $app := get $apps . -}}
+{{- range $appKey := (keys $apps | sortAlpha) -}}
+{{- $app := get $apps $appKey -}}
 {{- if and $app.host $.Values.components.certManager.enabled $istio.enabled $gateway.enabled -}}
 {{- include "skyfjell.common.require.api.istio.vs" $ -}}
+{{- $appName := default $appKey $app.name -}}
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: {{ $app.name }}
-  namespace: {{ $app.namespace }}
+  name: {{ $appName }}
+  namespace: {{ default $appName $app.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
   {{- include "platform-app-config.labels" $ | nindent 4 }}
 spec:
   hosts:
     - {{ $app.host }}
   gateways:
-    - {{ list $app.name $ | include "platform-app-config.format.name" | printf "%s/%s" $gateway.namespace }}
+    - {{ list $appName $ | include "platform-app-config.format.name" | printf "%s/%s" $gateway.namespace }}
   http:
     - match:
         - uri:
@@ -26,6 +27,6 @@ spec:
         - destination:
             port:
               number: {{ $app.service.port }}
-            host: {{ default $app.name $app.service.host }}
+            host: {{ default $appName $app.service.host }}
 {{- end -}}
 {{- end -}}

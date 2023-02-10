@@ -1,15 +1,16 @@
-{{- $apps := omit .Values.components "certManager" "istio" -}}
-{{- range (keys $apps | sortAlpha) -}}
+{{- $apps := include "platform-app-config.filter.apps" $.Values.components | fromYaml -}}
+{{- range $appKey := (keys $apps | sortAlpha) -}}
 {{- $app := get $apps . -}}
 {{- $istio := $.Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
 {{- if and $app.host $istio.enabled $gateway.enabled -}}
 {{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
+{{- $appName := default $appKey $app.name -}}
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: {{ list $app.name "gateway" "http" $ | include "platform-app-config.format.name" }}
+  name: {{ list $appName "gateway" "http" $ | include "platform-app-config.format.name" }}
   namespace: {{ $gateway.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
     {{- include "platform-app-config.labels" $ | nindent 4 }}
@@ -34,5 +35,5 @@ spec:
             ports:
               - "80"
               - "443"
-{{- end -}} 
+{{- end -}}
 {{- end -}}
