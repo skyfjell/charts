@@ -274,6 +274,20 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/null-0.0.1/null-0.0.1.tgz
     version: 0.0.1
+  platform-app-config:
+  - apiVersion: v2
+    created: "2023-02-23T19:31:58.212155083Z"
+    dependencies:
+    - name: common
+      repository: '@skyfjell'
+      version: 0.0.x
+    description: Skyfjell Platform Application Configuration Chart
+    digest: 468444e1d85ab1d74adce376448556a03f3be02b1da03893a7db59e7af02d045
+    name: platform-app-config
+    type: application
+    urls:
+    - https://github.com/skyfjell/charts/releases/download/platform-app-config-0.0.1/platform-app-config-0.0.1.tgz
+    version: 0.0.1
   platform-auth:
   - apiVersion: v2
     created: "2023-02-08T20:54:01.189991811Z"
@@ -743,4 +757,4 @@ entries:
     urls:
     - https://github.com/skyfjell/charts/releases/download/skyfjell-common-0.0.1/skyfjell-common-0.0.1.tgz
     version: 0.0.1
-generated: "2023-02-09T16:47:49.395575214Z"
+generated: "2023-02-23T19:31:58.212416289Z"
