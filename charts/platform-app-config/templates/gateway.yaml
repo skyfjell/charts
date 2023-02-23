@@ -1,17 +1,19 @@
-{{- $component := .Values.components.privatebin -}}
-
-{{- $istio := .Values.components.istio -}}
+{{- $apps := include "platform-app-config.filter.apps" $.Values.components | fromYaml -}}
+{{- $istio := $.Values.components.istio -}}
 {{- $gateway := $istio.components.gateway -}}
-
-{{- if and $component.host $istio.enabled -}}
+{{- range $appKey := (keys $apps | sortAlpha) -}}
+{{- $app := get $apps $appKey -}}
+{{- if and $app.host $.Values.components.certManager.enabled $istio.enabled $gateway.enabled -}}
 {{- include "skyfjell.common.require.api.istio.gateway" $ -}}
+{{- $appName := default $appKey $app.name -}}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: {{ list $component.name $ | include "platform-factory.format.name" }}
+  name: {{ list $appName $ | include "platform-app-config.format.name" }}
   namespace: {{ $gateway.namespace }}
   labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+  {{- include "platform-app-config.labels" $ | nindent 4 }}
 spec:
   selector:
     {{- $selector := $gateway.selector | default $gateway.selector }}
@@ -22,7 +24,7 @@ spec:
     {{- end }}
   servers:
     - hosts:
-        - {{ $component.host }}
+        - {{ $app.host }}
       port:
         name: http2
         number: 80
@@ -30,7 +32,7 @@ spec:
       tls:
         httpsRedirect: true
     - hosts:
-        - {{ $component.host }}
+        - {{ $app.host }}
       port:
         name: http
         number: 80
@@ -42,10 +44,11 @@ spec:
         name: https
         protocol: HTTPS
       hosts:
-        - {{ $component.host }}
-      {{- if and .Values.components.certManager.enabled .Values.components.certManager.issuerRef }}
+        - {{ $app.host }}
+      {{- if and $.Values.components.certManager.enabled $.Values.components.certManager.issuerRef }}
       tls:
         mode: SIMPLE
-        credentialName: {{ list $component.name "tls" $ | include "platform-factory.format.name" }}
+        credentialName: {{ printf "%s-tls" ( list $appName ( default $appName $app.namespace ) $ | include "platform-app-config.format.name" ) }}
       {{- end }}
+{{- end -}}
 {{- end -}}

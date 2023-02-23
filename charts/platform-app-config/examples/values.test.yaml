@@ -1,0 +1,56 @@
+components:
+  certManager:
+    issuerRef:
+      name: letsencrypt-prod
+      kind: ClusterIssuer
+      group: cert-manager.io
+  # Application Configuration
+  example-app-1:
+    name: example-app-1
+    namespace: example-app-1
+    host: example-app-1.example.com
+    # Default: this.name
+    # serviceAccountName: ""
+    service:
+      port: 80
+    components:
+      # Example of an http dependency. Ports, paths, and methods are required for each operation.
+      example-app-2:
+        name: example-app-2
+        namespace: example-app-2
+        operations:
+          - paths:
+              - /
+            methods:
+              - "*"
+            ports:
+              - 80
+          - paths:
+              - /admin
+            methods:
+              - GET
+            ports:
+              - 80
+      # Example of a non-http dependency such as postgresql where only a list of ports are necessary
+      example-dependency-1:
+        name: example-dependency-1
+        # Default: Parent Namespace
+        # Note:  Set if dependency is in another namespace
+        # namespace:
+        ports:
+          - 5432
+  # Example of cyclic relationship with the above app
+  example-app-2:
+    name: example-app-2
+    namespace: example-app-2
+    components:
+      example-app:
+        name: example-app-1
+        namespace: example-app-1
+        operations:
+          - paths:
+              - "*"
+            ports:
+              - 80
+            methods:
+              - "*"

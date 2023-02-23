@@ -1,0 +1,34 @@
+# Refer to ./examples/values.test.yaml for application configuration
+prefix: "config"
+nameOverride: ""
+fullnameOverride: ""
+
+components:
+  # cert-manager Configuration
+  certManager:
+    # Enable cert-manager Resources
+    enabled: true
+    # Certificate `issuerRef``
+    issuerRef: {}
+  istio:
+    enabled: true
+    namespace: "system-istio"
+    components:
+      gateway:
+        enabled: true
+        # Istio Ingress Gateway Namespace for Apps
+        namespace: system-istio-gateway
+        # For `app` label selector
+        name: ingress
+        # Selector - Defaults to `{ app: [name] }`
+        selector: {}
+# Global Values
+global:
+  affinity: {}
+  annotations: {}
+  labels: {}
+  nodeSelector: {}
+  tolerations: []
+  skyfjell:
+    validate:
+      api: true

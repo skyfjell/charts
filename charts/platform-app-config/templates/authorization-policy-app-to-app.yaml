@@ -1,0 +1,53 @@
+{{- $apps := include "platform-app-config.filter.apps" $.Values.components | fromYaml -}}
+{{- $gateway := $.Values.components.istio.components.gateway -}}
+{{- range $parentKey := ( keys $apps | sortAlpha ) -}}
+{{- $parent := get $apps $parentKey -}}
+{{- if and $parent.components $.Values.components.istio.enabled -}}
+{{- range $componentKey := ( keys $parent.components | sortAlpha ) -}}
+{{- $component := get $parent.components $componentKey -}}
+{{- include "skyfjell.common.require.api.istio.authorization-policy" $ -}}
+{{ $parentName := default $parentKey $parent.name }}
+{{ $componentName := default $componentKey $component.name }}
+{{- if or $component.operations $component.ports -}}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ list $parentName "to" $componentName $ | include "platform-app-config.format.name" }}
+  namespace: {{ default $parent.namespace $component.namespace | default $parentName }}
+  labels: {{- include "skyfjell.common.chartLabels" $ | nindent 4 }}
+    {{- include "platform-app-config.labels" $ | nindent 4 }}
+    skyfjell.io/from-ns: {{ default $parentName $parent.namespace }}
+    skyfjell.io/to-ns: {{ default $parent.namespace $component.namespace | default $parentName }}
+    skyfjell.io/from: {{ $parentName }}
+    skyfjell.io/to: {{ $componentName }}
+spec:
+  action: ALLOW
+  selector:
+    app.kubernetes.io/instance: {{ list $componentName $ | include "platform-app-config.format.name" }}
+  rules:
+    - from:
+        - source:
+            namespaces:
+              - {{ default $parentName $parent.namespace }}
+            principals:
+              - {{ default $parentName $parent.serviceAccountName | printf "cluster.local/ns/%s/sa/%s" (default $parentName $parent.namespace) }}
+    - to:
+      {{- with $component.ports }}
+      - operation:
+          ports:
+            {{- range $port := . }}
+              {{- int $port | printf "- %d" | nindent 12 }}
+            {{- end }}
+      {{- end }}
+      {{- range $index, $operation := $component.operations }}
+      {{- if not (and $operation.ports $operation.paths $operation.methods) -}}
+        {{- $err := printf "Operation `ports`, `paths`, and `methods` are required for %s -> %s at index %d" $parentName $componentName $index -}}
+        {{- fail $err -}}
+      {{- end }}
+      - operation: {{- $operation | toYaml | nindent 10 -}}
+      {{- end }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end }}

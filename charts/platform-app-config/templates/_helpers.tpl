@@ -1,23 +1,13 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "platform-factory.name" -}}
+{{- define "platform-app-config.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{- define "platform-factory.format.name" -}}
+{{- define "platform-app-config.format.name" -}}
   {{- $ := last . -}}
   {{- prepend . $.Values.prefix | initial | include "skyfjell.common.format.name" -}}
-{{- end }}
-
-{{- define "platform-factory.format.namespace" -}}
-  {{- $ := last . -}}
-  {{- $component := first . -}}
-  {{- if $component.namespace.create -}}
-    {{ list (dict "name" $component.name "namespace" $component.namespace.name) $ | include "skyfjell.common.format.component.namespace" }}
-  {{- else -}}
-  {{ $component.namespace.name }}
-  {{- end -}}
 {{- end }}
 
 {{/*
@@ -25,7 +15,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "platform-factory.fullname" -}}
+{{- define "platform-app-config.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -41,19 +31,19 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "platform-factory.chart" -}}
+{{- define "platform-app-config.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "platform-factory.labels" -}}
+{{- define "platform-app-config.labels" -}}
 {{- with .Values.global.labels -}}
 {{ toYaml .}}
 {{- end -}}
-helm.sh/chart: {{ include "platform-factory.chart" . }}
-{{ include "platform-factory.selectorLabels" . }}
+helm.sh/chart: {{ include "platform-app-config.chart" . }}
+{{ include "platform-app-config.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -63,18 +53,11 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "platform-factory.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "platform-factory.name" . }}
+{{- define "platform-app-config.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "platform-app-config.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "platform-factory.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "platform-factory.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
+{{- define "platform-app-config.filter.apps" -}}
+{{- omit . "auth" "istio" "certManager" | toYaml -}}
+{{- end -}}

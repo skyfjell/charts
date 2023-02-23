@@ -1,6 +1,6 @@
 apiVersion: v2
-name: platform-factory
-description: Skyfjell Platform Factory Chart
+name: platform-app-config
+description: Skyfjell Platform Application Configuration Chart
 type: application
 version: 0.0.1
 dependencies:
