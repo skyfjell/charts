@@ -10,7 +10,6 @@ ingressClass:
 providers:
   kubernetesIngress:
     enabled: false
-  hostNetwork: false
   kubernetesCRD:
     allowCrossNamespace: true
     namespaces:
@@ -18,12 +17,6 @@ providers:
   logs:
     general:
       format: json
-    access:
-      enabled: true
-      format: json
-      fields:
-        headers:
-          defaultmode: keep
 service:
   type: ClusterIP
 rbac:
