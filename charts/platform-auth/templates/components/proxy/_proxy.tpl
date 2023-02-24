@@ -13,7 +13,10 @@ providers:
   kubernetesCRD:
     allowCrossNamespace: true
     namespaces:
-      ["*"]
+      []
+  logs:
+    general:
+      format: json
 service:
   type: ClusterIP
 rbac:
