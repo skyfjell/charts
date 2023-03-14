@@ -75,6 +75,7 @@ spec:
       mutate:
         patchStrategicMerge:
           spec:
+            automountServiceAccountToken: true
             containers:
               - name: {{ list $parent.name $component.name | include "skyfjell.common.format.name" }}
                 image: {{ printf "%s/%s:%s" $component.image.registry $component.image.repository $component.image.tag }}
