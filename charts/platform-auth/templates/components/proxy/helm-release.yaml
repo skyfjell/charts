@@ -30,5 +30,5 @@ spec:
   interval: 1h0m0s
   values:
 {{- $defaultValues := ( include "platform-auth.app.proxy.template.values" $ | fromYaml ) }}
-{{ ( mergeOverwrite $defaultValues (default dict $component.valuesOverride )) | toYaml | indent 4 }}
+{{ ( mergeOverwrite $defaultValues (default dict $component.values )) | toYaml | indent 4 }}
 {{- end -}}
