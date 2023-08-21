@@ -64,7 +64,7 @@ components:
             kind: HelmRepository
         nodeSelector: {}
         tolerations: []
-        valuesOverride: {}
+        values: {}
       database:
         # Toggle Component
         # Defaults to postgres instance. Set false and pass auth to keycloak if needed
@@ -89,7 +89,7 @@ components:
           database: keycloak
         nodeSelector: {}
         tolerations: []
-        valuesOverride: {}
+        values: {}
       gateway:
         # selector for istio gateway
         selector: {}
@@ -106,7 +106,7 @@ components:
         # Defaults to `traefik` HelmRepository if not set
         name: ""
         kind: HelmRepository
-    valuesOverride: {}
+    values: {}
     nodeSelector: {}
     tolerations: []
 

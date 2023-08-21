@@ -36,5 +36,5 @@ spec:
   interval: 1h0m0s
   values:
 {{- $defaultValues := ( include "platform-auth.components.keycloak.values" $ | fromYaml ) }}
-{{ ( mergeOverwrite $defaultValues (default dict $parent.valuesOverride )) | toYaml | indent 4 }}
+{{ ( mergeOverwrite $defaultValues (default dict $parent.values )) | toYaml | indent 4 }}
 {{- end }}
